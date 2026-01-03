@@ -1,0 +1,45 @@
+.cookie-consent-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1055;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.cookie-consent-modal.show {
+  display: block;
+}
+
+.cookie-consent-dialog {
+  max-width: 720px;
+  margin: 4rem auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 40px 80px rgba(15, 23, 42, 0.25);
+}
+
+.cookie-consent-body {
+  padding: 1.5rem;
+}
+
+.cookie-consent-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cookie-consent-category {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cookie-consent-category:first-child {
+  border-top: none;
+}
+
+.cookie-consent-category label {
+  font-weight: 600;
+}

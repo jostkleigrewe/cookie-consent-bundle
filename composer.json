@@ -1,0 +1,46 @@
+{
+    "name": "jostkleigrewe/cookie-consent-bundle",
+    "description": "Symfony 8 bundle for GDPR-compliant cookie consent with Twig, Stimulus, and Turbo integration.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["symfony", "bundle", "gdpr", "cookie", "consent", "privacy", "stimulus", "turbo"],
+    "homepage": "https://github.com/jostkleigrewe/cookie-consent-bundle",
+    "authors": [
+        {
+            "name": "Jost Kleigrewe"
+        }
+    ],
+    "require": {
+        "php": ">=8.5",
+        "psr/log": "^3.0",
+        "symfony/config": "^8.0",
+        "symfony/dependency-injection": "^8.0",
+        "symfony/http-foundation": "^8.0",
+        "symfony/http-kernel": "^8.0",
+        "symfony/security-http": "^8.0",
+        "symfony/twig-bundle": "^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "symfony/framework-bundle": "^8.0"
+    },
+    "suggest": {
+        "doctrine/dbal": "For database-backed consent storage",
+        "doctrine/orm": "If you prefer ORM and entities for consent storage"
+    },
+    "autoload": {
+        "psr-4": {
+            "JostKleigrewe\\CookieConsentBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JostKleigrewe\\CookieConsentBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1-dev"
+        }
+    }
+}
