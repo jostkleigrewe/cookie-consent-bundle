@@ -1,0 +1,6 @@
+cookie_consent:
+  title: 'Privacy settings'
+  description: 'We use cookies to provide core functionality and to improve your experience. Choose what you want to allow.'
+  accept_all: 'Accept all'
+  reject_optional: 'Reject optional'
+  save: 'Save selection'

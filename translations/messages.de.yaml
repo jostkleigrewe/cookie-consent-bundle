@@ -1,0 +1,6 @@
+cookie_consent:
+  title: 'Datenschutzeinstellungen'
+  description: 'Wir verwenden Cookies, um grundlegende Funktionen bereitzustellen und dein Erlebnis zu verbessern. Waehle aus, was du erlauben moechtest.'
+  accept_all: 'Alle akzeptieren'
+  reject_optional: 'Optionale ablehnen'
+  save: 'Auswahl speichern'
