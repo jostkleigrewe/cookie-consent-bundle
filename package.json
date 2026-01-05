@@ -1,0 +1,21 @@
+{
+    "name": "@jostkleigrewe/cookie-consent-bundle",
+    "version": "0.1.0",
+    "symfony": {
+        "controllers": {
+            "cookie_consent": {
+                "main": "assets/dist/controllers/cookie_consent_controller.js",
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "assets/dist/styles/cookie_consent.css": true
+                }
+            }
+        },
+        "importmap": {
+            "@jostkleigrewe/cookie-consent-bundle/feature": {
+                "path": "assets/dist/controllers/cookie_consent_controller.js"
+            }
+        }
+    }
+}
