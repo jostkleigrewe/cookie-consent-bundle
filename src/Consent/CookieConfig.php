@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JostKleigrewe\CookieConsentBundle\Consent;
 
-final class CookieConfig
+class CookieConfig
 {
     public function __construct(
         public readonly string $name,

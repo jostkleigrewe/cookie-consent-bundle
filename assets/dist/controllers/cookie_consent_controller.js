@@ -10,6 +10,9 @@ export default class extends Controller {
   };
 
   connect() {
+
+    console.log('Cookie Consent Controller connected');
+
     this.handleTurboLoad = this.handleTurboLoad.bind(this);
     document.addEventListener('turbo:load', this.handleTurboLoad);
 
@@ -38,6 +41,9 @@ export default class extends Controller {
   }
 
   submit(action, preferences = null) {
+
+      console.log('Submit ' + action);
+
     const body = { action };
     if (preferences) {
       body.preferences = preferences;

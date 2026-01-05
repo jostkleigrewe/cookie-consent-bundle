@@ -9,6 +9,7 @@ use JostKleigrewe\CookieConsentBundle\Consent\ConsentStorageInterface;
 use JostKleigrewe\CookieConsentBundle\Consent\CookieConsentStorage;
 use JostKleigrewe\CookieConsentBundle\Consent\DoctrineConsentStorage;
 use JostKleigrewe\CookieConsentBundle\DependencyInjection\Configuration;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -21,7 +22,8 @@ final class CookieConsentBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $configuration = new Configuration();
-        $processedConfig = $this->processConfiguration($configuration, [$config]);
+        $processor = new Processor();
+        $processedConfig = $processor->processConfiguration($configuration, [$config]);
 
         $container->parameters()->set('cookie_consent', $processedConfig);
         $container->parameters()->set('cookie_consent.policy_version', $processedConfig['policy_version']);
@@ -32,12 +34,6 @@ final class CookieConsentBundle extends AbstractBundle
         $container->parameters()->set('cookie_consent.ui', $processedConfig['ui']);
         $container->parameters()->set('cookie_consent.routes', $processedConfig['routes']);
         $container->parameters()->set('cookie_consent.enforcement', $processedConfig['enforcement']);
-
-        $container->extension('twig', [
-            'paths' => [
-                $this->getPath() . '/templates' => 'CookieConsentBundle',
-            ],
-        ]);
 
         $loader = new PhpFileLoader($builder, new FileLocator($this->getPath() . '/Resources/config'));
         $loader->load('services.php');
@@ -56,5 +52,31 @@ final class CookieConsentBundle extends AbstractBundle
     public function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import($this->getPath() . '/Resources/config/routes.php');
+    }
+
+    public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        $container->extension('twig', [
+            'paths' => [
+                $this->getPath() . '/templates' => 'CookieConsentBundle',
+            ],
+        ]);
+
+        // DE: Nur konfigurieren, wenn AssetMapper wirklich vorhanden ist.
+        // EN: Only configure if AssetMapper is actually available.
+        if (!$builder->hasExtension('framework')) {
+            return;
+        }
+
+        $builder->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    // DE: Exponiert Bundle-Assets über AssetMapper (vendor/.../assets/dist).
+                    // EN: Exposes bundle assets via AssetMapper (vendor/.../assets/dist).
+                    __DIR__.'/../assets/dist' => '@jostkleigrewe/cookie-consent-bundle',
+                ],
+            ],
+        ]);
+
     }
 }
