@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "JostKleigrewe\\CookieConsentBundle\\": "src/"
+            "Jostkleigrewe\\CookieConsentBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JostKleigrewe\\CookieConsentBundle\\Tests\\": "tests/"
+            "Jostkleigrewe\\CookieConsentBundle\\Tests\\": "tests/"
         }
     },
     "extra": {

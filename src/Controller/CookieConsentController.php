@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\Controller;
+namespace Jostkleigrewe\CookieConsentBundle\Controller;
 
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class CookieConsentController
+final readonly class CookieConsentController
 {
-    public function __construct(private readonly ConsentManager $consentManager)
+    public function __construct(
+        private ConsentManager $consentManager
+    )
     {
     }
 
@@ -28,15 +30,15 @@ final class CookieConsentController
         $response = new JsonResponse();
 
         $state = match ($action) {
-            'accept_all' => $this->consentManager->acceptAll($request, $response),
-            'reject_optional' => $this->consentManager->rejectOptional($request, $response),
-            default => $this->consentManager->savePreferences($request, $response, $preferences),
+            'accept_all'        => $this->consentManager->acceptAll($request, $response),
+            'reject_optional'   => $this->consentManager->rejectOptional($request, $response),
+            default             => $this->consentManager->savePreferences($request, $response, $preferences),
         };
 
         $response->setData([
-            'preferences' => $state->getPreferences(),
-            'policy_version' => $state->getPolicyVersion(),
-            'decided_at' => $state->getDecidedAt()?->format(DATE_ATOM),
+            'preferences'       => $state->getPreferences(),
+            'policy_version'    => $state->getPolicyVersion(),
+            'decided_at'        => $state->getDecidedAt()?->format(DATE_ATOM),
         ]);
 
         return $response;
