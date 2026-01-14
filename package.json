@@ -10,6 +10,11 @@
                 "autoimport": {
                     "assets/dist/styles/cookie_consent.css": true
                 }
+            },
+            "cookie_consent_settings_button": {
+                "main": "assets/dist/controllers/cookie_consent_settings_button_controller.js",
+                "enabled": true,
+                "fetch": "eager"
             }
         },
         "importmap": {

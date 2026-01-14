@@ -1,0 +1,14 @@
+{# DE: Pinterest-Embed mit Consent-Placeholder. #}
+{# EN: Pinterest embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('Pinterest') %}
+{% set pin_url = pin_url|default('') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'html',
+    html: '<a data-pin-do="embedPin" href="' ~ pin_url ~ '"></a>',
+    title: title,
+    category: category,
+    script_src: 'https://assets.pinterest.com/js/pinit.js',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

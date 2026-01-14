@@ -1,0 +1,14 @@
+{# DE: SoundCloud-Embed mit Consent-Placeholder. #}
+{# EN: SoundCloud embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('SoundCloud') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    src: src,
+    title: title,
+    category: category,
+    type: 'iframe',
+    allow: 'autoplay; encrypted-media',
+    aspect_ratio: aspect_ratio|default('16 / 9'),
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

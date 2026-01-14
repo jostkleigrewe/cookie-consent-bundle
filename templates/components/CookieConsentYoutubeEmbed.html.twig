@@ -1,0 +1,14 @@
+{# DE: YouTube-Embed mit Consent-Placeholder (auf Embed-Helper). #}
+{# EN: YouTube embed with consent placeholder (via embed helper). #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('YouTube video') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    src: 'https://www.youtube-nocookie.com/embed/' ~ video_id,
+    title: title,
+    category: category,
+    type: 'iframe',
+    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+    aspect_ratio: '16 / 9',
+    placeholder: placeholder|default('cookie_consent.youtube_placeholder'|trans({'%category%': category}))
+}) }}

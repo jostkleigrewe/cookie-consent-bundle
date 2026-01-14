@@ -1,0 +1,14 @@
+{# DE: Typeform-Embed mit Consent-Placeholder. #}
+{# EN: Typeform embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('Typeform') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    src: src,
+    title: title,
+    category: category,
+    type: 'iframe',
+    allow: 'fullscreen',
+    aspect_ratio: aspect_ratio|default('16 / 9'),
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

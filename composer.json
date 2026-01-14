@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=8.5",
+        "php": ">=8.4",
         "psr/log": "^3.0",
         "symfony/framework-bundle": "^8.0",
         "symfony/asset-mapper": "^8.0",
@@ -20,6 +20,8 @@
         "symfony/dependency-injection": "^8.0",
         "symfony/http-foundation": "^8.0",
         "symfony/http-kernel": "^8.0",
+        "symfony/ux-twig-component": "^2.0",
+        "symfony/security-csrf": "^8.0",
         "symfony/security-http": "^8.0",
         "symfony/twig-bundle": "^8.0"
     },

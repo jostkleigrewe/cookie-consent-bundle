@@ -1,0 +1,14 @@
+{# DE: LinkedIn-Embed mit Consent-Placeholder. #}
+{# EN: LinkedIn embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('LinkedIn') %}
+{% set post_url = post_url|default('') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'html',
+    html: '<blockquote class="linkedin-post"><a href="' ~ post_url ~ '"></a></blockquote>',
+    title: title,
+    category: category,
+    script_src: 'https://platform.linkedin.com/in.js',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

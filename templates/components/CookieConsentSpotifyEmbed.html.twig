@@ -1,0 +1,14 @@
+{# DE: Spotify-Embed mit Consent-Placeholder. #}
+{# EN: Spotify embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('Spotify') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    src: src,
+    title: title,
+    category: category,
+    type: 'iframe',
+    allow: 'encrypted-media; fullscreen; picture-in-picture',
+    aspect_ratio: aspect_ratio|default('16 / 9'),
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}
