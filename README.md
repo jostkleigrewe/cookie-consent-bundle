@@ -1,83 +1,59 @@
 # Cookie Consent Bundle (Symfony 8)
 
-Symfony 8 bundle for GDPR-compliant cookie consent with Twig, Stimulus, and Turbo integration. Includes a Tabler-inspired modal UI and flexible configuration.
+[![Packagist Version](https://img.shields.io/packagist/v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![PHP Version](https://img.shields.io/packagist/php-v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![License](https://img.shields.io/packagist/l/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
 
-## Features
+A Symfony 8 bundle for GDPR-compliant cookie consent with Twig helpers, a Stimulus controller, and flexible storage (cookie, doctrine, or both).
 
-- Cookie-only or database-backed consent storage
-- Twig helpers for consent checks and modal rendering
-- Stimulus controller for modal actions and consent toggles
-- Turbo-friendly events (auto-open on `turbo:load`)
-- Configurable categories (necessary, functional, analytics, marketing)
-- Session blocking when consent is required and missing
-- Attribute- and config-based stateless/protected areas
+## Highlights
 
-## Requirements
+- Modal rendering via `{{ cookie_consent_modal() }}` and consent-aware Twig helpers.
+- Stimulus controller with Turbo-friendly behavior and consent-aware DOM handling.
+- Configurable categories, policy versioning, and session enforcement.
+- Cookie, Doctrine, or combined storage; optional consent logging.
+- Built-in templates (Tabler, Bootstrap, plain) with easy overrides.
 
-- PHP 8.5+
-- Symfony 8
-- Twig Bundle
-- Security Bundle (for session enforcement based on firewall statelessness)
+## Documentation
 
-## Installation
+Start here (short overview):
+
+- English: [Docs index](docs/index.en.md)
+- Deutsch: [Doku-Index](docs/index.de.md)
+
+Core docs (most users only need these):
+
+- Install: [EN](docs/installation.en.md) / [DE](docs/installation.de.md)
+- Config: [EN](docs/configuration.en.md) / [DE](docs/configuration.de.md)
+- UI/Templates: [EN](docs/ui.en.md) / [DE](docs/ui.de.md)
+- How it works: [EN](docs/how-it-works.en.md) / [DE](docs/how-it-works.de.md)
+
+Optional:
+
+- Advanced (logging + analytics): [EN](docs/advanced.en.md) / [DE](docs/advanced.de.md)
+
+Backlink from docs: see [README](README.md) in each index file.
+
+## Quickstart
 
 ```bash
 composer require jostkleigrewe/cookie-consent-bundle
 ```
-
-Enable the bundle (if not auto-registered):
 
 ```php
 // config/bundles.php
 Jostkleigrewe\CookieConsentBundle\CookieConsentBundle::class => ['all' => true],
 ```
 
-## Assets (Stimulus + CSS)
-
-### AssetMapper (recommended)
-
-```yaml
-# config/packages/asset_mapper.yaml
-framework:
-  asset_mapper:
-    paths:
-      - vendor/jostkleigrewe/cookie-consent-bundle/assets
-```
-
-Enable the Stimulus controller:
-
-```json
-// assets/controllers.json
-{
-  "controllers": {
-    "cookie-consent": {
-      "enabled": true,
-      "fetch": "lazy"
-    }
-  }
-}
-```
-
-Include the CSS in your app entry:
-
-```js
-// assets/app.js
-import 'cookie-consent-bundle/styles/cookie_consent.css';
-```
-
-### Webpack Encore
-
-If you use Encore, copy or import the assets from `vendor/jostkleigrewe/cookie-consent-bundle/assets`.
-
 ## Usage
 
-Add the modal to your base layout:
+Render the modal in your base layout:
 
 ```twig
 {{ cookie_consent_modal() }}
 ```
 
-Toggle content based on consent:
+Gate content by consent:
 
 ```twig
 {% if cookie_consent_has('analytics') %}
@@ -85,70 +61,39 @@ Toggle content based on consent:
 {% endif %}
 ```
 
-For lazy-loading scripts, use `data-consent-category`:
+Lazy script loading:
 
 ```html
 <script type="text/plain" data-consent-category="analytics" data-consent-src="https://example.com/analytics.js"></script>
 ```
 
-## Configuration
+Full installation and configuration guides:
 
-```yaml
-# config/packages/cookie_consent.yaml
-cookie_consent:
-  policy_version: '1'
-  storage: cookie # or doctrine
-  cookie:
-    name: cookie_consent
-    lifetime: 15552000
-    same_site: lax
-  categories:
-    necessary:
-      label: Necessary
-      required: true
-    analytics:
-      label: Analytics
-      default: false
-  ui:
-    template: '@CookieConsentBundle/modal.html.twig'
-    layout: tabler
-  enforcement:
-    require_consent_for_session: true
-    stateless_paths: ['/health', '/webhook']
-    protected_paths: ['/checkout']
+- English install: [Installation](docs/installation.en.md)
+- Deutsch install: [Installation](docs/installation.de.md)
+- English config: [Configuration](docs/configuration.en.md)
+- Deutsch config: [Konfiguration](docs/configuration.de.md)
+
+## Contributing & Development
+
+Local setup:
+
+```bash
+composer install
 ```
 
-## Database storage
+Run tests:
 
-Set `storage: doctrine` and create a table:
-
-```sql
-CREATE TABLE cookie_consent (
-  id VARCHAR(64) PRIMARY KEY,
-  preferences JSON NOT NULL,
-  policy_version VARCHAR(32) NOT NULL,
-  decided_at DATETIME NULL
-);
+```bash
+vendor/bin/phpunit
 ```
 
-The bundle stores a random identifier cookie (`cookie_consent_id`) and persists consent by that ID.
+Notes:
 
-## Attributes
-
-```php
-use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
-use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
-
-#[ConsentRequired]
-class CheckoutController { ... }
-
-#[ConsentStateless]
-class HealthController { ... }
-```
-
-## Overriding the UI
-
-Override `@CookieConsentBundle/modal.html.twig` in your app or change the `ui.template` config.
+- Bundle code lives in `src/`, templates in `templates/`, translations in `translations/`.
+- Docs are bilingual under `docs/` with `.en.md` and `.de.md` suffixes.
+- When adding new features, update the relevant EN/DE docs and config examples.
+- See [UI EN](docs/ui.en.md) and [UI DE](docs/ui.de.md) for templates, helper functions, and the settings button.
 
 ## License
 

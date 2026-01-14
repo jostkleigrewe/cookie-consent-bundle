@@ -1,0 +1,15 @@
+{# DE: Twitter/X-Embed mit Consent-Placeholder. #}
+{# EN: Twitter/X embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('X post') %}
+{% set tweet_url = tweet_url|default('') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'html',
+    html: '<blockquote class="twitter-tweet"><a href="' ~ tweet_url ~ '"></a></blockquote>',
+    title: title,
+    category: category,
+    script_src: 'https://platform.twitter.com/widgets.js',
+    callback: 'twttr.widgets.load',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

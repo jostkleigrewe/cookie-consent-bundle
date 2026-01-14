@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace Jostkleigrewe\CookieConsentBundle\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
 final class ConsentRequirementResolver
 {
     /**
-     * @param array{require_consent_for_session: bool, stateless_paths: string[], stateless_routes: string[], protected_paths: string[], protected_routes: string[]} $enforcement
+     * @param array{
+     *     require_consent_for_session: bool,
+     *     stateless_paths: string[],
+     *     stateless_routes: string[],
+     *     protected_paths: string[],
+     *     protected_routes: string[]} $enforcement
      */
     public function __construct(
-        private readonly array $enforcement,
-        private readonly ControllerAttributeResolver $attributeResolver,
-        private readonly ?FirewallMapInterface $firewallMap = null,
+        private readonly array                          $enforcement,
+        private readonly ControllerAttributeResolver    $attributeResolver,
+        private readonly ?FirewallMapInterface          $firewallMap = null,
+        private readonly ?LoggerInterface               $logger = null,
     ) {
     }
 
@@ -87,11 +94,13 @@ final class ConsentRequirementResolver
     private function isStatefulFirewall(Request $request): bool
     {
         if ($this->firewallMap === null) {
+            $this->logger?->notice('Consent enforcement skipped: no firewall map available.');
             return false;
         }
 
         $config = $this->firewallMap->getFirewallConfig($request);
         if ($config === null) {
+            $this->logger?->notice('Consent enforcement skipped: no firewall config matched the request.');
             return false;
         }
 

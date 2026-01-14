@@ -1,0 +1,12 @@
+{# DE: reCAPTCHA Loader mit Consent-Placeholder. #}
+{# EN: reCAPTCHA loader with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('reCAPTCHA') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'script',
+    src: 'https://www.google.com/recaptcha/api.js',
+    title: title,
+    category: category,
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

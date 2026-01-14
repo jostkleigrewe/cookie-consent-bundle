@@ -20,6 +20,7 @@
 composer.phar
 /phpunit.xml
 .phpunit.cache
+composer.lock
 
 ###> OS ###
 .DS_Store

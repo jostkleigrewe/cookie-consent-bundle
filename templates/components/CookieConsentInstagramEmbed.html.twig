@@ -1,0 +1,15 @@
+{# DE: Instagram-Embed mit Consent-Placeholder. #}
+{# EN: Instagram embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('Instagram post') %}
+{% set post_url = post_url|default('') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'html',
+    html: '<blockquote class="instagram-media" data-instgrm-permalink="' ~ post_url ~ '" data-instgrm-version="14"></blockquote>',
+    title: title,
+    category: category,
+    script_src: 'https://www.instagram.com/embed.js',
+    callback: 'instgrm.Embeds.process',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

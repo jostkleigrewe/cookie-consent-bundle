@@ -1,0 +1,14 @@
+{# DE: Vimeo-Embed mit Consent-Placeholder. #}
+{# EN: Vimeo embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('Vimeo video') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    src: 'https://player.vimeo.com/video/' ~ video_id,
+    title: title,
+    category: category,
+    type: 'iframe',
+    allow: 'autoplay; fullscreen; picture-in-picture',
+    aspect_ratio: '16 / 9',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}

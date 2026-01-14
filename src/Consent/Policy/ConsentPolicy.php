@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Policy;
 
+/**
+ * DE: Beschreibt Kategorien, Defaults und Policy-Version.
+ * EN: Describes categories, defaults, and policy version.
+ */
 final class ConsentPolicy
 {
     /**

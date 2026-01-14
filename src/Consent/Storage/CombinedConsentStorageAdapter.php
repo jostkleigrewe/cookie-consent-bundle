@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
 
+use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,11 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
  *     Read strategy: prefer cookie (fast, no DB), fallback to doctrine.
  *     Write strategy: always write to both (if doctrine is available).
  */
-final class CombinedConsentStorage implements ConsentStorageInterface
+final class CombinedConsentStorageAdapter implements ConsentStorageInterface
 {
     public function __construct(
-        private readonly CookieConsentStorage $cookieStorage,
-        private readonly DoctrineConsentStorage $doctrineStorage,
+        private readonly CookieConsentStorageAdapter    $cookieStorage,
+        private readonly DoctrineConsentStorageAdapter  $doctrineStorage,
     ) {
     }
 

@@ -1,0 +1,14 @@
+{# DE: TikTok-Embed mit Consent-Placeholder. #}
+{# EN: TikTok embed with consent placeholder. #}
+{% set category = category|default('marketing') %}
+{% set title = title|default('TikTok video') %}
+{% set video_url = video_url|default('') %}
+
+{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
+    type: 'html',
+    html: '<blockquote class="tiktok-embed" cite="' ~ video_url ~ '"></blockquote>',
+    title: title,
+    category: category,
+    script_src: 'https://www.tiktok.com/embed.js',
+    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+}) }}
