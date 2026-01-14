@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\Twig;
+namespace Jostkleigrewe\CookieConsentBundle\Twig;
 
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentManager;
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentPolicy;
-use JostKleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -16,15 +17,14 @@ final class ConsentTwigExtension extends AbstractExtension
 {
     /**
      * @param array{layout: string, template: string} $ui
-     * @param array{consent_endpoint: string} $routes
      */
     public function __construct(
         private readonly Environment $twig,
         private readonly ConsentManager $consentManager,
         private readonly ConsentPolicy $policy,
         private readonly RequestStack $requestStack,
+        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly array $ui,
-        private readonly array $routes,
     ) {
     }
 
@@ -51,7 +51,11 @@ final class ConsentTwigExtension extends AbstractExtension
             'categories' => $this->policy->getCategories(),
             'preferences' => $this->consentManager->getPreferences($request),
             'policy_version' => $this->policy->getPolicyVersion(),
-            'consent_endpoint' => $this->routes['consent_endpoint'],
+
+            // DE: Endpoint immer aus dem Router (Route-Name) generieren -> keine Param-Probleme.
+            // EN: Always generate endpoint from router (route name) -> avoids parameter issues.
+            'consent_endpoint' => $this->urlGenerator->generate('cookie_consent_update'),
+
             'consent_required' => $this->isConsentRequired(),
         ]);
     }

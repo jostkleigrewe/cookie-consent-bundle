@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\EventSubscriber;
+namespace Jostkleigrewe\CookieConsentBundle\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\FirewallMapInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\Attribute;
+namespace Jostkleigrewe\CookieConsentBundle\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 final class ConsentStateless

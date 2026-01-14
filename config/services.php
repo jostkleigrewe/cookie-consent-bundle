@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentIdProvider;
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentManager;
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentPolicy;
-use JostKleigrewe\CookieConsentBundle\Consent\CookieConfig;
-use JostKleigrewe\CookieConsentBundle\Consent\CookieConsentStorage;
-use JostKleigrewe\CookieConsentBundle\Consent\IdentifierCookieConfig;
-use JostKleigrewe\CookieConsentBundle\Consent\DoctrineConsentStorage;
-use JostKleigrewe\CookieConsentBundle\Controller\CookieConsentController;
-use JostKleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
-use JostKleigrewe\CookieConsentBundle\EventSubscriber\ConsentRequirementResolver;
-use JostKleigrewe\CookieConsentBundle\EventSubscriber\ControllerAttributeResolver;
-use JostKleigrewe\CookieConsentBundle\Twig\ConsentTwigExtension;
+use Jostkleigrewe\CookieConsentBundle\Consent\CombinedConsentStorage;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentIdProvider;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentStorageInterface;
+use Jostkleigrewe\CookieConsentBundle\Consent\CookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Consent\CookieConsentStorage;
+use Jostkleigrewe\CookieConsentBundle\Consent\IdentifierCookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Consent\DoctrineConsentStorage;
+use Jostkleigrewe\CookieConsentBundle\Controller\CookieConsentController;
+use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
+use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentRequirementResolver;
+use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ControllerAttributeResolver;
+use Jostkleigrewe\CookieConsentBundle\Twig\ConsentTwigExtension;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ReferenceConfigurator;
 use Symfony\Component\Security\Http\FirewallMapInterface;
@@ -51,7 +53,13 @@ return static function (ContainerConfigurator $container): void {
 
     if (class_exists(Doctrine\DBAL\Connection::class)) {
         $services->set(DoctrineConsentStorage::class);
+        $services->set(CombinedConsentStorage::class);
     }
+
+//    $services->alias(
+//        ConsentStorageInterface::class,
+//        '%cookie_consent.storage%' === 'doctrine' ? DoctrineConsentStorage::class : CookieConsentStorage::class
+//    );
 
     $services->set(ConsentManager::class);
     $services->set(ConsentRequirementResolver::class)
@@ -59,18 +67,21 @@ return static function (ContainerConfigurator $container): void {
             '$enforcement' => '%cookie_consent.enforcement%',
             '$firewallMap' => new ReferenceConfigurator(FirewallMapInterface::class),
         ]);
-    $services->set(ControllerAttributeResolver::class);
+    $services
+        ->set(ControllerAttributeResolver::class);
 
-    $services->set(ConsentSessionSubscriber::class)
+    $services
+        ->set(ConsentSessionSubscriber::class)
         ->tag('kernel.event_subscriber');
 
-    $services->set(CookieConsentController::class)
+    $services
+        ->set(CookieConsentController::class)
         ->tag('controller.service_arguments');
 
-    $services->set(ConsentTwigExtension::class)
+    $services
+        ->set(ConsentTwigExtension::class)
         ->tag('twig.extension')
         ->args([
             '$ui' => '%cookie_consent.ui%',
-            '$routes' => '%cookie_consent.routes%',
         ]);
 };

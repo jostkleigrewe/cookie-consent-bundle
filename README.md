@@ -29,7 +29,7 @@ Enable the bundle (if not auto-registered):
 
 ```php
 // config/bundles.php
-JostKleigrewe\CookieConsentBundle\CookieConsentBundle::class => ['all' => true],
+Jostkleigrewe\CookieConsentBundle\CookieConsentBundle::class => ['all' => true],
 ```
 
 ## Assets (Stimulus + CSS)
@@ -136,8 +136,8 @@ The bundle stores a random identifier cookie (`cookie_consent_id`) and persists 
 ## Attributes
 
 ```php
-use JostKleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
-use JostKleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
+use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
+use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
 
 #[ConsentRequired]
 class CheckoutController { ... }

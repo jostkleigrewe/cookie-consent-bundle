@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\EventSubscriber;
+namespace Jostkleigrewe\CookieConsentBundle\EventSubscriber;
 
-use JostKleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
-use JostKleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
+use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
+use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ControllerAttributeResolver

@@ -1,0 +1,19 @@
+{
+    "name": "@jostkleigrewe/cookie-consent-bundle",
+    "description": "Cookie consent Stimulus controller and styles for Symfony",
+    "license": "MIT",
+    "version": "0.1.0",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "symfony": {
+        "controllers": {
+            "cookie-consent": {
+                "main": "dist/controllers/cookie_consent_controller.js",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        }
+    }
+}

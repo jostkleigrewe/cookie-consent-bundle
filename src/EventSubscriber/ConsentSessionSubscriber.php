@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\EventSubscriber;
+namespace Jostkleigrewe\CookieConsentBundle\EventSubscriber;
 
-use JostKleigrewe\CookieConsentBundle\Consent\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\ConsentManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;

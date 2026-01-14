@@ -21,33 +21,39 @@ export default class extends Controller {
   }
 
   disconnect() {
+    console.log('Cookie Consent Controller disconnected');
     document.removeEventListener('turbo:load', this.handleTurboLoad);
   }
 
   handleTurboLoad() {
+      console.log('Cookie Consent Controller handleTurboLoad');
     this.showIfRequired();
   }
 
   acceptAll() {
-    this.submit('accept_all');
+      console.log('Cookie Consent Controller acceptAll');
+      this.submit('accept_all');
   }
 
   rejectOptional() {
+      console.log('Cookie Consent Controller rejectOptional');
     this.submit('reject_optional');
   }
 
   save() {
+      console.log('Cookie Consent Controller save');
     this.submit('custom', this.collectPreferences());
   }
 
   submit(action, preferences = null) {
 
-      console.log('Submit ' + action);
+      console.log('Submit ' + action, this.endpointValue);
 
     const body = { action };
     if (preferences) {
       body.preferences = preferences;
     }
+
 
     fetch(this.endpointValue, {
       method: 'POST',

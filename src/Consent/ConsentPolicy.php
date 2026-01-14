@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JostKleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent;
 
 final class ConsentPolicy
 {
