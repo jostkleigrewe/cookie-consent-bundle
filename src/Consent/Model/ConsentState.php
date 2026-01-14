@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Model;
 
+/**
+ * DE: Wertobjekt fuer Consent-Status (Preferences, Version, Zeitpunkt).
+ * EN: Value object for consent state (preferences, version, timestamp).
+ */
 final class ConsentState
 {
     /**

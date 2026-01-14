@@ -2,13 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
 
+use Jostkleigrewe\CookieConsentBundle\Consent\Config\CookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class CookieConsentStorage implements ConsentStorageInterface
+/**
+ * DE: Speichert Consent im Browser-Cookie.
+ * EN: Stores consent in a browser cookie.
+ */
+final class CookieConsentStorageAdapter implements ConsentStorageInterface
 {
     public function __construct(
         private readonly CookieConfig $config,
@@ -52,11 +58,15 @@ final class CookieConsentStorage implements ConsentStorageInterface
 
     public function save(Request $request, Response $response, ConsentState $state): void
     {
-        $payload = json_encode([
-            'version' => $state->getPolicyVersion(),
-            'preferences' => $state->getPreferences(),
-            'decided_at' => $state->getDecidedAt()?->format(DATE_ATOM),
-        ], JSON_THROW_ON_ERROR);
+        try {
+            $payload = json_encode([
+                'version' => $state->getPolicyVersion(),
+                'preferences' => $state->getPreferences(),
+                'decided_at' => $state->getDecidedAt()?->format(DATE_ATOM),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new \RuntimeException('Failed to encode consent cookie payload.', 0, $exception);
+        }
 
         $cookie = Cookie::create(
             $this->config->name,

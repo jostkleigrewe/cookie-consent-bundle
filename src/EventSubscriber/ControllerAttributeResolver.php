@@ -8,8 +8,17 @@ use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentRequired;
 use Jostkleigrewe\CookieConsentBundle\Attribute\ConsentStateless;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * DE: Liest Consent-Attribute auf Controllern/Actions aus.
+ * EN: Resolves consent attributes from controllers/actions.
+ */
 final class ControllerAttributeResolver
 {
+    /**
+     * @var array<string, array{stateless: bool, required: bool}>
+     */
+    private array $cache = [];
+
     public function isStateless(Request $request): bool
     {
         $attributes = $this->resolve($request);
@@ -30,13 +39,21 @@ final class ControllerAttributeResolver
     private function resolve(Request $request): array
     {
         $controller = $request->attributes->get('_controller');
-        if (!is_string($controller) || !str_contains($controller, '::')) {
+        if (!is_string($controller) || $controller === '') {
             return ['stateless' => false, 'required' => false];
+        }
+
+        if (isset($this->cache[$controller])) {
+            return $this->cache[$controller];
+        }
+
+        if (!str_contains($controller, '::')) {
+            return $this->cache[$controller] = ['stateless' => false, 'required' => false];
         }
 
         [$class, $method] = explode('::', $controller, 2);
         if (!class_exists($class)) {
-            return ['stateless' => false, 'required' => false];
+            return $this->cache[$controller] = ['stateless' => false, 'required' => false];
         }
 
         $refClass = new \ReflectionClass($class);
@@ -50,9 +67,9 @@ final class ControllerAttributeResolver
         }
 
         if ($stateless) {
-            return ['stateless' => true, 'required' => false];
+            return $this->cache[$controller] = ['stateless' => true, 'required' => false];
         }
 
-        return ['stateless' => false, 'required' => $required];
+        return $this->cache[$controller] = ['stateless' => false, 'required' => $required];
     }
 }

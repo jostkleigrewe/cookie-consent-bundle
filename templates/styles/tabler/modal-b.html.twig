@@ -1,0 +1,70 @@
+{# DE: Tabler-Layout B mit Highlight-Panel und Link-Footer. #}
+{# EN: Tabler layout B with highlight panel and link footer. #}
+<div
+    class="cookie-consent-modal modal fade cookie-consent-layout-tabler cookie-consent-layout-tabler-b"
+    data-controller="jostkleigrewe--cookie-consent-bundle--cookie-consent"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="modal"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-endpoint-value="{{ consent_endpoint }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-preferences-value='{{ preferences|json_encode|e('html_attr') }}'
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-csrf-token-value="{{ csrf_token }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-required-value="{{ consent_required ? 'true' : 'false' }}"
+    role="dialog"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered cookie-consent-dialog" role="document">
+        <div class="modal-content">
+            <div class="cookie-consent-banner">
+                <div>
+                    <h5 class="modal-title cookie-consent-title">{{ 'cookie_consent.title'|trans }}</h5>
+                    <p class="cookie-consent-description">{{ 'cookie_consent.description'|trans }}</p>
+                </div>
+                <div class="cookie-consent-badge">GDPR</div>
+            </div>
+            <div class="modal-body cookie-consent-body">
+                <div class="cookie-consent-categories">
+                    {% for name, config in categories %}
+                        <div class="cookie-consent-category">
+                            <div>
+                                <input
+                                    id="cookie-consent-{{ name }}-b"
+                                    class="form-check-input cookie-consent-checkbox"
+                                    type="checkbox"
+                                    value="{{ name }}"
+                                    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
+                                    {% if preferences[name] %}checked{% endif %}
+                                    {% if config.required %}disabled{% endif %}
+                                >
+                            </div>
+                            <div>
+                                <label class="cookie-consent-category-label" for="cookie-consent-{{ name }}-b">
+                                    {{ config.label ?? name|title }}
+                                </label>
+                                {% if config.description %}
+                                    <div class="cookie-consent-category-description">{{ config.description }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="cookie-consent-footer">
+                <div class="cookie-consent-actions">
+                    <button type="button" class="cookie-consent-btn cookie-consent-btn-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#acceptAll">
+                        {{ 'cookie_consent.accept_all'|trans }}
+                    </button>
+                    <button type="button" class="cookie-consent-btn cookie-consent-btn-secondary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#rejectOptional">
+                        {{ 'cookie_consent.reject_optional'|trans }}
+                    </button>
+                    <button type="button" class="cookie-consent-btn cookie-consent-btn-outline" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#save">
+                        {{ 'cookie_consent.save'|trans }}
+                    </button>
+                </div>
+                <div class="cookie-consent-links">
+                    <a href="{{ privacy_url }}" rel="nofollow">{{ 'cookie_consent.privacy'|trans }}</a>
+                    <span aria-hidden="true">&middot;</span>
+                    <a href="{{ imprint_url }}" rel="nofollow">{{ 'cookie_consent.imprint'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

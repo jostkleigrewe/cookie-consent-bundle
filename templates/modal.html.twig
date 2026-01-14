@@ -1,60 +1,6 @@
-{# Tabler-inspired consent modal; override this template for custom layout. #}
-<div
-    class="cookie-consent-modal modal fade"
-    data-controller="jostkleigrewe--cookie-consent-bundle--cookie-consent"
-    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="modal"
-    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-endpoint-value="{{ consent_endpoint }}"
-    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-preferences-value='{{ preferences|json_encode|e('html_attr') }}'
-    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-required-value="{{ consent_required ? 'true' : 'false' }}"
-    role="dialog"
-    aria-hidden="true"
->
-    <div class="modal-dialog modal-dialog-centered cookie-consent-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ 'cookie_consent.title'|trans }}</h5>
-            </div>
-            <div class="modal-body cookie-consent-body">
-                <p class="text-muted">{{ 'cookie_consent.description'|trans }}</p>
+{# DE: Default-Template; alternative Templates in templates/styles/. #}
+{# EN: Default template; alternative templates live in templates/styles/. #}
 
-                <div class="cookie-consent-categories">
-                    {% for name, config in categories %}
-                        <div class="cookie-consent-category">
-                            <div>
-                                <input
-                                    id="cookie-consent-{{ name }}"
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    value="{{ name }}"
-                                    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
-                                    {% if preferences[name] %}checked{% endif %}
-                                    {% if config.required %}disabled{% endif %}
-                                >
-                            </div>
-                            <div>
-                                <label class="form-check-label" for="cookie-consent-{{ name }}">
-                                    {{ config.label ?? name|title }}
-                                </label>
-                                {% if config.description %}
-                                    <div class="text-muted small">{{ config.description }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+{#{% include '@CookieConsent/styles/tabler/modal.html.twig' %}#}
 
-                <div class="cookie-consent-actions mt-4">
-                    <button type="button" class="btn btn-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#acceptAll">
-                        {{ 'cookie_consent.accept_all'|trans }}
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#rejectOptional">
-                        {{ 'cookie_consent.reject_optional'|trans }}
-                    </button>
-                    <button type="button" class="btn btn-outline-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#save">
-                        {{ 'cookie_consent.save'|trans }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+sdfsdfsdfsdfsdfsdf

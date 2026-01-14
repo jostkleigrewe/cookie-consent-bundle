@@ -2,21 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
 
+use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class DoctrineConsentStorage implements ConsentStorageInterface
+/**
+ * DE: Speichert Consent in der Datenbank via Doctrine DBAL.
+ * EN: Stores consent in the database via Doctrine DBAL.
+ */
+final class DoctrineConsentStorageAdapter implements ConsentStorageInterface
 {
     private const TABLE = 'cookie_consent';
 
     public function __construct(
-        private readonly Connection $connection,
-        private readonly ConsentIdProvider $idProvider,
-        private readonly ConsentPolicy $policy,
+        private readonly Connection         $connection,
+        private readonly ConsentIdProvider  $idProvider,
+        private readonly ConsentPolicy      $policy,
     ) {
     }
 
@@ -33,7 +40,7 @@ final class DoctrineConsentStorage implements ConsentStorageInterface
                 [$id]
             );
         } catch (Exception $exception) {
-            throw new \RuntimeException('Consent table is missing or unreachable. See docs for setup.', 0, $exception);
+            throw new RuntimeException('Consent table is missing or unreachable. See docs for setup.', 0, $exception);
         }
 
         if (!$row) {
@@ -90,7 +97,7 @@ final class DoctrineConsentStorage implements ConsentStorageInterface
                 'decided_at' => $decidedAt,
             ]);
         } catch (Exception $exception) {
-            throw new \RuntimeException('Failed to persist consent. See docs for database setup.', 0, $exception);
+            throw new RuntimeException('Failed to persist consent. See docs for database setup.', 0, $exception);
         }
     }
 }

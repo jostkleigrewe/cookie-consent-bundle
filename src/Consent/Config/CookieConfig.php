@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent;
+namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
 
+/**
+ * DE: Konfiguration des Consent-Cookies.
+ * EN: Configuration for the consent cookie.
+ */
 class CookieConfig
 {
     public function __construct(
@@ -20,9 +24,9 @@ class CookieConfig
     /**
      * @param array{name: string, lifetime: int, path: string, domain: ?string, secure: ?bool, same_site: string, http_only: bool} $config
      */
-    public static function fromArray(array $config): self
+    public static function fromArray(array $config): static
     {
-        return new self(
+        return new static(
             $config['name'],
             $config['lifetime'],
             $config['path'],

@@ -4,3 +4,6 @@ cookie_consent:
   accept_all: 'Accept all'
   reject_optional: 'Reject optional'
   save: 'Save selection'
+  settings: 'Privacy settings'
+  privacy: 'Privacy policy'
+  imprint: 'Imprint'
