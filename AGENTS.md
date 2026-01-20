@@ -7,6 +7,7 @@
 - `config/` ships bundle configuration defaults and service wiring.
 - `translations/` contains UI strings for the consent modal.
 - `docs/` collects supporting documentation; `public/` is for any packaged static assets.
+- `_tmp/` Ignore this folder. Use it only if i tell you explicitly
 
 ## Build, Test, and Development Commands
 - `composer install` installs PHP dependencies for the bundle.

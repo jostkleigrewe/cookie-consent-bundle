@@ -39,6 +39,10 @@ final readonly class ConsentIdProvider
             return $existing;
         }
 
+        // DE: Wenn secure=null, automatisch HTTPS-Status des Requests verwenden.
+        // EN: If secure=null, automatically use the request's HTTPS status.
+        $secure = $this->identifierConfig->secure ?? $request->isSecure();
+
         $id = bin2hex(random_bytes(16));
         $cookie = Cookie::create(
             $this->identifierConfig->name,
@@ -46,7 +50,7 @@ final readonly class ConsentIdProvider
             $this->getExpiration(),
             $this->identifierConfig->path,
             $this->identifierConfig->domain,
-            $this->identifierConfig->secure,
+            $secure,
             $this->identifierConfig->httpOnly,
             false,
             $this->identifierConfig->sameSite

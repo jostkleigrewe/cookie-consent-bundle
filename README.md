@@ -1,100 +1,142 @@
-# Cookie Consent Bundle (Symfony 8)
+# Cookie Consent Bundle
 
 [![Packagist Version](https://img.shields.io/packagist/v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
 [![PHP Version](https://img.shields.io/packagist/php-v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
-[![License](https://img.shields.io/packagist/l/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![License](https://img.shields.io/packagist/l/jostkleigrewe/cookie-consent-bundle)](LICENSE)
 
-A Symfony 8 bundle for GDPR-compliant cookie consent with Twig helpers, a Stimulus controller, and flexible storage (cookie, doctrine, or both).
+A Symfony 8 bundle for GDPR-compliant cookie consent with Twig integration, Stimulus.js, and flexible storage backends.
 
-## Highlights
+**[Deutsche Version](README.de.md)**
 
-- Modal rendering via `{{ cookie_consent_modal() }}` and consent-aware Twig helpers.
-- Stimulus controller with Turbo-friendly behavior and consent-aware DOM handling.
-- Configurable categories, policy versioning, and session enforcement.
-- Cookie, Doctrine, or combined storage; optional consent logging.
-- Built-in templates (Tabler, Bootstrap, plain) with easy overrides.
+## Features
 
-## Documentation
+- **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
+- **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
+- **Stimulus.js** - Turbo-friendly, no full page reload needed
+- **Flexible Storage** - Cookie, Doctrine, or both combined
+- **Session Protection** - Prevents session cookies without consent
+- **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
+- **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
+- **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
 
-Start here (short overview):
+## Requirements
 
-- English: [Docs index](docs/index.en.md)
-- Deutsch: [Doku-Index](docs/index.de.md)
+- PHP 8.4+
+- Symfony 8.0+
+- Twig Bundle, Security Bundle, Stimulus Bundle
 
-Core docs (most users only need these):
+## Quick Start
 
-- Install: [EN](docs/installation.en.md) / [DE](docs/installation.de.md)
-- Config: [EN](docs/configuration.en.md) / [DE](docs/configuration.de.md)
-- UI/Templates: [EN](docs/ui.en.md) / [DE](docs/ui.de.md)
-- How it works: [EN](docs/how-it-works.en.md) / [DE](docs/how-it-works.de.md)
-
-Optional:
-
-- Advanced (logging + analytics): [EN](docs/advanced.en.md) / [DE](docs/advanced.de.md)
-
-Backlink from docs: see [README](README.md) in each index file.
-
-## Quickstart
+### 1. Install
 
 ```bash
 composer require jostkleigrewe/cookie-consent-bundle
 ```
 
-```php
-// config/bundles.php
-Jostkleigrewe\CookieConsentBundle\CookieConsentBundle::class => ['all' => true],
+### 2. Configure assets
+
+```javascript
+// assets/app.js
+import '@jostkleigrewe/cookie-consent-bundle/styles/cookie_consent.css';
 ```
 
-## Usage
+```json
+// assets/controllers.json
+{
+  "controllers": {
+    "@jostkleigrewe/cookie-consent-bundle": {
+      "cookie-consent": { "enabled": true, "fetch": "eager" }
+    }
+  }
+}
+```
 
-Render the modal in your base layout:
+### 3. Render the modal
 
 ```twig
+{# templates/base.html.twig #}
 {{ cookie_consent_modal() }}
 ```
 
-Gate content by consent:
+### 4. Gate content by consent
 
 ```twig
 {% if cookie_consent_has('analytics') %}
-  {# analytics script #}
+  <script src="https://example.com/analytics.js"></script>
 {% endif %}
 ```
 
-Lazy script loading:
+Or use lazy loading:
 
 ```html
-<script type="text/plain" data-consent-category="analytics" data-consent-src="https://example.com/analytics.js"></script>
+<script type="text/plain" data-consent-category="analytics"
+        data-consent-src="https://example.com/analytics.js"></script>
 ```
 
-Full installation and configuration guides:
+## Configuration
 
-- English install: [Installation](docs/installation.en.md)
-- Deutsch install: [Installation](docs/installation.de.md)
-- English config: [Configuration](docs/configuration.en.md)
-- Deutsch config: [Konfiguration](docs/configuration.de.md)
+Create `config/packages/cookie_consent.yaml`:
 
-## Contributing & Development
+```yaml
+cookie_consent:
+  policy_version: '1'
+  storage: cookie  # cookie, doctrine, or both
 
-Local setup:
+  categories:
+    necessary:
+      label: Necessary
+      required: true
+      default: true
+    analytics:
+      label: Analytics
+      default: false
+    marketing:
+      label: Marketing
+      default: false
+
+  ui:
+    template: '@CookieConsent/styles/tabler/modal.html.twig'
+    privacy_url: '/privacy'
+    reload_on_change: false
+
+  google_consent_mode:
+    enabled: false
+```
+
+Increment `policy_version` when changing categories to require re-consent.
+
+## Documentation
+
+- **[Getting Started](docs/getting-started.md)** - Installation, assets, first steps
+- **[Configuration](docs/configuration.md)** - All options, templates, Twig helpers
+- **[Advanced](docs/advanced.md)** - Storage backends, session enforcement, logging, events
+
+## Embed Components
+
+Gate third-party content with built-in components:
+
+```twig
+{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
+  video_id: 'dQw4w9WgXcQ',
+  category: 'marketing'
+}) }}
+```
+
+Available: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok, and more.
+
+## Contributing
 
 ```bash
 composer install
-```
-
-Run tests:
-
-```bash
 vendor/bin/phpunit
 ```
 
-Notes:
-
-- Bundle code lives in `src/`, templates in `templates/`, translations in `translations/`.
-- Docs are bilingual under `docs/` with `.en.md` and `.de.md` suffixes.
-- When adding new features, update the relevant EN/DE docs and config examples.
-- See [UI EN](docs/ui.en.md) and [UI DE](docs/ui.de.md) for templates, helper functions, and the settings button.
-
 ## License
 
-MIT
+MIT - see [LICENSE](LICENSE).
+
+## Resources
+
+- [Packagist](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+- [GitHub](https://github.com/jostkleigrewe/cookie-consent-bundle)
+- [Report Issues](https://github.com/jostkleigrewe/cookie-consent-bundle/issues)
