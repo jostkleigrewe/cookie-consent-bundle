@@ -22,6 +22,7 @@ final class ConsentTwigExtension extends AbstractExtension
 {
     /**
      * @param array{template: string, privacy_url: ?string, imprint_url: ?string, reload_on_change: bool} $ui
+     * @param array{enabled: bool, mapping: array{analytics_storage: string, ad_storage: string, ad_user_data: string, ad_personalization: string}} $googleConsentMode
      */
     public function __construct(
         private readonly Environment                $twig,
@@ -31,6 +32,7 @@ final class ConsentTwigExtension extends AbstractExtension
         private readonly UrlGeneratorInterface      $urlGenerator,
         private readonly ConsentCsrfTokenManager    $csrfTokenManager,
         private readonly array                      $ui,
+        private readonly array                      $googleConsentMode,
     ) {
     }
 
@@ -69,6 +71,10 @@ final class ConsentTwigExtension extends AbstractExtension
             'privacy_url' => $this->ui['privacy_url'] ?? null,
             'imprint_url' => $this->ui['imprint_url'] ?? null,
             'reload_on_change' => (bool) ($this->ui['reload_on_change'] ?? false),
+
+            // DE: Google Consent Mode v2 Konfiguration.
+            // EN: Google Consent Mode v2 configuration.
+            'google_consent_mode' => $this->googleConsentMode,
         ]);
     }
 

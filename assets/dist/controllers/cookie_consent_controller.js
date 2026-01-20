@@ -5,12 +5,12 @@ import { Controller } from '@hotwired/stimulus';
 /**
  * Cookie Consent Controller
  *
- * DE: Stimulus Controller für das Cookie-Consent-Banner.
- *     Verwaltet die Anzeige des Banners, speichert Präferenzen
+ * DE: Stimulus Controller für das Cookie-Consent-Modal.
+ *     Verwaltet die Anzeige des Modals, speichert Präferenzen
  *     und synchronisiert mit dem Server für DSGVO-Compliance.
  *
- * EN: Stimulus controller for the cookie consent banner.
- *     Manages banner display, stores preferences, and syncs
+ * EN: Stimulus controller for the cookie consent modal.
+ *     Manages modal display, stores preferences, and syncs
  *     with the server for GDPR compliance.
  *
  * @example
@@ -35,12 +35,14 @@ export default class extends Controller {
     // EN: Values – Configuration values from data attributes
     // ============================================================
     static values = {
-        categories: String,   // DE: JSON der verfügbaren Kategorien | EN: JSON of available categories
-        preferences: String,  // DE: JSON der aktuellen Präferenzen | EN: JSON of current preferences
-        endpoint: String,     // DE: Server-Endpoint für Speicherung | EN: Server endpoint for storage
-        csrfToken: String,    // DE: CSRF-Token für sichere Requests | EN: CSRF token for secure requests
-        required: Boolean,    // DE: Ob Banner angezeigt werden muss | EN: Whether banner must be shown
-        reloadOnChange: Boolean, // DE: Seite nach Consent-Update neu laden | EN: Reload page after consent update
+        categories: String,              // DE: JSON der verfügbaren Kategorien | EN: JSON of available categories
+        preferences: String,             // DE: JSON der aktuellen Präferenzen | EN: JSON of current preferences
+        endpoint: String,                // DE: Server-Endpoint für Speicherung | EN: Server endpoint for storage
+        csrfToken: String,               // DE: CSRF-Token für sichere Requests | EN: CSRF token for secure requests
+        required: Boolean,               // DE: Ob Banner angezeigt werden muss | EN: Whether banner must be shown
+        reloadOnChange: Boolean,         // DE: Seite nach Consent-Update neu laden | EN: Reload page after consent update
+        googleConsentModeEnabled: Boolean,  // DE: Google Consent Mode v2 aktivieren | EN: Enable Google Consent Mode v2
+        googleConsentModeMapping: String,   // DE: JSON Mapping Bundle-Kategorien → Google Consent Types | EN: JSON mapping bundle categories → Google consent types
     };
 
     // ============================================================
@@ -351,6 +353,10 @@ export default class extends Controller {
             // EN: Show/hide or remove normal elements
             this._handleRegularElement(element, allowed, mode);
         });
+
+        // DE: Google Consent Mode v2 aktualisieren (falls aktiviert)
+        // EN: Update Google Consent Mode v2 (if enabled)
+        this._updateGoogleConsentMode(normalized);
     }
 
     /**
@@ -467,5 +473,83 @@ export default class extends Controller {
                 bubbles: true,
             })
         );
+    }
+
+    // ============================================================
+    // PRIVATE METHODS – GOOGLE CONSENT MODE v2
+    // DE: Private Methoden – Google Consent Mode v2 Integration
+    // EN: Private methods – Google Consent Mode v2 integration
+    // ============================================================
+
+    /**
+     * DE: Aktualisiert Google Consent Mode v2 basierend auf den Präferenzen.
+     *     Wird nur ausgeführt wenn:
+     *     - googleConsentModeEnabled = true
+     *     - gtag() Funktion existiert
+     *
+     * EN: Updates Google Consent Mode v2 based on preferences.
+     *     Only executed when:
+     *     - googleConsentModeEnabled = true
+     *     - gtag() function exists
+     *
+     * @param {Object} preferences - Die aktuellen Consent-Präferenzen
+     */
+    _updateGoogleConsentMode(preferences) {
+        // DE: Feature deaktiviert? Abbrechen.
+        // EN: Feature disabled? Abort.
+        if (!this.googleConsentModeEnabledValue) {
+            return;
+        }
+
+        // DE: gtag() nicht verfügbar? Warning ausgeben.
+        // EN: gtag() not available? Log warning.
+        if (typeof gtag !== 'function') {
+            console.warn(
+                '[CookieConsent] Google Consent Mode enabled but gtag() not found. ' +
+                'Make sure Google Analytics/Tag Manager is loaded before the consent modal.'
+            );
+            return;
+        }
+
+        // DE: Mapping parsen
+        // EN: Parse mapping
+        const mapping = this._parseGoogleConsentModeMapping();
+        if (mapping === null) {
+            return;
+        }
+
+        // DE: Consent-Status für jeden Google Consent Type ermitteln
+        // EN: Determine consent status for each Google consent type
+        const consentUpdate = {};
+        for (const [googleType, bundleCategory] of Object.entries(mapping)) {
+            const hasConsent = Boolean(preferences[bundleCategory]);
+            consentUpdate[googleType] = hasConsent ? 'granted' : 'denied';
+        }
+
+        // DE: gtag consent update aufrufen
+        // EN: Call gtag consent update
+        gtag('consent', 'update', consentUpdate);
+
+        console.debug('[CookieConsent] Google Consent Mode updated:', consentUpdate);
+    }
+
+    /**
+     * DE: Parst das Google Consent Mode Mapping aus dem Value-Attribut.
+     * EN: Parses Google Consent Mode mapping from value attribute.
+     *
+     * @returns {Object|null} Gepartes Mapping oder null bei Fehler
+     */
+    _parseGoogleConsentModeMapping() {
+        if (!this.hasGoogleConsentModeMappingValue || !this.googleConsentModeMappingValue) {
+            console.warn('[CookieConsent] Google Consent Mode enabled but no mapping configured.');
+            return null;
+        }
+
+        try {
+            return JSON.parse(this.googleConsentModeMappingValue);
+        } catch (error) {
+            console.warn('[CookieConsent] Failed to parse Google Consent Mode mapping:', error.message);
+            return null;
+        }
     }
 }

@@ -9,6 +9,8 @@
     data-jostkleigrewe--cookie-consent-bundle--cookie-consent-csrf-token-value="{{ csrf_token }}"
     data-jostkleigrewe--cookie-consent-bundle--cookie-consent-required-value="{{ consent_required ? 'true' : 'false' }}"
     data-jostkleigrewe--cookie-consent-bundle--cookie-consent-reload-on-change-value="{{ reload_on_change ? 'true' : 'false' }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-google-consent-mode-enabled-value="{{ google_consent_mode.enabled ? 'true' : 'false' }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-google-consent-mode-mapping-value='{{ google_consent_mode.mapping|json_encode|e('html_attr') }}'
     role="dialog"
     aria-hidden="true"
 >

@@ -68,13 +68,17 @@ final class CookieConsentStorageAdapter implements ConsentStorageInterface
             throw new \RuntimeException('Failed to encode consent cookie payload.', 0, $exception);
         }
 
+        // DE: Wenn secure=null, automatisch HTTPS-Status des Requests verwenden.
+        // EN: If secure=null, automatically use the request's HTTPS status.
+        $secure = $this->config->secure ?? $request->isSecure();
+
         $cookie = Cookie::create(
             $this->config->name,
             $payload,
             $this->getExpiration(),
             $this->config->path,
             $this->config->domain,
-            $this->config->secure,
+            $secure,
             $this->config->httpOnly,
             false,
             $this->config->sameSite

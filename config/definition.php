@@ -112,5 +112,27 @@ return static function (DefinitionConfigurator $definition): void {
                     ->booleanNode('anonymize_ip')->defaultTrue()->end()
                 ->end()
             ->end()
+
+            // DE: Google Consent Mode v2 Integration.
+            //     Wenn aktiviert, wird gtag('consent', 'update', ...) automatisch aufgerufen.
+            // EN: Google Consent Mode v2 integration.
+            //     When enabled, gtag('consent', 'update', ...) is called automatically.
+            ->arrayNode('google_consent_mode')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->booleanNode('enabled')->defaultFalse()->end()
+                    ->arrayNode('mapping')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            // DE: Mapping von Google Consent Types auf Bundle-Kategorien.
+                            // EN: Mapping from Google consent types to bundle categories.
+                            ->scalarNode('analytics_storage')->defaultValue('analytics')->end()
+                            ->scalarNode('ad_storage')->defaultValue('marketing')->end()
+                            ->scalarNode('ad_user_data')->defaultValue('marketing')->end()
+                            ->scalarNode('ad_personalization')->defaultValue('marketing')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
         ->end();
 };

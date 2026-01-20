@@ -104,5 +104,6 @@ return static function (ContainerConfigurator $container): void {
         ->tag('twig.extension')
         ->args([
             '$ui' => '%cookie_consent.ui%',
+            '$googleConsentMode' => '%cookie_consent.google_consent_mode%',
         ]);
 };
