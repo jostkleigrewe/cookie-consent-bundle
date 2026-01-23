@@ -7,24 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.1] - 2026-01-23
+
 ### Added
-- Initial release
-- GDPR-compliant cookie consent modal
-- Multiple storage backends (Cookie, Doctrine, Combined)
-- Stimulus.js controller with Turbo support
-- Twig helpers for consent-aware rendering
+- GDPR-compliant cookie consent modal with Stimulus.js controller
+- Multiple storage backends: Cookie, Doctrine, or Combined
+- Twig helpers: `cookie_consent_has()`, `cookie_consent_modal()`, etc.
 - Session enforcement (prevent session cookies without consent)
 - Google Consent Mode v2 integration
-- Embed components (YouTube, Vimeo, Google Maps, etc.)
+- Embed components (YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok, etc.)
 - Audit logging for consent actions
-- Multiple themes (Tabler, Bootstrap, Plain)
-- Controller attributes (`#[ConsentRequired]`, `#[ConsentStateless]`)
-- Policy versioning for re-consent on changes
+- Multiple themes: Tabler (light/dark/compact), Bootstrap, Plain
+- Controller attributes: `#[ConsentRequired]`, `#[ConsentStateless]`
+- Policy versioning for automatic re-consent on category changes
+- Lazy script loading with `data-consent-category` attribute
+- Settings button component to re-open modal
+- Browser events: `cookie-consent:changed`, `cookie-consent:open`
 
-## [0.1.0] - TBD
-
-### Added
-- First public release
-
-[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.1.0
+[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v1.0.0-beta.1...HEAD
+[1.0.0-beta.1]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v1.0.0-beta.1
