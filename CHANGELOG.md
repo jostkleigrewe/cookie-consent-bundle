@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0-beta.1] - 2026-01-23
+## [0.1.0] - 2026-01-23
 
 ### Added
 - GDPR-compliant cookie consent modal with Stimulus.js controller
@@ -24,5 +24,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings button component to re-open modal
 - Browser events: `cookie-consent:changed`, `cookie-consent:open`
 
-[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v1.0.0-beta.1...HEAD
-[1.0.0-beta.1]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v1.0.0-beta.1
+[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.1.0
