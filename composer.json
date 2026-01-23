@@ -42,9 +42,13 @@
             "Jostkleigrewe\\CookieConsentBundle\\Tests\\": "tests/"
         }
     },
+    "support": {
+        "issues": "https://github.com/jostkleigrewe/cookie-consent-bundle/issues",
+        "source": "https://github.com/jostkleigrewe/cookie-consent-bundle"
+    },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }
