@@ -1,3 +1,7 @@
-{# DE: Tabler-Layout Alias fuer Day-Variante. #}
-{# EN: Tabler layout alias for the day variant. #}
-{% include '@CookieConsent/styles/tabler/modal-day.html.twig' %}
+{# DE: Alias fuer Abwaertskompatibilitaet - nutzt neues konsolidiertes Template. #}
+{# EN: Alias for backwards compatibility - uses new consolidated template. #}
+{% include '@CookieConsent/modal.html.twig' with {
+    variant: 'tabler',
+    theme: theme|default('day'),
+    density: density|default('normal')
+} %}

@@ -1,0 +1,30 @@
+# Cookie Consent Bundle - Minimal Configuration
+# Copy this file to: config/packages/cookie_consent.yaml
+#
+# DE: Minimale Konfiguration - nutzt alle Standardwerte.
+#     Für die meisten Projekte reicht diese Konfiguration aus.
+# EN: Minimal configuration - uses all default values.
+#     This configuration is sufficient for most projects.
+
+cookie_consent:
+
+    # DE: Links im Modal (optional aber empfohlen für DSGVO).
+    # EN: Links in modal (optional but recommended for GDPR).
+    ui:
+        privacy_url: /privacy
+        imprint_url: /imprint
+
+    # DE: Google Consent Mode aktivieren wenn du GA4/Google Ads nutzt.
+    # EN: Enable Google Consent Mode if you use GA4/Google Ads.
+    # google_consent_mode:
+    #     enabled: true
+
+# DE: Standardwerte die automatisch gesetzt werden:
+# EN: Default values that are automatically set:
+#
+# - variant: tabler
+# - theme: day
+# - density: normal
+# - storage: cookie
+# - categories: necessary (required), functional, analytics, marketing
+# - policy_version: '1'

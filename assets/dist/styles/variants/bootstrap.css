@@ -1,0 +1,42 @@
+/**
+ * Cookie Consent - Bootstrap Variant
+ * DE: Variante mit Bootstrap-kompatiblen Styles.
+ * EN: Variant with Bootstrap-compatible styles.
+ *
+ * Nutzt native Bootstrap-Klassen im Template (btn, form-check-input, etc.)
+ * und ergaenzt nur cookie-consent-spezifische Styles.
+ */
+
+.cookie-consent-variant-bootstrap {
+    --cc-overlay: rgba(0, 0, 0, 0.55);
+    --cc-radius: 14px;
+}
+
+.cookie-consent-variant-bootstrap .modal-content {
+    border: 1px solid #dee2e6;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.cookie-consent-variant-bootstrap .cookie-consent-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.cookie-consent-variant-bootstrap .cookie-consent-category {
+    background: var(--cc-bg);
+    border: 1px solid #e9ecef;
+}
+
+/* Bootstrap native buttons get pill shape */
+.cookie-consent-variant-bootstrap .cookie-consent-actions .btn {
+    border-radius: 999px;
+    padding: 0.55rem 1.25rem;
+}
+
+/* Category layout for plain checkbox style */
+.cookie-consent-variant-bootstrap .cookie-consent-category {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+}

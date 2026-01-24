@@ -14,6 +14,7 @@ use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentStorageInterface;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\CookieConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\DoctrineConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Controller\CookieConsentController;
+use Jostkleigrewe\CookieConsentBundle\Controller\ShowcaseController;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentRequirementResolver;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ControllerAttributeResolver;
@@ -97,6 +98,10 @@ return static function (ContainerConfigurator $container): void {
 
     $services
         ->set(CookieConsentController::class)
+        ->tag('controller.service_arguments');
+
+    $services
+        ->set(ShowcaseController::class)
         ->tag('controller.service_arguments');
 
     $services

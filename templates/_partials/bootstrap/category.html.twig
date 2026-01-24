@@ -1,0 +1,26 @@
+{# DE: Bootstrap-Kategorie mit form-check Klassen. #}
+{# EN: Bootstrap category with form-check classes. #}
+
+<div class="cookie-consent-category">
+    <div>
+        <input
+            id="cookie-consent-{{ name }}-{{ id_suffix }}"
+            class="form-check-input cookie-consent-checkbox"
+            type="checkbox"
+            value="{{ name }}"
+            data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
+            {% if preferences[name] %}checked{% endif %}
+            {% if config.required %}disabled{% endif %}
+        >
+    </div>
+    <div>
+        <label class="form-check-label cookie-consent-category-label" for="cookie-consent-{{ name }}-{{ id_suffix }}">
+            {{ config.label ?? name|title }}
+        </label>
+        {% if config.description %}
+            <div class="text-muted small cookie-consent-category-description">
+                {{ config.description }}
+            </div>
+        {% endif %}
+    </div>
+</div>
