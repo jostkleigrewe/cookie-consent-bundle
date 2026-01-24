@@ -63,14 +63,14 @@ final readonly class ConsentUpdatePayload
     public const ACTION_CUSTOM = 'custom';
 
     /**
-     * @param string $action DE: Die Aktion | EN: The action
-     * @param array<string, bool> $preferences DE: Die Praeferenzen | EN: The preferences
-     * @param string $csrfToken DE: Das CSRF-Token | EN: The CSRF token
+     * @param string                $action DE: Die Aktion | EN: The action
+     * @param array<string, bool>   $preferences DE: Die Praeferenzen | EN: The preferences
+     * @param string                $csrfToken DE: Das CSRF-Token | EN: The CSRF token
      */
     private function __construct(
-        private string $action,
-        private array $preferences,
-        private string $csrfToken,
+        private string  $action,
+        private array   $preferences,
+        private string  $csrfToken,
     ) {
     }
 

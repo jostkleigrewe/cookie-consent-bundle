@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/symfony/phpunit-bridge/phpunit.xml.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
          executionOrder="depends,defects"
          cacheDirectory=".phpunit.cache"
 >
+    <php>
+        <env name="SYMFONY_PHPUNIT_VERSION" value="11.5"/>
+    </php>
     <testsuites>
         <testsuite name="Cookie Consent Bundle Test Suite">
             <directory>tests</directory>

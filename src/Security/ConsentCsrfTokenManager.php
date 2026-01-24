@@ -53,9 +53,9 @@ final class ConsentCsrfTokenManager implements CsrfTokenManagerInterface
     private SameOriginCsrfTokenManager $manager;
 
     /**
-     * @param RequestStack $requestStack DE: Request-Stack fuer Origin/Referer
-     *                                    EN: Request stack for Origin/Referer
-     * @param LoggerInterface|null $logger DE: Optionaler Logger | EN: Optional logger
+     * @param RequestStack          $requestStack   DE: Request-Stack fuer Origin/Referer
+     *                                              EN: Request stack for Origin/Referer
+     * @param LoggerInterface|null  $logger         DE: Optionaler Logger | EN: Optional logger
      */
     public function __construct(RequestStack $requestStack, ?LoggerInterface $logger = null)
     {
