@@ -1,0 +1,16 @@
+{# DE: Bootstrap-Buttons mit nativen btn-Klassen. #}
+{# EN: Bootstrap buttons with native btn classes. #}
+
+<div class="cookie-consent-actions">
+    <button type="button" class="btn btn-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#acceptAll">
+        {{ 'cookie_consent.accept_all'|trans }}
+    </button>
+    {% if density != 'compact' %}
+        <button type="button" class="btn btn-outline-secondary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#rejectOptional">
+            {{ 'cookie_consent.reject_optional'|trans }}
+        </button>
+    {% endif %}
+    <button type="button" class="btn btn-outline-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#save">
+        {{ 'cookie_consent.save'|trans }}
+    </button>
+</div>

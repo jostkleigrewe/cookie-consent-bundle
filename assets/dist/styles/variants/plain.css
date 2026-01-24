@@ -1,0 +1,33 @@
+/**
+ * Cookie Consent - Plain Variant
+ * DE: Framework-agnostische Variante mit eigenen Styles.
+ * EN: Framework-agnostic variant with custom styles.
+ */
+
+.cookie-consent-variant-plain {
+    --cc-overlay: rgba(15, 23, 42, 0.45);
+    --cc-radius: 16px;
+    --cc-btn-radius: 10px;
+}
+
+.cookie-consent-variant-plain {
+    backdrop-filter: blur(6px);
+}
+
+.cookie-consent-variant-plain .modal-content {
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.2);
+}
+
+.cookie-consent-variant-plain .cookie-consent-header {
+    background: linear-gradient(120deg, var(--cc-bg-secondary), var(--cc-bg));
+}
+
+.cookie-consent-variant-plain .cookie-consent-category {
+    background: var(--cc-bg);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* Plain buttons with border */
+.cookie-consent-variant-plain .cookie-consent-btn {
+    border: 1px solid var(--cc-border-solid);
+}

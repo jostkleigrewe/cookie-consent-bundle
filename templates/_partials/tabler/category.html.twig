@@ -1,0 +1,24 @@
+{# DE: Tabler-Kategorie mit Switch-Toggle. #}
+{# EN: Tabler category with switch toggle. #}
+
+<div class="cookie-consent-category">
+    <div class="form-check form-switch cookie-consent-toggle">
+        <input
+            id="cookie-consent-{{ name }}-{{ id_suffix }}"
+            class="form-check-input cookie-consent-checkbox"
+            type="checkbox"
+            value="{{ name }}"
+            data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
+            {% if preferences[name] %}checked{% endif %}
+            {% if config.required %}disabled{% endif %}
+        >
+        <label class="form-check-label cookie-consent-category-label" for="cookie-consent-{{ name }}-{{ id_suffix }}">
+            {{ config.label ?? name|title }}
+        </label>
+        {% if config.description %}
+            <div class="cookie-consent-category-description">
+                {{ config.description }}
+            </div>
+        {% endif %}
+    </div>
+</div>

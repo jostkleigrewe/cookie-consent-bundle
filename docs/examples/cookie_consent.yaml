@@ -1,0 +1,176 @@
+# Cookie Consent Bundle - Full Configuration Example
+# Copy this file to: config/packages/cookie_consent.yaml
+#
+# DE: Vollständige Beispielkonfiguration mit allen verfügbaren Optionen.
+# EN: Complete example configuration with all available options.
+
+cookie_consent:
+
+    # DE: Policy-Version - bei Änderung der Kategorien erhöhen, um Nutzer erneut zu fragen.
+    # EN: Policy version - increment when changing categories to require re-consent.
+    policy_version: '1'
+
+    # DE: Speicher-Backend: cookie (nur Browser), doctrine (Datenbank), both (beides).
+    # EN: Storage backend: cookie (browser only), doctrine (database), both (both).
+    storage: cookie
+
+    # DE: Einstellungen für das Consent-Cookie.
+    # EN: Settings for the consent cookie.
+    cookie:
+        name: cookie_consent
+        lifetime: 15552000        # DE: 6 Monate in Sekunden / EN: 6 months in seconds
+        path: /
+        domain: ~                 # DE: null = aktuelle Domain / EN: null = current domain
+        secure: ~                 # DE: null = automatische Erkennung / EN: null = auto-detect
+        same_site: lax
+        http_only: true
+
+    # DE: Identifier-Cookie für Doctrine-Speicherung (pseudonyme ID).
+    # EN: Identifier cookie for Doctrine storage (pseudonymous ID).
+    identifier_cookie:
+        name: cookie_consent_id
+        lifetime: 31536000        # DE: 1 Jahr in Sekunden / EN: 1 year in seconds
+        path: /
+        domain: ~
+        secure: ~
+        same_site: lax
+        http_only: true
+
+    # DE: Cookie-Kategorien - passe diese an deine Anforderungen an.
+    # EN: Cookie categories - customize these to your requirements.
+    categories:
+        necessary:
+            # DE: Notwendige Cookies - immer aktiv, kann nicht deaktiviert werden.
+            # EN: Necessary cookies - always active, cannot be disabled.
+            label: Necessary
+            description: Required for basic site functionality.
+            required: true
+            default: true
+
+        functional:
+            # DE: Funktionale Cookies - Spracheinstellungen, Präferenzen, etc.
+            # EN: Functional cookies - language settings, preferences, etc.
+            label: Functional
+            description: Remember choices and enhance features.
+            required: false
+            default: false
+
+        analytics:
+            # DE: Analyse-Cookies - anonyme Nutzungsstatistiken (z.B. Google Analytics).
+            # EN: Analytics cookies - anonymous usage statistics (e.g., Google Analytics).
+            label: Analytics
+            description: Help us improve by collecting anonymous analytics.
+            required: false
+            default: false
+
+        marketing:
+            # DE: Marketing-Cookies - personalisierte Werbung, Retargeting, Social Media.
+            # EN: Marketing cookies - personalized ads, retargeting, social media.
+            label: Marketing
+            description: Personalized marketing and ads.
+            required: false
+            default: false
+
+    # DE: UI-Einstellungen für das Consent-Modal.
+    # EN: UI settings for the consent modal.
+    ui:
+        # DE: Template-Pfad (Standard genügt für die meisten Fälle).
+        # EN: Template path (default is sufficient for most cases).
+        template: '@CookieConsent/modal.html.twig'
+
+        # DE: Layout-Variante: plain (minimalistisch), bootstrap (Bootstrap 5), tabler (Tabler UI).
+        # EN: Layout variant: plain (minimalist), bootstrap (Bootstrap 5), tabler (Tabler UI).
+        variant: tabler
+
+        # DE: Farbschema: day (hell), night (dunkel), auto (folgt System-Einstellung).
+        # EN: Color theme: day (light), night (dark), auto (follows system preference).
+        theme: day
+
+        # DE: Dichte: normal (Standard-Abstände), compact (kompakter für kleinere Modals).
+        # EN: Density: normal (standard spacing), compact (smaller footprint).
+        density: normal
+
+        # DE: URL zur Datenschutzerklärung (optional, wird im Modal verlinkt).
+        # EN: URL to privacy policy (optional, linked in the modal).
+        privacy_url: /privacy
+
+        # DE: URL zum Impressum (optional, wird im Modal verlinkt).
+        # EN: URL to imprint/legal notice (optional, linked in the modal).
+        imprint_url: /imprint
+
+        # DE: Seite nach Consent-Änderung neu laden (nützlich wenn serverseitige Logik abhängt).
+        # EN: Reload page after consent change (useful when server-side logic depends on it).
+        reload_on_change: false
+
+    # DE: Durchsetzungs-Einstellungen für Session-Consent.
+    # EN: Enforcement settings for session consent.
+    enforcement:
+        # DE: Consent vor Session-Start erforderlich?
+        # EN: Require consent before session starts?
+        require_consent_for_session: true
+
+        # DE: Pfade die ohne Consent zugänglich sind (z.B. Health-Checks, APIs).
+        # EN: Paths accessible without consent (e.g., health checks, APIs).
+        stateless_paths:
+            - /health
+            - /api
+
+        # DE: Routen die ohne Consent zugänglich sind (Route-Namen).
+        # EN: Routes accessible without consent (route names).
+        stateless_routes: []
+
+        # DE: Pfade die Consent erfordern bevor sie aufgerufen werden können.
+        # EN: Paths that require consent before they can be accessed.
+        protected_paths:
+            - /checkout
+
+        # DE: Routen die Consent erfordern (Route-Namen).
+        # EN: Routes that require consent (route names).
+        protected_routes: []
+
+    # DE: Logging für Audit-Zwecke (DSGVO-Nachweis).
+    # EN: Logging for audit purposes (GDPR compliance proof).
+    logging:
+        # DE: Logging aktivieren?
+        # EN: Enable logging?
+        enabled: false
+
+        # DE: Log-Level (debug, info, notice, warning, error).
+        # EN: Log level (debug, info, notice, warning, error).
+        level: info
+
+        # DE: IP-Adressen anonymisieren (empfohlen für DSGVO).
+        # EN: Anonymize IP addresses (recommended for GDPR).
+        anonymize_ip: true
+
+    # DE: Google Consent Mode v2 Integration.
+    #     Ermöglicht datenschutzkonforme Nutzung von Google Analytics 4 und Google Ads.
+    #     Wenn aktiviert, wird gtag('consent', 'update', ...) automatisch aufgerufen.
+    # EN: Google Consent Mode v2 integration.
+    #     Enables privacy-compliant use of Google Analytics 4 and Google Ads.
+    #     When enabled, gtag('consent', 'update', ...) is called automatically.
+    google_consent_mode:
+        # DE: Google Consent Mode aktivieren?
+        # EN: Enable Google Consent Mode?
+        enabled: false
+
+        # DE: Mapping von Google Consent-Typen auf Bundle-Kategorien.
+        #     Passe dies an, wenn du andere Kategorienamen verwendest.
+        # EN: Mapping from Google consent types to bundle categories.
+        #     Customize this if you use different category names.
+        mapping:
+            # DE: Speicherung von Analytics-Cookies (z.B. _ga, _gid).
+            # EN: Storage of analytics cookies (e.g., _ga, _gid).
+            analytics_storage: analytics
+
+            # DE: Speicherung von Werbe-Cookies (z.B. für Remarketing).
+            # EN: Storage of advertising cookies (e.g., for remarketing).
+            ad_storage: marketing
+
+            # DE: Nutzerdaten für Werbezwecke an Google senden.
+            # EN: Send user data to Google for advertising purposes.
+            ad_user_data: marketing
+
+            # DE: Personalisierte Werbung erlauben.
+            # EN: Allow personalized advertising.
+            ad_personalization: marketing
