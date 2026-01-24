@@ -21,7 +21,15 @@ use Twig\TwigFunction;
 final class ConsentTwigExtension extends AbstractExtension
 {
     /**
-     * @param array{template: string, privacy_url: ?string, imprint_url: ?string, reload_on_change: bool} $ui
+     * @param array{
+     *     template: string,
+     *     variant: string,
+     *     theme: string,
+     *     density: string,
+     *     privacy_url: ?string,
+     *     imprint_url: ?string,
+     *     reload_on_change: bool
+     * } $ui
      * @param array{enabled: bool, mapping: array{analytics_storage: string, ad_storage: string, ad_user_data: string, ad_personalization: string}} $googleConsentMode
      */
     public function __construct(
@@ -50,7 +58,13 @@ final class ConsentTwigExtension extends AbstractExtension
         ];
     }
 
-    public function renderModal(): string
+    /**
+     * DE: Rendert das Cookie-Consent-Modal mit optionalen Overrides.
+     * EN: Renders the cookie consent modal with optional overrides.
+     *
+     * @param array{variant?: string, theme?: string, density?: string} $overrides
+     */
+    public function renderModal(array $overrides = []): string
     {
         $request = $this->requestStack->getCurrentRequest();
         if ($request === null) {
@@ -71,6 +85,12 @@ final class ConsentTwigExtension extends AbstractExtension
             'privacy_url' => $this->ui['privacy_url'] ?? null,
             'imprint_url' => $this->ui['imprint_url'] ?? null,
             'reload_on_change' => (bool) ($this->ui['reload_on_change'] ?? false),
+
+            // DE: Layout-Optionen mit Override-Moeglichkeit.
+            // EN: Layout options with override capability.
+            'variant' => $overrides['variant'] ?? $this->ui['variant'] ?? 'tabler',
+            'theme' => $overrides['theme'] ?? $this->ui['theme'] ?? 'day',
+            'density' => $overrides['density'] ?? $this->ui['density'] ?? 'normal',
 
             // DE: Google Consent Mode v2 Konfiguration.
             // EN: Google Consent Mode v2 configuration.

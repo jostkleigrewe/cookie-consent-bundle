@@ -1,0 +1,16 @@
+{# DE: Plain-Buttons mit Bundle-eigenen Klassen. #}
+{# EN: Plain buttons with bundle-specific classes. #}
+
+<div class="cookie-consent-actions">
+    <button type="button" class="cookie-consent-btn cookie-consent-btn-primary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#acceptAll">
+        {{ 'cookie_consent.accept_all'|trans }}
+    </button>
+    {% if density != 'compact' %}
+        <button type="button" class="cookie-consent-btn cookie-consent-btn-secondary" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#rejectOptional">
+            {{ 'cookie_consent.reject_optional'|trans }}
+        </button>
+    {% endif %}
+    <button type="button" class="cookie-consent-btn cookie-consent-btn-outline" data-action="jostkleigrewe--cookie-consent-bundle--cookie-consent#save">
+        {{ 'cookie_consent.save'|trans }}
+    </button>
+</div>

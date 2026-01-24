@@ -1,0 +1,363 @@
+/**
+ * Cookie Consent - Base Styles
+ * DE: Basis-Layout und CSS Custom Properties.
+ * EN: Base layout and CSS custom properties.
+ */
+
+/* ==========================================================================
+   CSS Custom Properties (Design Tokens)
+   ========================================================================== */
+
+.cookie-consent-modal {
+    /* Colors - overridden by themes */
+    --cc-bg: #ffffff;
+    --cc-bg-secondary: #f8fafc;
+    --cc-text: #0f172a;
+    --cc-text-muted: #475569;
+    --cc-text-description: #64748b;
+    --cc-border: rgba(148, 163, 184, 0.2);
+    --cc-border-solid: #e2e8f0;
+    --cc-overlay: rgba(15, 23, 42, 0.55);
+
+    /* Accent colors */
+    --cc-accent: #2563eb;
+    --cc-accent-hover: #1d4ed8;
+    --cc-accent-text: #ffffff;
+
+    /* Badge */
+    --cc-badge-bg: rgba(37, 99, 235, 0.12);
+    --cc-badge-text: #1d4ed8;
+
+    /* Buttons */
+    --cc-btn-primary-bg: #2563eb;
+    --cc-btn-primary-text: #ffffff;
+    --cc-btn-primary-border: #2563eb;
+
+    --cc-btn-secondary-bg: #0f172a;
+    --cc-btn-secondary-text: #ffffff;
+    --cc-btn-secondary-border: #0f172a;
+
+    --cc-btn-outline-bg: #ffffff;
+    --cc-btn-outline-text: #0f172a;
+    --cc-btn-outline-border: #cbd5e1;
+
+    /* Category cards */
+    --cc-category-bg: #f8fafc;
+    --cc-category-border: rgba(148, 163, 184, 0.2);
+
+    /* Spacing - overridden by density */
+    --cc-padding-x: 1.75rem;
+    --cc-padding-y: 1.5rem;
+    --cc-gap: 0.85rem;
+    --cc-category-padding: 0.85rem 1rem;
+
+    /* Typography */
+    --cc-title-size: 1.25rem;
+    --cc-description-size: 0.95rem;
+    --cc-category-description-size: 0.85rem;
+
+    /* Border radius */
+    --cc-radius: 18px;
+    --cc-radius-sm: 12px;
+    --cc-btn-radius: 999px;
+
+    /* Shadows */
+    --cc-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+
+    /* Dialog */
+    --cc-dialog-width: min(760px, 100%);
+}
+
+/* ==========================================================================
+   Modal Overlay
+   ========================================================================== */
+
+.cookie-consent-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    padding: 1.75rem 1rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--cc-overlay);
+    overflow-y: auto;
+}
+
+.cookie-consent-modal.show {
+    display: flex;
+}
+
+/* ==========================================================================
+   Dialog Container
+   ========================================================================== */
+
+.cookie-consent-dialog {
+    width: var(--cc-dialog-width);
+    margin: 0;
+}
+
+.cookie-consent-dialog-compact {
+    --cc-dialog-width: min(680px, 100%);
+}
+
+/* ==========================================================================
+   Modal Content
+   ========================================================================== */
+
+.cookie-consent-modal .modal-content {
+    width: 100%;
+    border: 0;
+    border-radius: var(--cc-radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 3.5rem);
+    background: var(--cc-bg);
+    color: var(--cc-text);
+    box-shadow: var(--cc-shadow);
+}
+
+/* ==========================================================================
+   Header (Plain/Bootstrap style)
+   ========================================================================== */
+
+.cookie-consent-header {
+    padding: var(--cc-padding-y) var(--cc-padding-x) 1rem;
+    border-bottom: 1px solid var(--cc-border);
+}
+
+.cookie-consent-title {
+    margin: 0 0 0.35rem;
+    font-size: var(--cc-title-size);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--cc-text);
+}
+
+.cookie-consent-description {
+    margin: 0;
+    color: var(--cc-text-muted);
+    font-size: var(--cc-description-size);
+}
+
+/* ==========================================================================
+   Banner (Tabler style header)
+   ========================================================================== */
+
+.cookie-consent-banner {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: var(--cc-padding-y) var(--cc-padding-x);
+    border-bottom: 1px solid var(--cc-border);
+}
+
+.cookie-consent-badge {
+    align-self: start;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--cc-badge-bg);
+    color: var(--cc-badge-text);
+}
+
+/* ==========================================================================
+   Body
+   ========================================================================== */
+
+.cookie-consent-body {
+    padding: var(--cc-padding-y) var(--cc-padding-x) var(--cc-padding-y);
+    overflow: auto;
+}
+
+/* ==========================================================================
+   Categories
+   ========================================================================== */
+
+.cookie-consent-categories {
+    display: grid;
+    gap: var(--cc-gap);
+    margin-top: 1.25rem;
+}
+
+/* Remove margin-top when in tabler banner style (description in banner) */
+.cookie-consent-variant-tabler .cookie-consent-categories {
+    margin-top: 0;
+}
+
+.cookie-consent-category {
+    padding: var(--cc-category-padding);
+    border-radius: var(--cc-radius-sm);
+    border: 1px solid var(--cc-category-border);
+    background: var(--cc-category-bg);
+}
+
+.cookie-consent-toggle {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.cookie-consent-category-label {
+    font-weight: 600;
+    color: inherit;
+}
+
+.cookie-consent-category-description {
+    color: var(--cc-text-description);
+    font-size: var(--cc-category-description-size);
+}
+
+.cookie-consent-checkbox {
+    margin-top: 0.2rem;
+    accent-color: var(--cc-accent);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.cookie-consent-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem var(--cc-padding-x) var(--cc-padding-y);
+    border-top: 1px solid var(--cc-border);
+}
+
+/* ==========================================================================
+   Actions (Buttons)
+   ========================================================================== */
+
+.cookie-consent-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.cookie-consent-btn {
+    border: none;
+    border-radius: var(--cc-btn-radius);
+    padding: 0.55rem 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.cookie-consent-btn:hover {
+    opacity: 0.9;
+}
+
+.cookie-consent-btn-primary {
+    background: var(--cc-btn-primary-bg);
+    color: var(--cc-btn-primary-text);
+    border: 1px solid var(--cc-btn-primary-border);
+}
+
+.cookie-consent-btn-secondary {
+    background: var(--cc-btn-secondary-bg);
+    color: var(--cc-btn-secondary-text);
+    border: 1px solid var(--cc-btn-secondary-border);
+}
+
+.cookie-consent-btn-outline {
+    background: var(--cc-btn-outline-bg);
+    color: var(--cc-btn-outline-text);
+    border: 1px solid var(--cc-btn-outline-border);
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+.cookie-consent-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.cookie-consent-links a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.cookie-consent-links a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Embed Placeholders
+   ========================================================================== */
+
+.cookie-consent-embed-placeholder,
+.cookie-consent-youtube-placeholder {
+    border: 1px dashed rgba(148, 163, 184, 0.5);
+    border-radius: var(--cc-radius-sm);
+    padding: 1.25rem;
+    background: rgba(148, 163, 184, 0.08);
+    color: var(--cc-text-muted);
+}
+
+.cookie-consent-embed-placeholder p,
+.cookie-consent-youtube-placeholder p {
+    margin: 0 0 0.85rem;
+}
+
+/* ==========================================================================
+   Density: Compact
+   ========================================================================== */
+
+.cookie-consent-density-compact {
+    --cc-padding-x: 1.1rem;
+    --cc-padding-y: 0.85rem;
+    --cc-gap: 0.5rem;
+    --cc-category-padding: 0.55rem 0.7rem;
+    --cc-title-size: 1.05rem;
+    --cc-description-size: 0.88rem;
+}
+
+.cookie-consent-density-compact .cookie-consent-badge {
+    padding: 0.25rem 0.65rem;
+    font-size: 0.65rem;
+}
+
+.cookie-consent-density-compact .cookie-consent-categories {
+    margin-top: 0.6rem;
+}
+
+.cookie-consent-density-compact .cookie-consent-actions {
+    margin-top: 0.6rem;
+}
+
+.cookie-consent-density-compact .cookie-consent-footer {
+    padding: 0.75rem var(--cc-padding-x) 0.85rem;
+    gap: 0.6rem;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 640px) {
+    .cookie-consent-modal {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .cookie-consent-header,
+    .cookie-consent-body,
+    .cookie-consent-banner {
+        padding: 1.25rem;
+    }
+
+    .cookie-consent-category {
+        padding: 0.75rem 0.85rem;
+    }
+
+    .cookie-consent-footer {
+        padding: 1rem 1.25rem 1.25rem;
+    }
+}

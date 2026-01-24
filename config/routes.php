@@ -12,4 +12,10 @@ return static function (RoutingConfigurator $routes): void {
         ->controller('Jostkleigrewe\\CookieConsentBundle\\Controller\\CookieConsentController::update')
         ->methods(['POST']);
 
+    // DE: Template-Showcase fuer visuelles Testing aller Varianten.
+    // EN: Template showcase for visual testing of all variants.
+    $routes->add('cookie_consent_showcase', '/_cookie-consent/showcase')
+        ->controller('Jostkleigrewe\\CookieConsentBundle\\Controller\\ShowcaseController')
+        ->methods(['GET']);
+
 };

@@ -2,6 +2,16 @@
 
 [Deutsch](configuration.de.md) | [Back to README](../README.md)
 
+## Minimal Configuration
+
+```yaml
+cookie_consent: ~
+```
+
+This uses all defaults: Tabler variant, day theme, standard categories.
+
+---
+
 ## Full Configuration Reference
 
 Create `config/packages/cookie_consent.yaml`:
@@ -45,7 +55,10 @@ cookie_consent:
 
   # UI settings
   ui:
-    template: '@CookieConsent/styles/tabler/modal.html.twig'
+    template: '@CookieConsent/modal.html.twig'
+    variant: tabler           # plain, bootstrap, tabler
+    theme: day                # day, night, auto
+    density: normal           # normal, compact
     privacy_url: '/privacy'   # optional
     imprint_url: '/imprint'   # optional
     reload_on_change: false
@@ -76,9 +89,38 @@ cookie_consent:
 
 ---
 
+## UI Variants
+
+### `variant`
+
+| Value | Description |
+|-------|-------------|
+| `tabler` | Tabler UI framework style with switch toggles and badge |
+| `bootstrap` | Bootstrap 5 compatible with native button classes |
+| `plain` | Framework-agnostic with minimal dependencies |
+
+### `theme`
+
+| Value | Description |
+|-------|-------------|
+| `day` | Light color scheme |
+| `night` | Dark color scheme |
+| `auto` | Follows `prefers-color-scheme` media query |
+
+### `density`
+
+| Value | Description |
+|-------|-------------|
+| `normal` | Standard spacing and typography |
+| `compact` | Reduced padding for smaller footprint |
+
+---
+
 ## Templates
 
-### Built-in Templates
+### Built-in Templates (Legacy)
+
+For backwards compatibility, the following template paths still work:
 
 | Template | Path |
 |----------|------|
@@ -89,12 +131,20 @@ cookie_consent:
 | Bootstrap | `@CookieConsent/styles/bootstrap/modal.html.twig` |
 | Plain/Vanilla | `@CookieConsent/styles/plain/modal.html.twig` |
 
+**Recommended:** Use the new `variant`, `theme`, `density` options instead of separate template paths.
+
 ### Custom Template
 
 Copy a template to your app and modify:
 
 ```
-templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
+templates/bundles/CookieConsentBundle/modal.html.twig
+```
+
+Or override individual partials:
+
+```
+templates/bundles/CookieConsentBundle/_partials/tabler/header.html.twig
 ```
 
 ---
@@ -104,6 +154,7 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 | Function | Description |
 |----------|-------------|
 | `cookie_consent_modal()` | Renders the consent modal |
+| `cookie_consent_modal({variant: 'bootstrap'})` | Renders with override options |
 | `cookie_consent_has('category')` | Check if category is consented |
 | `cookie_consent_preferences()` | Get all current preferences |
 | `cookie_consent_preferences_raw()` | Get raw stored preferences |
@@ -115,6 +166,9 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 ### Examples
 
 ```twig
+{# Override variant/theme per instance #}
+{{ cookie_consent_modal({variant: 'bootstrap', theme: 'night'}) }}
+
 {# Conditional content #}
 {% if cookie_consent_has('analytics') %}
   <script src="https://example.com/analytics.js"></script>
@@ -282,3 +336,15 @@ document.addEventListener('cookie-consent:changed', (e) => {
 ## Translations
 
 Translation keys are in `translations/messages.*.yaml`. Override by creating your own translations in the `messages` domain.
+
+---
+
+## Template Showcase
+
+For visual testing of all variant combinations, visit:
+
+```
+/_cookie-consent/showcase
+```
+
+This displays all 12 combinations (3 variants × 2 themes × 2 densities) on a single page.

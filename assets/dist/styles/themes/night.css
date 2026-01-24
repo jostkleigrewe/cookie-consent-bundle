@@ -1,0 +1,101 @@
+/**
+ * Cookie Consent - Night Theme (Dark)
+ * DE: Dunkles Farbschema.
+ * EN: Dark color scheme.
+ */
+
+.cookie-consent-theme-night {
+    --cc-bg: #0f172a;
+    --cc-bg-secondary: #1e293b;
+    --cc-text: #e2e8f0;
+    --cc-text-muted: #cbd5e1;
+    --cc-text-description: #94a3b8;
+    --cc-border: rgba(148, 163, 184, 0.2);
+    --cc-border-solid: #334155;
+    --cc-overlay: radial-gradient(circle at top, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.92));
+
+    --cc-accent: #38bdf8;
+    --cc-accent-hover: #0ea5e9;
+    --cc-accent-text: #0f172a;
+
+    --cc-badge-bg: rgba(56, 189, 248, 0.2);
+    --cc-badge-text: #bae6fd;
+
+    --cc-btn-primary-bg: #38bdf8;
+    --cc-btn-primary-text: #0f172a;
+    --cc-btn-primary-border: #38bdf8;
+
+    --cc-btn-secondary-bg: #0f172a;
+    --cc-btn-secondary-text: #e2e8f0;
+    --cc-btn-secondary-border: #334155;
+
+    --cc-btn-outline-bg: transparent;
+    --cc-btn-outline-text: #e2e8f0;
+    --cc-btn-outline-border: #475569;
+
+    --cc-category-bg: rgba(15, 23, 42, 0.85);
+    --cc-category-border: rgba(148, 163, 184, 0.25);
+
+    --cc-shadow: 0 30px 70px rgba(2, 6, 23, 0.6);
+    --cc-radius: 20px;
+}
+
+/* Night theme link colors */
+.cookie-consent-theme-night .cookie-consent-links a {
+    color: var(--cc-text-muted);
+}
+
+/* Tabler-specific night adjustments */
+.cookie-consent-variant-tabler.cookie-consent-theme-night .cookie-consent-banner {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.4));
+}
+
+/* ==========================================================================
+   Auto Theme (follows system preference)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    .cookie-consent-theme-auto {
+        --cc-bg: #0f172a;
+        --cc-bg-secondary: #1e293b;
+        --cc-text: #e2e8f0;
+        --cc-text-muted: #cbd5e1;
+        --cc-text-description: #94a3b8;
+        --cc-border: rgba(148, 163, 184, 0.2);
+        --cc-border-solid: #334155;
+        --cc-overlay: radial-gradient(circle at top, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.92));
+
+        --cc-accent: #38bdf8;
+        --cc-accent-hover: #0ea5e9;
+        --cc-accent-text: #0f172a;
+
+        --cc-badge-bg: rgba(56, 189, 248, 0.2);
+        --cc-badge-text: #bae6fd;
+
+        --cc-btn-primary-bg: #38bdf8;
+        --cc-btn-primary-text: #0f172a;
+        --cc-btn-primary-border: #38bdf8;
+
+        --cc-btn-secondary-bg: #0f172a;
+        --cc-btn-secondary-text: #e2e8f0;
+        --cc-btn-secondary-border: #334155;
+
+        --cc-btn-outline-bg: transparent;
+        --cc-btn-outline-text: #e2e8f0;
+        --cc-btn-outline-border: #475569;
+
+        --cc-category-bg: rgba(15, 23, 42, 0.85);
+        --cc-category-border: rgba(148, 163, 184, 0.25);
+
+        --cc-shadow: 0 30px 70px rgba(2, 6, 23, 0.6);
+        --cc-radius: 20px;
+    }
+
+    .cookie-consent-theme-auto .cookie-consent-links a {
+        color: var(--cc-text-muted);
+    }
+
+    .cookie-consent-variant-tabler.cookie-consent-theme-auto .cookie-consent-banner {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.4));
+    }
+}

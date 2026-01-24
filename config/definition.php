@@ -88,6 +88,28 @@ return static function (DefinitionConfigurator $definition): void {
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->scalarNode('template')->defaultValue('@CookieConsent/modal.html.twig')->end()
+
+                    // DE: Layout-Variante: plain (framework-agnostisch), bootstrap, tabler.
+                    // EN: Layout variant: plain (framework-agnostic), bootstrap, tabler.
+                    ->enumNode('variant')
+                        ->values(['plain', 'bootstrap', 'tabler'])
+                        ->defaultValue('tabler')
+                    ->end()
+
+                    // DE: Farbschema: day (hell), night (dunkel), auto (folgt prefers-color-scheme).
+                    // EN: Color theme: day (light), night (dark), auto (follows prefers-color-scheme).
+                    ->enumNode('theme')
+                        ->values(['day', 'night', 'auto'])
+                        ->defaultValue('day')
+                    ->end()
+
+                    // DE: Dichte-Modus: normal oder compact.
+                    // EN: Density mode: normal or compact.
+                    ->enumNode('density')
+                        ->values(['normal', 'compact'])
+                        ->defaultValue('normal')
+                    ->end()
+
                     ->scalarNode('privacy_url')->defaultNull()->end()
                     ->scalarNode('imprint_url')->defaultNull()->end()
                     ->booleanNode('reload_on_change')->defaultFalse()->end()

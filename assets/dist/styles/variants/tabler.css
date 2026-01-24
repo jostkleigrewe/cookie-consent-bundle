@@ -1,0 +1,28 @@
+/**
+ * Cookie Consent - Tabler Variant
+ * DE: Variante mit Tabler-kompatiblen Styles.
+ * EN: Variant with Tabler-compatible styles.
+ *
+ * Nutzt Tabler/Bootstrap form-switch im Template und ergaenzt
+ * cookie-consent-spezifische Styles.
+ */
+
+.cookie-consent-variant-tabler {
+    --cc-radius: 18px;
+}
+
+/* Ensure switch toggle works with Tabler */
+.cookie-consent-variant-tabler .form-check.form-switch {
+    padding-left: 2.5em;
+}
+
+.cookie-consent-variant-tabler .form-check.form-switch .form-check-input {
+    width: 2em;
+    margin-left: -2.5em;
+    margin-top: 0.25em;
+}
+
+/* Category labels inline with switch */
+.cookie-consent-variant-tabler .cookie-consent-category-label {
+    display: inline;
+}

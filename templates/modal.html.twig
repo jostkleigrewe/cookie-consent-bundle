@@ -1,0 +1,86 @@
+{# DE: Konsolidiertes Cookie-Consent-Modal mit konfigurierbarer Variante, Theme und Dichte. #}
+{# EN: Consolidated cookie consent modal with configurable variant, theme, and density. #}
+
+{# Defaults aus Konfiguration oder Parameter #}
+{% set variant = variant|default('tabler') %}
+{% set theme = theme|default('day') %}
+{% set density = density|default('normal') %}
+
+{# Eindeutiger ID-Suffix fuer mehrere Modals auf einer Seite #}
+{% set id_suffix = id_suffix|default([variant, theme, density]|join('-')) %}
+
+{# CSS-Klassen basierend auf Konfiguration #}
+{% set modal_classes = [
+    'cookie-consent-modal',
+    'cookie-consent-variant-' ~ variant,
+    'cookie-consent-theme-' ~ theme,
+    density == 'compact' ? 'cookie-consent-density-compact' : ''
+]|filter(v => v)|join(' ') %}
+
+{% set dialog_classes = [
+    'modal-dialog',
+    'modal-dialog-centered',
+    'cookie-consent-dialog',
+    density == 'compact' ? 'cookie-consent-dialog-compact' : ''
+]|filter(v => v)|join(' ') %}
+
+<div
+    class="{{ modal_classes }}"
+    data-controller="jostkleigrewe--cookie-consent-bundle--cookie-consent"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="modal"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-endpoint-value="{{ consent_endpoint }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-preferences-value='{{ preferences|json_encode|e('html_attr') }}'
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-csrf-token-value="{{ csrf_token }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-required-value="{{ consent_required ? 'true' : 'false' }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-reload-on-change-value="{{ reload_on_change ? 'true' : 'false' }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-google-consent-mode-enabled-value="{{ google_consent_mode.enabled ? 'true' : 'false' }}"
+    data-jostkleigrewe--cookie-consent-bundle--cookie-consent-google-consent-mode-mapping-value='{{ google_consent_mode.mapping|json_encode|e('html_attr') }}'
+    role="dialog"
+    aria-hidden="true"
+    aria-labelledby="cookie-consent-title-{{ id_suffix }}"
+>
+    <div class="{{ dialog_classes }}" role="document">
+        <div class="modal-content">
+
+            {# Header - varianten-spezifisch #}
+            {% block header %}
+                {% include '@CookieConsent/_partials/' ~ variant ~ '/header.html.twig' %}
+            {% endblock %}
+
+            {# Body mit Kategorien #}
+            {% block body %}
+                <div class="modal-body cookie-consent-body">
+                    {# Beschreibung nur bei non-Tabler (Tabler hat sie im Banner) #}
+                    {% if variant != 'tabler' %}
+                        <p class="cookie-consent-description">
+                            {{ 'cookie_consent.description'|trans }}
+                        </p>
+                    {% endif %}
+
+                    <div class="cookie-consent-categories">
+                        {% for name, config in categories %}
+                            {% include '@CookieConsent/_partials/' ~ variant ~ '/category.html.twig' with {
+                                name: name,
+                                config: config
+                            } %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endblock %}
+
+            {# Footer mit Actions und Links #}
+            {% block footer %}
+                <div class="{% if variant == 'bootstrap' %}modal-footer {% endif %}cookie-consent-footer">
+                    {% block actions %}
+                        {% include '@CookieConsent/_partials/' ~ variant ~ '/actions.html.twig' %}
+                    {% endblock %}
+
+                    {% block links %}
+                        {% include '@CookieConsent/_partials/links.html.twig' %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+
+        </div>
+    </div>
+</div>
