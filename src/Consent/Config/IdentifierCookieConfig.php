@@ -5,8 +5,26 @@ declare(strict_types=1);
 namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
 
 /**
- * DE: Konfiguration des Identifier-Cookies fuer DB-Storage.
- * EN: Configuration for the identifier cookie used by DB storage.
+ * IdentifierCookieConfig - Konfiguration fuer das Identifier-Cookie
+ *
+ * DE: Spezialisierte Cookie-Konfiguration fuer das Identifier-Cookie.
+ *     Das Identifier-Cookie speichert die Nutzer-ID fuer das Doctrine-Backend.
+ *     Erbt alle Einstellungen von CookieConfig.
+ *
+ * EN: Specialized cookie configuration for the identifier cookie.
+ *     The identifier cookie stores the user ID for the Doctrine backend.
+ *     Inherits all settings from CookieConfig.
+ *
+ * @example
+ * // config/packages/cookie_consent.yaml
+ * cookie_consent:
+ *     identifier_cookie:
+ *         name: cookie_consent_id
+ *         lifetime: 31536000  # 1 Jahr
+ *         http_only: true     # Aus Sicherheitsgruenden
+ *
+ * @see CookieConfig
+ * @see ConsentIdProvider
  */
 final class IdentifierCookieConfig extends CookieConfig
 {

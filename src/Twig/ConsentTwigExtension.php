@@ -15,12 +15,52 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * DE: Twig-Extension mit Consent-Helpern und Modal-Rendering.
- * EN: Twig extension exposing consent helpers and modal rendering.
+ * ConsentTwigExtension - Twig-Funktionen fuer Cookie-Consent
+ *
+ * DE: Stellt Twig-Funktionen fuer Consent-Abfragen und Modal-Rendering bereit.
+ *     Ermoeglicht einfache Integration in Templates ohne Controller-Logik.
+ *
+ * EN: Provides Twig functions for consent queries and modal rendering.
+ *     Enables easy template integration without controller logic.
+ *
+ * Verfuegbare Funktionen / Available functions:
+ * - cookie_consent_modal()        - Rendert das Consent-Modal
+ * - cookie_consent_has(category)  - Prueft ob Kategorie erlaubt
+ * - cookie_consent_preferences()  - Gibt normalisierte Praeferenzen zurueck
+ * - cookie_consent_preferences_raw() - Gibt rohe Praeferenzen zurueck
+ * - cookie_consent_has_decision() - Prueft ob Entscheidung vorliegt
+ * - cookie_consent_decided_at()   - Gibt Entscheidungszeitpunkt zurueck
+ * - cookie_consent_required()     - Prueft ob Modal angezeigt werden muss
+ * - cookie_consent_categories()   - Gibt alle Kategorien zurueck
+ *
+ * @example
+ * {# DE: Modal im base.html.twig einbinden #}
+ * {# EN: Include modal in base.html.twig #}
+ * {{ cookie_consent_modal() }}
+ *
+ * @example
+ * {# DE: Bedingt Analytics-Script laden #}
+ * {# EN: Conditionally load analytics script #}
+ * {% if cookie_consent_has('analytics') %}
+ *     <script src="analytics.js"></script>
+ * {% endif %}
+ *
+ * @example
+ * {# DE: Praeferenzen als JSON fuer JavaScript #}
+ * {# EN: Preferences as JSON for JavaScript #}
+ * <script>
+ *     window.cookiePreferences = {{ cookie_consent_preferences()|json_encode|raw }};
+ * </script>
  */
 final class ConsentTwigExtension extends AbstractExtension
 {
     /**
+     * @param Environment $twig DE: Twig-Environment fuer Rendering | EN: Twig environment for rendering
+     * @param ConsentManager $consentManager DE: Consent-Service | EN: Consent service
+     * @param ConsentPolicy $policy DE: Policy-Konfiguration | EN: Policy configuration
+     * @param RequestStack $requestStack DE: Request-Stack | EN: Request stack
+     * @param UrlGeneratorInterface $urlGenerator DE: URL-Generator | EN: URL generator
+     * @param ConsentCsrfTokenManager $csrfTokenManager DE: CSRF-Manager | EN: CSRF manager
      * @param array{
      *     template: string,
      *     variant: string,
@@ -29,21 +69,29 @@ final class ConsentTwigExtension extends AbstractExtension
      *     privacy_url: ?string,
      *     imprint_url: ?string,
      *     reload_on_change: bool
-     * } $ui
-     * @param array{enabled: bool, mapping: array{analytics_storage: string, ad_storage: string, ad_user_data: string, ad_personalization: string}} $googleConsentMode
+     * } $ui DE: UI-Konfiguration | EN: UI configuration
+     * @param array{enabled: bool, mapping: array<string, string>} $googleConsentMode
+     *        DE: Google Consent Mode Konfiguration | EN: Google Consent Mode configuration
      */
     public function __construct(
-        private readonly Environment                $twig,
-        private readonly ConsentManager             $consentManager,
-        private readonly ConsentPolicy              $policy,
-        private readonly RequestStack               $requestStack,
-        private readonly UrlGeneratorInterface      $urlGenerator,
-        private readonly ConsentCsrfTokenManager    $csrfTokenManager,
-        private readonly array                      $ui,
-        private readonly array                      $googleConsentMode,
+        private readonly Environment $twig,
+        private readonly ConsentManager $consentManager,
+        private readonly ConsentPolicy $policy,
+        private readonly RequestStack $requestStack,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ConsentCsrfTokenManager $csrfTokenManager,
+        private readonly array $ui,
+        private readonly array $googleConsentMode,
     ) {
     }
 
+    /**
+     * DE: Registriert alle Twig-Funktionen.
+     *
+     * EN: Registers all Twig functions.
+     *
+     * @return TwigFunction[] DE: Liste der Twig-Funktionen | EN: List of Twig functions
+     */
     public function getFunctions(): array
     {
         return [
@@ -60,9 +108,20 @@ final class ConsentTwigExtension extends AbstractExtension
 
     /**
      * DE: Rendert das Cookie-Consent-Modal mit optionalen Overrides.
+     *
      * EN: Renders the cookie consent modal with optional overrides.
      *
      * @param array{variant?: string, theme?: string, density?: string} $overrides
+     *        DE: Optionale UI-Overrides | EN: Optional UI overrides
+     * @return string DE: Gerendertes HTML | EN: Rendered HTML
+     *
+     * @example
+     * {# DE: Mit Default-Einstellungen #}
+     * {{ cookie_consent_modal() }}
+     *
+     * @example
+     * {# DE: Mit Override fuer Dark-Mode #}
+     * {{ cookie_consent_modal({theme: 'night'}) }}
      */
     public function renderModal(array $overrides = []): string
     {
@@ -98,6 +157,19 @@ final class ConsentTwigExtension extends AbstractExtension
         ]);
     }
 
+    /**
+     * DE: Prueft ob eine bestimmte Kategorie erlaubt ist.
+     *
+     * EN: Checks if a specific category is allowed.
+     *
+     * @param string $category DE: Kategoriename | EN: Category name
+     * @return bool DE: true wenn erlaubt | EN: true if allowed
+     *
+     * @example
+     * {% if cookie_consent_has('marketing') %}
+     *     {# Marketing-Pixel einbinden #}
+     * {% endif %}
+     */
     public function hasConsentFor(string $category): bool
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -109,7 +181,11 @@ final class ConsentTwigExtension extends AbstractExtension
     }
 
     /**
-     * @return array<string, bool>
+     * DE: Gibt die rohen (nicht normalisierten) Praeferenzen zurueck.
+     *
+     * EN: Returns the raw (non-normalized) preferences.
+     *
+     * @return array<string, bool> DE: Rohe Praeferenzen | EN: Raw preferences
      */
     public function getRawPreferences(): array
     {
@@ -121,6 +197,18 @@ final class ConsentTwigExtension extends AbstractExtension
         return $this->consentManager->getState($request)->getPreferences();
     }
 
+    /**
+     * DE: Prueft ob eine Consent-Entscheidung vorliegt.
+     *
+     * EN: Checks if a consent decision exists.
+     *
+     * @return bool DE: true wenn entschieden | EN: true if decided
+     *
+     * @example
+     * {% if not cookie_consent_has_decision() %}
+     *     {# Hinweis anzeigen dass Consent fehlt #}
+     * {% endif %}
+     */
     public function hasDecision(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -131,6 +219,18 @@ final class ConsentTwigExtension extends AbstractExtension
         return $this->consentManager->hasConsent($request);
     }
 
+    /**
+     * DE: Gibt den Zeitpunkt der Consent-Entscheidung zurueck.
+     *
+     * EN: Returns the consent decision timestamp.
+     *
+     * @return \DateTimeImmutable|null DE: Zeitpunkt oder null | EN: Timestamp or null
+     *
+     * @example
+     * {% if cookie_consent_decided_at() %}
+     *     Entschieden am: {{ cookie_consent_decided_at()|date('d.m.Y') }}
+     * {% endif %}
+     */
     public function getDecidedAt(): ?\DateTimeImmutable
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -142,7 +242,15 @@ final class ConsentTwigExtension extends AbstractExtension
     }
 
     /**
-     * @return array<string, bool>
+     * DE: Gibt die normalisierten Praeferenzen zurueck.
+     *
+     * EN: Returns the normalized preferences.
+     *
+     * @return array<string, bool> DE: Kategorie => erlaubt | EN: Category => allowed
+     *
+     * @example
+     * {% set prefs = cookie_consent_preferences() %}
+     * {{ prefs|json_encode }}
      */
     public function getPreferences(): array
     {
@@ -154,6 +262,15 @@ final class ConsentTwigExtension extends AbstractExtension
         return $this->consentManager->getPreferences($request);
     }
 
+    /**
+     * DE: Prueft ob das Consent-Modal angezeigt werden muss.
+     *     Basiert auf Session-Enforcement-Logik.
+     *
+     * EN: Checks if the consent modal must be displayed.
+     *     Based on session enforcement logic.
+     *
+     * @return bool DE: true wenn Modal erforderlich | EN: true if modal required
+     */
     public function isConsentRequired(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -165,7 +282,19 @@ final class ConsentTwigExtension extends AbstractExtension
     }
 
     /**
+     * DE: Gibt alle konfigurierten Kategorien zurueck.
+     *
+     * EN: Returns all configured categories.
+     *
      * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
+     *
+     * @example
+     * {% for name, config in cookie_consent_categories() %}
+     *     <label>
+     *         {{ config.label }}
+     *         {% if config.required %}(Pflicht){% endif %}
+     *     </label>
+     * {% endfor %}
      */
     public function getCategories(): array
     {
