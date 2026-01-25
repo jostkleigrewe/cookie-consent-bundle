@@ -50,6 +50,7 @@
         "test": "vendor/bin/simple-phpunit",
         "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
         "ci": [
+            "composer validate --strict",
             "@test",
             "@phpstan"
         ]

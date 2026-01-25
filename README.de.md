@@ -128,7 +128,7 @@ Verfügbar: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok u
 
 ```bash
 composer install
-vendor/bin/phpunit
+composer ci
 ```
 
 ## Lizenz

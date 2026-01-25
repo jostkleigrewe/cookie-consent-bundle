@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- PHPUnit Bridge setup with functional/kernel tests
+- PHPStan configuration (level 6) and CI integration
+- Composer scripts: `test`, `phpstan`, `ci`
 
-## [0.2.0] - 2026-01-24
+### Changed
+- CI workflow runs `composer ci` for validation, tests, and static analysis
+
+## [0.2.0] - 2026-01-25
 
 ### Added
 - Examples for Bundle-Configuration
@@ -35,6 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings button component to re-open modal
 - Browser events: `cookie-consent:changed`, `cookie-consent:open`
 
-[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.2.0...HEAD
 [0.1.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.1.0
-[0.2.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.2.0
+[0.2.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...v0.2.0
