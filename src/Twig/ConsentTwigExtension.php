@@ -141,15 +141,15 @@ final class ConsentTwigExtension extends AbstractExtension
             'csrf_token' => $this->csrfTokenManager->getToken(ConsentCsrfTokenManager::TOKEN_ID)->getValue(),
 
             'consent_required' => $this->isConsentRequired(),
-            'privacy_url' => $this->ui['privacy_url'] ?? null,
-            'imprint_url' => $this->ui['imprint_url'] ?? null,
-            'reload_on_change' => (bool) ($this->ui['reload_on_change'] ?? false),
+            'privacy_url' => $this->ui['privacy_url'],
+            'imprint_url' => $this->ui['imprint_url'],
+            'reload_on_change' => $this->ui['reload_on_change'],
 
             // DE: Layout-Optionen mit Override-Moeglichkeit.
             // EN: Layout options with override capability.
-            'variant' => $overrides['variant'] ?? $this->ui['variant'] ?? 'tabler',
-            'theme' => $overrides['theme'] ?? $this->ui['theme'] ?? 'day',
-            'density' => $overrides['density'] ?? $this->ui['density'] ?? 'normal',
+            'variant' => $overrides['variant'] ?? $this->ui['variant'],
+            'theme' => $overrides['theme'] ?? $this->ui['theme'],
+            'density' => $overrides['density'] ?? $this->ui['density'],
 
             // DE: Google Consent Mode v2 Konfiguration.
             // EN: Google Consent Mode v2 configuration.

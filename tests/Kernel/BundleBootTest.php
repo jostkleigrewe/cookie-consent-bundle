@@ -16,6 +16,9 @@ final class BundleBootTest extends KernelTestCase
         return TestKernel::class;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new TestKernel($options['environment'] ?? 'test', $options['debug'] ?? false);

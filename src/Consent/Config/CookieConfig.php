@@ -25,6 +25,9 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
  *         same_site: lax       # 'lax' | 'strict' | 'none'
  *         http_only: true      # Nicht per JavaScript lesbar
  */
+/**
+ * @phpstan-consistent-constructor
+ */
 class CookieConfig
 {
     /**
@@ -62,7 +65,7 @@ class CookieConfig
      *        DE: Konfigurationsarray | EN: Configuration array
      * @return static DE: Neue CookieConfig-Instanz | EN: New CookieConfig instance
      */
-    public static function fromArray(array $config): static
+    final public static function fromArray(array $config): static
     {
         return new static(
             $config['name'],

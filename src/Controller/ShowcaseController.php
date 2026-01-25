@@ -86,7 +86,7 @@ final readonly class ShowcaseController
         $templateData = [
             'categories' => $this->policy->getCategories(),
             'preferences' => array_map(
-                fn(array $cat) => $cat['default'] ?? false,
+                fn(array $cat) => $cat['default'],
                 $this->policy->getCategories()
             ),
             'policy_version' => $this->policy->getPolicyVersion(),

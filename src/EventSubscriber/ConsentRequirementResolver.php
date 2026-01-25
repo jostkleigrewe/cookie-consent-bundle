@@ -193,6 +193,11 @@ final class ConsentRequirementResolver
             return false;
         }
 
+        if (!method_exists($this->firewallMap, 'getFirewallConfig')) {
+            $this->logger?->notice('Consent enforcement skipped: firewall map does not expose config.');
+            return false;
+        }
+
         // DE: Firewall-Config fuer diesen Request holen
         // EN: Get firewall config for this request
         $config = $this->firewallMap->getFirewallConfig($request);
