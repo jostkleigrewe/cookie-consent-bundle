@@ -15,17 +15,16 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * ConsentManager - Zentrale API fuer Cookie-Consent
  *
- * DE: Hauptservice fuer alle Consent-Operationen.
+ * Hauptservice fuer alle Consent-Operationen.
  *     Koordiniert Storage, Policy und Events.
  *     Stellt die oeffentliche API fuer Controller und Twig bereit.
  *
- * EN: Main service for all consent operations.
+ * Main service for all consent operations.
  *     Coordinates storage, policy, and events.
  *     Provides the public API for controllers and Twig.
  *
  * @example
- * // DE: Im Controller verwenden
- * // EN: Use in controller
+ * // Use in controller
  * public function index(ConsentManager $consentManager, Request $request): Response
  * {
  *     if ($consentManager->hasConsent($request)) {
@@ -37,8 +36,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * }
  *
  * @example
- * // DE: Consent programmatisch speichern
- * // EN: Save consent programmatically
+ * // Save consent programmatically
  * $state = $consentManager->savePreferences($request, $response, [
  *     'necessary' => true,
  *     'analytics' => false,
@@ -47,13 +45,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class ConsentManager
 {
     /**
-     * @param ConsentStorageInterface $storage DE: Storage-Backend (Cookie/Doctrine/Combined)
-     *                                         EN: Storage backend (Cookie/Doctrine/Combined)
-     * @param ConsentPolicy $policy DE: Policy mit Kategorien und Version
-     *                              EN: Policy with categories and version
-     * @param ConsentLogger $logger DE: Optionaler Audit-Logger | EN: Optional audit logger
-     * @param EventDispatcherInterface|null $eventDispatcher DE: Event-Dispatcher fuer ConsentChangedEvent
-     *                                                        EN: Event dispatcher for ConsentChangedEvent
+     * @param ConsentStorageInterface $storage Storage backend (Cookie/Doctrine/Combined)
+     * @param ConsentPolicy $policy Policy with categories and version
+     * @param ConsentLogger $logger Optional audit logger
+     * @param EventDispatcherInterface|null $eventDispatcher Event dispatcher for ConsentChangedEvent
      */
     public function __construct(
         private readonly ConsentStorageInterface $storage,
@@ -64,21 +59,17 @@ final class ConsentManager
     }
 
     /**
-     * DE: Laedt den aktuellen Consent-Status aus dem Storage.
-     *     Gibt leeren State zurueck wenn Policy-Version nicht uebereinstimmt.
-     *
-     * EN: Loads the current consent state from storage.
+     * Loads the current consent state from storage.
      *     Returns empty state if policy version doesn't match.
      *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @return ConsentState DE: Consent-Status (kann leer sein) | EN: Consent state (may be empty)
+     * @param Request $request Current HTTP request
+     * @return ConsentState Consent state (may be empty)
      */
     public function getState(Request $request): ConsentState
     {
         $state = $this->storage->load($request);
 
-        // DE: Bei Policy-Aenderung: alte Zustimmung ist ungueltig
-        // EN: On policy change: old consent is invalid
+        // On policy change: old consent is invalid
         if ($state->getPolicyVersion() !== $this->policy->getPolicyVersion()) {
             return ConsentState::empty($this->policy->getPolicyVersion());
         }
@@ -87,12 +78,10 @@ final class ConsentManager
     }
 
     /**
-     * DE: Prueft ob der Nutzer bereits eine Consent-Entscheidung getroffen hat.
+     * Checks if the user has already made a consent decision.
      *
-     * EN: Checks if the user has already made a consent decision.
-     *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @return bool DE: true wenn Entscheidung vorliegt | EN: true if decision exists
+     * @param Request $request Current HTTP request
+     * @return bool true if decision exists
      */
     public function hasConsent(Request $request): bool
     {
@@ -100,14 +89,11 @@ final class ConsentManager
     }
 
     /**
-     * DE: Gibt die normalisierten Praeferenzen zurueck.
-     *     Beruecksichtigt Pflicht-Kategorien und Defaults.
-     *
-     * EN: Returns the normalized preferences.
+     * Returns the normalized preferences.
      *     Considers required categories and defaults.
      *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @return array<string, bool> DE: Kategorie => erlaubt/nicht erlaubt | EN: Category => allowed/not allowed
+     * @param Request $request Current HTTP request
+     * @return array<string, bool> Category => allowed/not allowed
      *
      * @example
      * $prefs = $consentManager->getPreferences($request);
@@ -124,18 +110,14 @@ final class ConsentManager
     }
 
     /**
-     * DE: Speichert benutzerdefinierte Praeferenzen.
-     *     Normalisiert die Eingabe, persistiert, loggt und dispatcht Event.
-     *
-     * EN: Saves custom preferences.
+     * Saves custom preferences.
      *     Normalizes input, persists, logs, and dispatches event.
      *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @param Response $response DE: Response fuer Cookie-Header | EN: Response for cookie header
-     * @param array<string, bool> $preferences DE: Zu speichernde Praeferenzen | EN: Preferences to save
-     * @param string $action DE: Aktion fuer Logging ('custom', 'accept_all', etc.)
-     *                       EN: Action for logging ('custom', 'accept_all', etc.)
-     * @return ConsentState DE: Der gespeicherte Consent-Status | EN: The saved consent state
+     * @param Request $request Current HTTP request
+     * @param Response $response Response for cookie header
+     * @param array<string, bool> $preferences Preferences to save
+     * @param string $action Action for logging ('custom', 'accept_all', etc.)
+     * @return ConsentState The saved consent state
      */
     public function savePreferences(Request $request, Response $response, array $preferences, string $action = 'custom'): ConsentState
     {
@@ -156,15 +138,12 @@ final class ConsentManager
     }
 
     /**
-     * DE: Akzeptiert alle Cookie-Kategorien.
-     *     Shortcut fuer savePreferences() mit allen Kategorien aktiviert.
-     *
-     * EN: Accepts all cookie categories.
+     * Accepts all cookie categories.
      *     Shortcut for savePreferences() with all categories enabled.
      *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @param Response $response DE: Response fuer Cookie-Header | EN: Response for cookie header
-     * @return ConsentState DE: Der gespeicherte Consent-Status | EN: The saved consent state
+     * @param Request $request Current HTTP request
+     * @param Response $response Response for cookie header
+     * @return ConsentState The saved consent state
      */
     public function acceptAll(Request $request, Response $response): ConsentState
     {
@@ -172,15 +151,12 @@ final class ConsentManager
     }
 
     /**
-     * DE: Lehnt alle optionalen Cookies ab (nur Pflicht-Kategorien bleiben).
-     *     Shortcut fuer savePreferences() mit nur required=true Kategorien.
-     *
-     * EN: Rejects all optional cookies (only required categories remain).
+     * Rejects all optional cookies (only required categories remain).
      *     Shortcut for savePreferences() with only required=true categories.
      *
-     * @param Request $request DE: Aktueller HTTP-Request | EN: Current HTTP request
-     * @param Response $response DE: Response fuer Cookie-Header | EN: Response for cookie header
-     * @return ConsentState DE: Der gespeicherte Consent-Status | EN: The saved consent state
+     * @param Request $request Current HTTP request
+     * @param Response $response Response for cookie header
+     * @return ConsentState The saved consent state
      */
     public function rejectOptional(Request $request, Response $response): ConsentState
     {
@@ -188,11 +164,9 @@ final class ConsentManager
     }
 
     /**
-     * DE: Gibt die aktuelle Policy zurueck (fuer Twig/Controller).
+     * Returns the current policy (for Twig/controllers).
      *
-     * EN: Returns the current policy (for Twig/controllers).
-     *
-     * @return ConsentPolicy DE: Die konfigurierte Policy | EN: The configured policy
+     * @return ConsentPolicy The configured policy
      */
     public function getPolicy(): ConsentPolicy
     {

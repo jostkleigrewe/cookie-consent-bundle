@@ -12,14 +12,14 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * ConsentChangedEvent - Event bei Consent-Aenderungen
  *
- * DE: Wird dispatcht wenn ein Nutzer seine Cookie-Praeferenzen aendert.
+ * Wird dispatcht wenn ein Nutzer seine Cookie-Praeferenzen aendert.
  *     Ermoeglicht Reaktionen auf Consent-Aenderungen, z.B.:
  *     - Tracking-Systeme aktivieren/deaktivieren
  *     - Externe Services benachrichtigen
  *     - Audit-Logs schreiben
  *     - Cache invalidieren
  *
- * EN: Dispatched when a user changes their cookie preferences.
+ * Dispatched when a user changes their cookie preferences.
  *     Enables reactions to consent changes, e.g.:
  *     - Enable/disable tracking systems
  *     - Notify external services
@@ -29,8 +29,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  * Event-Name: 'cookie_consent.changed'
  *
  * @example
- * // DE: Event-Subscriber registrieren
- * // EN: Register event subscriber
+ * // Register event subscriber
  * class ConsentEventSubscriber implements EventSubscriberInterface
  * {
  *     public static function getSubscribedEvents(): array
@@ -53,18 +52,15 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class ConsentChangedEvent extends Event
 {
     /**
-     * DE: Event-Name fuer den EventDispatcher.
-     * EN: Event name for the EventDispatcher.
+     * Event name for the EventDispatcher.
      */
     public const NAME = 'cookie_consent.changed';
 
     /**
-     * @param ConsentState $state DE: Der neue Consent-State | EN: The new consent state
-     * @param ConsentPolicy $policy DE: Die aktuelle Policy | EN: The current policy
-     * @param string $action DE: Die ausgefuehrte Aktion ('accept_all', 'reject_optional', 'custom')
-     *                       EN: The performed action ('accept_all', 'reject_optional', 'custom')
-     * @param Request|null $request DE: Der HTTP-Request (fuer Kontext)
-     *                               EN: The HTTP request (for context)
+     * @param ConsentState $state The new consent state
+     * @param ConsentPolicy $policy The current policy
+     * @param string $action The performed action ('accept_all', 'reject_optional', 'custom')
+     * @param Request|null $request The HTTP request (for context)
      */
     public function __construct(
         private readonly ConsentState $state,
@@ -75,11 +71,9 @@ final class ConsentChangedEvent extends Event
     }
 
     /**
-     * DE: Gibt den neuen Consent-State zurueck.
+     * Returns the new consent state.
      *
-     * EN: Returns the new consent state.
-     *
-     * @return ConsentState DE: Der neue State | EN: The new state
+     * @return ConsentState The new state
      */
     public function getState(): ConsentState
     {
@@ -87,11 +81,9 @@ final class ConsentChangedEvent extends Event
     }
 
     /**
-     * DE: Gibt die aktuelle Policy zurueck.
+     * Returns the current policy.
      *
-     * EN: Returns the current policy.
-     *
-     * @return ConsentPolicy DE: Die Policy | EN: The policy
+     * @return ConsentPolicy The policy
      */
     public function getPolicy(): ConsentPolicy
     {
@@ -99,12 +91,9 @@ final class ConsentChangedEvent extends Event
     }
 
     /**
-     * DE: Gibt die ausgefuehrte Aktion zurueck.
+     * Returns the performed action.
      *
-     * EN: Returns the performed action.
-     *
-     * @return string DE: 'accept_all', 'reject_optional', oder 'custom'
-     *                EN: 'accept_all', 'reject_optional', or 'custom'
+     * @return string 'accept_all', 'reject_optional', or 'custom'
      */
     public function getAction(): string
     {
@@ -112,11 +101,9 @@ final class ConsentChangedEvent extends Event
     }
 
     /**
-     * DE: Gibt den HTTP-Request zurueck (kann null sein).
+     * Returns the HTTP request (may be null).
      *
-     * EN: Returns the HTTP request (may be null).
-     *
-     * @return Request|null DE: Der Request oder null | EN: The request or null
+     * @return Request|null The request or null
      */
     public function getRequest(): ?Request
     {

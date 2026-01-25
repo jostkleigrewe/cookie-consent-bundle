@@ -7,14 +7,14 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
 /**
  * ConsentStorageFactory - Factory fuer Storage-Backend-Auswahl
  *
- * DE: Waehlt das passende Storage-Backend basierend auf der Konfiguration.
+ * Waehlt das passende Storage-Backend basierend auf der Konfiguration.
  *     Wird vom DI-Container verwendet um den richtigen Adapter zu injizieren.
  *
- * EN: Selects the appropriate storage backend based on configuration.
+ * Selects the appropriate storage backend based on configuration.
  *     Used by DI container to inject the correct adapter.
  *
- * Verfuegbare Backends / Available backends:
- * - 'cookie': CookieConsentStorageAdapter (Standard)
+ * Available backends:
+ * - 'cookie': CookieConsentStorageAdapter (default)
  * - 'doctrine': DoctrineConsentStorageAdapter
  * - 'both': CombinedConsentStorageAdapter
  *
@@ -26,11 +26,9 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
 final readonly class ConsentStorageFactory
 {
     /**
-     * @param CookieConsentStorageAdapter $cookieStorage DE: Cookie-Adapter | EN: Cookie adapter
-     * @param DoctrineConsentStorageAdapter|null $doctrineStorage DE: Doctrine-Adapter (null wenn nicht installiert)
-     *                                                             EN: Doctrine adapter (null if not installed)
-     * @param CombinedConsentStorageAdapter|null $combinedStorage DE: Combined-Adapter
-     *                                                             EN: Combined adapter
+     * @param CookieConsentStorageAdapter $cookieStorage Cookie adapter
+     * @param DoctrineConsentStorageAdapter|null $doctrineStorage Doctrine adapter (null if not installed)
+     * @param CombinedConsentStorageAdapter|null $combinedStorage Combined adapter
      */
     public function __construct(
         private CookieConsentStorageAdapter $cookieStorage,
@@ -40,15 +38,12 @@ final readonly class ConsentStorageFactory
     }
 
     /**
-     * DE: Erstellt den passenden Storage-Adapter basierend auf der Konfiguration.
+     * Creates the appropriate storage adapter based on configuration.
      *
-     * EN: Creates the appropriate storage adapter based on configuration.
+     * @param string $storage Configured storage type
+     * @return ConsentStorageInterface The appropriate adapter
      *
-     * @param string $storage DE: Konfigurierter Storage-Typ | EN: Configured storage type
-     * @return ConsentStorageInterface DE: Der passende Adapter | EN: The appropriate adapter
-     *
-     * @throws \LogicException DE: Wenn Doctrine benoetigt aber nicht installiert
-     *                         EN: If Doctrine required but not installed
+     * @throws \LogicException If Doctrine required but not installed
      */
     public function create(string $storage): ConsentStorageInterface
     {
@@ -60,16 +55,12 @@ final readonly class ConsentStorageFactory
     }
 
     /**
-     * DE: Gibt Doctrine-Adapter zurueck oder wirft Exception.
+     * Returns Doctrine adapter or throws exception.
      *
-     * EN: Returns Doctrine adapter or throws exception.
-     *
-     * @param string $storage DE: Konfigurierter Wert (fuer Fehlermeldung)
-     *                        EN: Configured value (for error message)
+     * @param string $storage Configured value (for error message)
      * @return DoctrineConsentStorageAdapter
      *
-     * @throws \LogicException DE: Wenn Doctrine nicht installiert
-     *                         EN: If Doctrine not installed
+     * @throws \LogicException If Doctrine not installed
      */
     private function requireDoctrine(string $storage): DoctrineConsentStorageAdapter
     {
@@ -84,16 +75,12 @@ final readonly class ConsentStorageFactory
     }
 
     /**
-     * DE: Gibt Combined-Adapter zurueck oder wirft Exception.
+     * Returns Combined adapter or throws exception.
      *
-     * EN: Returns Combined adapter or throws exception.
-     *
-     * @param string $storage DE: Konfigurierter Wert (fuer Fehlermeldung)
-     *                        EN: Configured value (for error message)
+     * @param string $storage Configured value (for error message)
      * @return CombinedConsentStorageAdapter
      *
-     * @throws \LogicException DE: Wenn Doctrine nicht installiert
-     *                         EN: If Doctrine not installed
+     * @throws \LogicException If Doctrine not installed
      */
     private function requireCombined(string $storage): CombinedConsentStorageAdapter
     {
