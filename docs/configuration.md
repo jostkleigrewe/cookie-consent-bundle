@@ -252,38 +252,7 @@ Scripts load automatically when consent is given:
 
 ## Embed Components
 
-Gate third-party embeds with built-in components:
-
-```twig
-{# YouTube #}
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Vimeo #}
-{{ include('@CookieConsent/components/CookieConsentVimeoEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Google Maps #}
-{{ include('@CookieConsent/components/CookieConsentGoogleMapsEmbed.html.twig', {
-  src: 'https://www.google.com/maps/embed?pb=...'
-}) }}
-
-{# Generic embed #}
-{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
-  src: 'https://example.com/embed',
-  title: 'Embedded content',
-  category: 'marketing',
-  type: 'iframe',
-  allow: 'autoplay; encrypted-media',
-  aspect_ratio: '16 / 9'
-}) }}
-```
-
-**Available components:** YouTube, Vimeo, Google Maps, Spotify, SoundCloud, Twitter/X, Instagram, TikTok, Calendly, Facebook, LinkedIn, Pinterest, Typeform, reCAPTCHA.
+All embed components are documented in **[Integration](integration.md)** (usage, full list, and best practices).
 
 For embeds to work without page reload, include the embed helper:
 

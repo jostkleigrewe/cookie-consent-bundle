@@ -71,7 +71,9 @@ return static function (ContainerConfigurator $container): void {
     $services->set(NullAuditLogPersister::class);
     $services->alias(AuditLogPersisterInterface::class, NullAuditLogPersister::class);
 
-    if (class_exists(EntityManagerInterface::class)) {
+    $hasDoctrineBundle = class_exists(\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class);
+
+    if ($hasDoctrineBundle && class_exists(EntityManagerInterface::class)) {
         $services->set(DoctrineOrmConsentStorageAdapter::class);
         $doctrineStorage = new ReferenceConfigurator(DoctrineOrmConsentStorageAdapter::class);
 
@@ -90,7 +92,7 @@ return static function (ContainerConfigurator $container): void {
             ->tag('console.command');
     }
 
-    if (class_exists(Doctrine\DBAL\Connection::class)) {
+    if ($hasDoctrineBundle && class_exists(Doctrine\DBAL\Connection::class)) {
         $services->set(DoctrineConsentStorageAdapter::class);
         if ($doctrineStorage === null) {
             $doctrineStorage = new ReferenceConfigurator(DoctrineConsentStorageAdapter::class);

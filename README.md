@@ -10,15 +10,15 @@ A Symfony 8 bundle for GDPR-compliant cookie consent with Twig integration, Stim
 
 ## Features
 
-- **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
-- **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
-- **Stimulus.js** - Turbo-friendly, no full page reload needed
-- **Flexible Storage** - Cookie, Doctrine, or both combined
-- **Vendor-Level Consent** - Optional per-vendor toggles inside categories
-- **Session Protection** - Prevents session cookies without consent
-- **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
-- **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
-- **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
+- 🎯 **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
+- 🎨 **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
+- ⚡ **Stimulus.js** - Turbo-friendly, no full page reload needed
+- 🧭 **Flexible Storage** - Cookie, Doctrine, or both combined
+- 🧩 **Vendor-Level Consent** - Optional per-vendor toggles inside categories
+- 🛡️ **Session Protection** - Prevents session cookies without consent
+- 📊 **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
+- 🎬 **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
+- 🧪 **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
 
 ## Requirements
 
@@ -126,13 +126,24 @@ Increment `policy_version` when changing categories to require re-consent.
 - **[Getting Started](docs/getting-started.md)** - Installation, assets, first steps
 - **[Configuration](docs/configuration.md)** - All options, templates, Twig helpers
 - **[Advanced](docs/advanced.md)** - Storage backends, session enforcement, logging, events
+- **[Integration](docs/integration.md)** - Components, helpers, attributes, data attributes, events
 
 ## Embed Components
 
 Gate third-party content with built-in components:
 
 ```twig
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
+<twig:CookieConsentYoutubeEmbed
+  video_id="dQw4w9WgXcQ"
+  category="marketing"
+  vendor="youtube"
+/>
+```
+
+Alternative:
+
+```twig
+{{ component('CookieConsentYoutubeEmbed', {
   video_id: 'dQw4w9WgXcQ',
   category: 'marketing',
   vendor: 'youtube'
@@ -140,6 +151,10 @@ Gate third-party content with built-in components:
 ```
 
 Available: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok, and more.
+
+## Integration Overview
+
+See **[Integration](docs/integration.md)** for Twig components, helpers, data attributes, controller attributes, and events.
 
 ## Contributing
 

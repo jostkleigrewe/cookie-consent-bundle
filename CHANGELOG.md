@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+## [0.3.0] - 2026-01-26
+
+### Added
 - PHPUnit Bridge setup with functional/kernel tests
 - PHPStan configuration (level 6) and CI integration
 - Composer scripts: `test`, `phpstan`, `ci`
@@ -17,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Log retention config (`logging.retention_days`) and `cookie-consent:prune-logs` command
 - Doctrine ORM + Symfony Console as required dependencies
 - Optional vendor-level consent per category (new preference schema)
+- Twig component classes for embed templates (use `<twig:...>` or `component()`)
+- Integration guide (Twig components, attributes, helpers, data attributes)
+- Docblock examples for embed Twig components (template usage)
 
 ### Changed
 - CI workflow runs `composer ci` for validation, tests, and static analysis
@@ -27,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tabler vendor entries use a switch layout with reduced emphasis
 - Embed placeholders now use category/vendor labels from config
 - Embed components accept optional vendor parameters with docs examples
+- Embed documentation now uses Twig component tags instead of include paths
+- Documentation consolidated: installation content merged into Getting Started and new Integration quick start added
+- Documentation refreshed: configuration pages now link to the Integration guide and embed examples consolidated
 
 ### Removed
 - Vendor list toggle button and `ui.vendors` configuration options

@@ -221,6 +221,17 @@ document.dispatchEvent(new CustomEvent('cookie-consent:open'));
 ### Embed-Komponenten
 
 Alle Embed-Komponenten akzeptieren optional den Key `vendor` für Vendor-Consent.
+Für eine gebündelte Integrationsübersicht siehe **[Integration](integration.de.md)**.
+
+```twig
+<twig:CookieConsentYoutubeEmbed
+  video_id="dQw4w9WgXcQ"
+  category="marketing"
+  vendor="youtube"
+/>
+```
+
+Alternative:
 
 ```twig
 {{ component('CookieConsentYoutubeEmbed', {

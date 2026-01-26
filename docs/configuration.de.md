@@ -200,22 +200,7 @@ Skripte werden automatisch geladen, wenn die Einwilligung erteilt wird:
 
 ## Embed-Komponenten
 
-Drittanbieter-Embeds mit integrierten Komponenten absichern:
-
-```twig
-{# YouTube #}
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Google Maps #}
-{{ include('@CookieConsent/components/CookieConsentGoogleMapsEmbed.html.twig', {
-  src: 'https://www.google.com/maps/embed?pb=...'
-}) }}
-```
-
-**Verfügbar:** YouTube, Vimeo, Google Maps, Spotify, SoundCloud, Twitter/X, Instagram, TikTok, Calendly, Facebook, LinkedIn, Pinterest, Typeform, reCAPTCHA.
+Alle Embed-Komponenten sind in **[Integration](integration.de.md)** dokumentiert (Verwendung, vollständige Liste, Best Practices).
 
 Für Embeds ohne Seiten-Reload den Embed-Helfer einbinden:
 
