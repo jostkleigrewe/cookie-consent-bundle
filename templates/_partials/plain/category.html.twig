@@ -1,6 +1,11 @@
 {# DE: Plain-Kategorie mit minimalen Klassen. #}
 {# EN: Plain category with minimal classes. #}
 
+{% set category_preferences = preferences[name] ?? {'allowed': false, 'vendors': {}} %}
+{% set category_allowed = category_preferences.allowed ?? false %}
+{% set vendor_preferences = category_preferences.vendors ?? {} %}
+{% set vendors = config.vendors ?? {} %}
+
 <div class="cookie-consent-category">
     <div>
         <input
@@ -8,8 +13,10 @@
             class="cookie-consent-checkbox"
             type="checkbox"
             value="{{ name }}"
+            data-consent-type="category"
+            data-consent-category-name="{{ name }}"
             data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
-            {% if preferences[name] %}checked{% endif %}
+            {% if category_allowed %}checked{% endif %}
             {% if config.required %}disabled{% endif %}
         >
     </div>
@@ -20,6 +27,41 @@
         {% if config.description %}
             <div class="cookie-consent-category-description">
                 {{ config.description }}
+            </div>
+        {% endif %}
+        {% if vendors is not empty %}
+            <div
+                class="cookie-consent-vendors"
+                data-consent-vendor-list="true"
+                data-consent-category-name="{{ name }}"
+                {% if not category_allowed %}hidden{% endif %}
+            >
+                {% for vendor_name, vendor_config in vendors %}
+                    <div class="cookie-consent-vendor">
+                        <input
+                            id="cookie-consent-{{ name }}-vendor-{{ vendor_name }}-{{ id_suffix }}"
+                            class="cookie-consent-vendor-checkbox"
+                            type="checkbox"
+                            value="{{ vendor_name }}"
+                            data-consent-type="vendor"
+                            data-consent-category-name="{{ name }}"
+                            data-consent-vendor="{{ vendor_name }}"
+                            data-consent-required="{{ vendor_config.required ? 'true' : 'false' }}"
+                            data-consent-default="{{ vendor_config.default ? 'true' : 'false' }}"
+                            data-jostkleigrewe--cookie-consent-bundle--cookie-consent-target="checkbox"
+                            {% if vendor_preferences[vendor_name] ?? false %}checked{% endif %}
+                            {% if vendor_config.required %}disabled{% endif %}
+                        >
+                        <label class="cookie-consent-vendor-label" for="cookie-consent-{{ name }}-vendor-{{ vendor_name }}-{{ id_suffix }}">
+                            {{ vendor_config.label ?? vendor_name|title }}
+                        </label>
+                        {% if vendor_config.description %}
+                            <div class="cookie-consent-vendor-description">
+                                {{ vendor_config.description }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
         {% endif %}
     </div>

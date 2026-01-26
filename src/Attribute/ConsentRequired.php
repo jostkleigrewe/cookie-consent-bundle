@@ -9,21 +9,20 @@ use Attribute;
 /**
  * ConsentRequired - Markiert Controller/Action als consent-pflichtig
  *
- * DE: PHP 8 Attribut das Controller oder Actions als consent-pflichtig markiert.
+ * PHP 8 Attribut das Controller oder Actions als consent-pflichtig markiert.
  *     Routes mit diesem Attribut zeigen immer das Consent-Modal wenn kein
  *     Consent vorliegt, unabhaengig von anderen Enforcement-Einstellungen.
  *
- * EN: PHP 8 attribute that marks controllers or actions as consent-required.
+ * PHP 8 attribute that marks controllers or actions as consent-required.
  *     Routes with this attribute always show the consent modal if no
  *     consent exists, regardless of other enforcement settings.
  *
- * Kann auf Klassen- oder Methoden-Ebene verwendet werden:
- * - Klasse: Alle Actions im Controller sind consent-pflichtig
- * - Methode: Nur diese Action ist consent-pflichtig
+ * Can be used at class or method level:
+ * - Class: All actions in the controller are consent-required
+ * - Method: Only this action is consent-required
  *
  * @example
- * // DE: Gesamter Controller ist consent-pflichtig
- * // EN: Entire controller requires consent
+ * // Entire controller requires consent
  * #[ConsentRequired]
  * class NewsletterController
  * {
@@ -32,18 +31,17 @@ use Attribute;
  * }
  *
  * @example
- * // DE: Nur eine Action ist consent-pflichtig
- * // EN: Only one action requires consent
+ * // Only one action requires consent
  * class ContactController
  * {
  *     #[ConsentRequired]
  *     public function trackingForm(): Response { ... }
  *
- *     public function simpleForm(): Response { ... }  // Kein Consent nötig
+ *     public function simpleForm(): Response { ... }  // No consent needed
  * }
  *
- * @see ConsentStateless - Das Gegenteil: Route ist consent-frei
- * @see ConsentRequirementResolver - Wertet das Attribut aus
+ * @see ConsentStateless - Opposite: route is consent-free
+ * @see ConsentRequirementResolver - Evaluates the attribute
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 final class ConsentRequired

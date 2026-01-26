@@ -10,14 +10,15 @@ A Symfony 8 bundle for GDPR-compliant cookie consent with Twig integration, Stim
 
 ## Features
 
-- **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
-- **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
-- **Stimulus.js** - Turbo-friendly, no full page reload needed
-- **Flexible Storage** - Cookie, Doctrine, or both combined
-- **Session Protection** - Prevents session cookies without consent
-- **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
-- **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
-- **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
+- 🎯 **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
+- 🎨 **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
+- ⚡ **Stimulus.js** - Turbo-friendly, no full page reload needed
+- 🧭 **Flexible Storage** - Cookie, Doctrine, or both combined
+- 🧩 **Vendor-Level Consent** - Optional per-vendor toggles inside categories
+- 🛡️ **Session Protection** - Prevents session cookies without consent
+- 📊 **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
+- 🎬 **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
+- 🧪 **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
 
 ## Requirements
 
@@ -93,14 +94,29 @@ cookie_consent:
     marketing:
       label: Marketing
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          default: false
 
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
+    position: center
     privacy_url: '/privacy'
     reload_on_change: false
 
+  logging:
+    retention_days: null
+
   google_consent_mode:
     enabled: false
+```
+
+If `storage` is set to `doctrine` or `both`, generate migrations in your app (bundle ships entities, not migrations). This requires Doctrine ORM:
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 Increment `policy_version` when changing categories to require re-consent.
@@ -110,19 +126,35 @@ Increment `policy_version` when changing categories to require re-consent.
 - **[Getting Started](docs/getting-started.md)** - Installation, assets, first steps
 - **[Configuration](docs/configuration.md)** - All options, templates, Twig helpers
 - **[Advanced](docs/advanced.md)** - Storage backends, session enforcement, logging, events
+- **[Integration](docs/integration.md)** - Components, helpers, attributes, data attributes, events
 
 ## Embed Components
 
 Gate third-party content with built-in components:
 
 ```twig
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
+<twig:CookieConsentYoutubeEmbed
+  video_id="dQw4w9WgXcQ"
+  category="marketing"
+  vendor="youtube"
+/>
+```
+
+Alternative:
+
+```twig
+{{ component('CookieConsentYoutubeEmbed', {
   video_id: 'dQw4w9WgXcQ',
-  category: 'marketing'
+  category: 'marketing',
+  vendor: 'youtube'
 }) }}
 ```
 
 Available: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok, and more.
+
+## Integration Overview
+
+See **[Integration](docs/integration.md)** for Twig components, helpers, data attributes, controller attributes, and events.
 
 ## Contributing
 

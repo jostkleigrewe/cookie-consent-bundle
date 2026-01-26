@@ -10,14 +10,15 @@ Ein Symfony 8 Bundle für DSGVO-konforme Cookie-Einwilligung mit Twig-Integratio
 
 ## Features
 
-- **DSGVO-konform** - Cookie-Einwilligung mit Richtlinien-Versionierung und Audit-Logging
-- **Mehrere Themes** - Tabler (hell/dunkel), Bootstrap oder eigene Templates
-- **Stimulus.js** - Turbo-kompatibel, kein vollständiger Seiten-Reload nötig
-- **Flexible Speicherung** - Cookie, Doctrine oder beides kombiniert
-- **Session-Schutz** - Verhindert Session-Cookies ohne Einwilligung
-- **Google Consent Mode v2** - Integrierte GA4- und Google Ads-Unterstützung
-- **Embed-Komponenten** - YouTube, Vimeo, Google Maps u.v.m. mit Consent-Gates
-- **Twig-Helfer** - `cookie_consent_has()`, `cookie_consent_modal()` und mehr
+- 🎯 **DSGVO-konform** - Cookie-Einwilligung mit Richtlinien-Versionierung und Audit-Logging
+- 🎨 **Mehrere Themes** - Tabler (hell/dunkel), Bootstrap oder eigene Templates
+- ⚡ **Stimulus.js** - Turbo-kompatibel, kein vollständiger Seiten-Reload nötig
+- 🧭 **Flexible Speicherung** - Cookie, Doctrine oder beides kombiniert
+- 🧩 **Vendor-Ebene** - Optionale Vendor-Toggles innerhalb von Kategorien
+- 🛡️ **Session-Schutz** - Verhindert Session-Cookies ohne Einwilligung
+- 📊 **Google Consent Mode v2** - Integrierte GA4- und Google Ads-Unterstützung
+- 🎬 **Embed-Komponenten** - YouTube, Vimeo, Google Maps u.v.m. mit Consent-Gates
+- 🧪 **Twig-Helfer** - `cookie_consent_has()`, `cookie_consent_modal()` und mehr
 
 ## Voraussetzungen
 
@@ -93,14 +94,29 @@ cookie_consent:
     marketing:
       label: Marketing
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          default: false
 
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
+    position: center
     privacy_url: '/datenschutz'
     reload_on_change: false
 
+  logging:
+    retention_days: null
+
   google_consent_mode:
     enabled: false
+```
+
+Wenn `storage` auf `doctrine` oder `both` steht, erstelle die Migrationen in der App (das Bundle liefert Entities, keine Migrationen). Das erfordert Doctrine ORM:
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 Erhöhe `policy_version` bei Änderungen an den Kategorien, um eine erneute Einwilligung zu erzwingen.
@@ -110,19 +126,35 @@ Erhöhe `policy_version` bei Änderungen an den Kategorien, um eine erneute Einw
 - **[Erste Schritte](docs/getting-started.de.md)** - Installation, Assets, erste Schritte
 - **[Konfiguration](docs/configuration.de.md)** - Alle Optionen, Templates, Twig-Helfer
 - **[Erweitert](docs/advanced.de.md)** - Speicher-Backends, Session-Erzwingung, Logging, Events
+- **[Integration](docs/integration.de.md)** - Komponenten, Helper, Attribute, Data-Attributes, Events
 
 ## Embed-Komponenten
 
 Drittanbieter-Inhalte mit integrierten Komponenten absichern:
 
 ```twig
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
+<twig:CookieConsentYoutubeEmbed
+  video_id="dQw4w9WgXcQ"
+  category="marketing"
+  vendor="youtube"
+/>
+```
+
+Alternative:
+
+```twig
+{{ component('CookieConsentYoutubeEmbed', {
   video_id: 'dQw4w9WgXcQ',
-  category: 'marketing'
+  category: 'marketing',
+  vendor: 'youtube'
 }) }}
 ```
 
 Verfügbar: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok und mehr.
+
+## Integrationsübersicht
+
+Siehe **[Integration](docs/integration.de.md)** für Komponenten, Helper, Data-Attributes, Controller-Attribute und Events.
 
 ## Entwicklung
 

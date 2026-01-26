@@ -25,6 +25,7 @@ cookie_consent:
 # - variant: tabler
 # - theme: day
 # - density: normal
+# - position: center
 # - storage: cookie
 # - categories: necessary (required), functional, analytics, marketing
 # - policy_version: '1'

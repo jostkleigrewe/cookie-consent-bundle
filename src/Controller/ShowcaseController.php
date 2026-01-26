@@ -13,13 +13,13 @@ use Twig\Environment;
 /**
  * ShowcaseController - Template-Showcase fuer visuelles Testing
  *
- * DE: Development-Controller der alle Template-Varianten auf einer Seite zeigt.
+ * Development-Controller der alle Template-Varianten auf einer Seite zeigt.
  *     Ermoeglicht schnelles visuelles Testing aller Kombinationen von:
  *     - Variants: tabler, bootstrap, plain
  *     - Themes: day, night
  *     - Densities: normal, compact
  *
- * EN: Development controller showing all template variants on one page.
+ * Development controller showing all template variants on one page.
  *     Enables quick visual testing of all combinations of:
  *     - Variants: tabler, bootstrap, plain
  *     - Themes: day, night
@@ -27,20 +27,19 @@ use Twig\Environment;
  *
  * Route: GET /_cookie-consent/showcase
  *
- * Insgesamt 12 Kombinationen (3 x 2 x 2) werden angezeigt.
+ * Displays 12 combinations (3 x 2 x 2).
  *
  * @example
- * // DE: Im Browser aufrufen
- * // EN: Open in browser
+ * // Open in browser
  * https://localhost/_cookie-consent/showcase
  */
 final readonly class ShowcaseController
 {
     /**
-     * @param Environment $twig DE: Twig-Environment | EN: Twig environment
-     * @param ConsentPolicy $policy DE: Policy fuer Kategorien | EN: Policy for categories
-     * @param UrlGeneratorInterface $urlGenerator DE: URL-Generator | EN: URL generator
-     * @param ConsentCsrfTokenManager $csrfTokenManager DE: CSRF-Manager | EN: CSRF manager
+     * @param Environment $twig Twig environment
+     * @param ConsentPolicy $policy Policy for categories
+     * @param UrlGeneratorInterface $urlGenerator URL generator
+     * @param ConsentCsrfTokenManager $csrfTokenManager CSRF manager
      */
     public function __construct(
         private Environment $twig,
@@ -51,22 +50,18 @@ final readonly class ShowcaseController
     }
 
     /**
-     * DE: Rendert die Showcase-Seite mit allen Template-Kombinationen.
+     * Renders the showcase page with all template combinations.
      *
-     * EN: Renders the showcase page with all template combinations.
-     *
-     * @return Response DE: HTML-Response mit Showcase | EN: HTML response with showcase
+     * @return Response HTML response with showcase
      */
     public function __invoke(): Response
     {
-        // DE: Alle moeglichen Kombinationen definieren.
-        // EN: Define all possible combinations.
+        // Define all possible combinations.
         $variants = ['tabler', 'bootstrap', 'plain'];
         $themes = ['day', 'night'];
         $densities = ['normal', 'compact'];
 
-        // DE: Kombinationen aufbauen
-        // EN: Build combinations
+        // Build combinations
         $combinations = [];
         foreach ($variants as $variant) {
             foreach ($themes as $theme) {
@@ -81,8 +76,7 @@ final readonly class ShowcaseController
             }
         }
 
-        // DE: Beispiel-Daten fuer das Modal.
-        // EN: Example data for the modal.
+        // Example data for the modal.
         $templateData = [
             'categories' => $this->policy->getCategories(),
             'preferences' => array_map(
@@ -107,8 +101,7 @@ final readonly class ShowcaseController
             ],
         ];
 
-        // DE: Showcase-Template rendern
-        // EN: Render showcase template
+        // Render showcase template
         $content = $this->twig->render('@CookieConsent/showcase.html.twig', [
             'combinations' => $combinations,
             'template_data' => $templateData,

@@ -25,13 +25,20 @@ cookie_consent:
   storage: doctrine
 ```
 
-Tabelle erstellen:
+Doctrine ORM ist Pflicht für `doctrine` oder `both`. Migrationen in der App erzeugen (Bundle liefert Entities, keine Migrationen):
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
+```
+
+Wenn du nur DBAL nutzt, Tabelle manuell anlegen:
 
 ```sql
 CREATE TABLE cookie_consent (
-  id VARCHAR(64) PRIMARY KEY,
+  id VARCHAR(32) PRIMARY KEY,
   preferences JSON NOT NULL,
-  policy_version VARCHAR(32) NOT NULL,
+  policy_version VARCHAR(16) NOT NULL,
   decided_at DATETIME NULL
 );
 ```
@@ -122,6 +129,7 @@ cookie_consent:
     enabled: true
     level: info
     anonymize_ip: true
+    retention_days: 180
 ```
 
 ### Protokollierte Daten
@@ -131,8 +139,24 @@ cookie_consent:
 - Richtlinienversion und Entscheidungszeitstempel
 - Akzeptierte/abgelehnte Kategorien
 - Request-Kontext (IP, User-Agent, Referrer, URI)
+- User-ID (falls authentifiziert)
 
 IPs werden anonymisiert, wenn `anonymize_ip: true`.
+
+### Datenbank-Audit-Log
+
+Wenn Doctrine ORM verfügbar ist, werden Audit-Einträge in `cookie_consent_log` gespeichert.
+Der aktuelle Zustand liegt in `cookie_consent`.
+
+### Aufbewahrung / Bereinigung
+
+Retention kann konfiguriert oder per Command überschrieben werden:
+Setze `retention_days` auf `null`, um die Bereinigung zu deaktivieren.
+
+```bash
+bin/console cookie-consent:prune-logs
+bin/console cookie-consent:prune-logs --days=90
+```
 
 ---
 
@@ -172,6 +196,71 @@ document.dispatchEvent(new CustomEvent('cookie-consent:open'));
 
 ---
 
+## Vendor-Prüfung (Twig + Data-Attribute)
+
+### Twig-Helfer
+
+```twig
+{% if cookie_consent_vendor_has('marketing', 'youtube') %}
+  <script src="https://www.youtube.com/iframe_api"></script>
+{% endif %}
+```
+
+### Data-Attribute für Skripte/Inhalte
+
+```html
+<script
+  type="text/plain"
+  data-consent-category="marketing"
+  data-consent-vendor="youtube"
+  data-consent-mode="hide"
+  src="https://www.youtube.com/iframe_api">
+</script>
+```
+
+### Embed-Komponenten
+
+Alle Embed-Komponenten akzeptieren optional den Key `vendor` für Vendor-Consent.
+Für eine gebündelte Integrationsübersicht siehe **[Integration](integration.de.md)**.
+
+```twig
+<twig:CookieConsentYoutubeEmbed
+  video_id="dQw4w9WgXcQ"
+  category="marketing"
+  vendor="youtube"
+/>
+```
+
+Alternative:
+
+```twig
+{{ component('CookieConsentYoutubeEmbed', {
+  video_id: 'dQw4w9WgXcQ',
+  category: 'marketing',
+  vendor: 'youtube'
+}) }}
+```
+
+Beispiele für weitere Komponenten:
+
+```twig
+{{ component('CookieConsentVimeoEmbed', { video_id: '12345', category: 'marketing', vendor: 'vimeo' }) }}
+{{ component('CookieConsentGoogleMapsEmbed', { src: map_url, category: 'marketing', vendor: 'google_maps' }) }}
+{{ component('CookieConsentSpotifyEmbed', { src: spotify_url, category: 'marketing', vendor: 'spotify' }) }}
+{{ component('CookieConsentInstagramEmbed', { post_url: post_url, category: 'marketing', vendor: 'instagram' }) }}
+{{ component('CookieConsentTikTokEmbed', { video_url: video_url, category: 'marketing', vendor: 'tiktok' }) }}
+{{ component('CookieConsentTwitterEmbed', { tweet_url: tweet_url, category: 'marketing', vendor: 'twitter' }) }}
+{{ component('CookieConsentLinkedInEmbed', { post_url: post_url, category: 'marketing', vendor: 'linkedin' }) }}
+{{ component('CookieConsentPinterestEmbed', { pin_url: pin_url, category: 'marketing', vendor: 'pinterest' }) }}
+{{ component('CookieConsentSoundCloudEmbed', { src: soundcloud_url, category: 'marketing', vendor: 'soundcloud' }) }}
+{{ component('CookieConsentFacebookPageEmbed', { src: page_url, category: 'marketing', vendor: 'facebook' }) }}
+{{ component('CookieConsentRecaptcha', { category: 'marketing', vendor: 'recaptcha' }) }}
+{{ component('CookieConsentTypeformEmbed', { src: typeform_url, category: 'marketing', vendor: 'typeform' }) }}
+{{ component('CookieConsentCalendlyEmbed', { src: calendly_url, category: 'marketing', vendor: 'calendly' }) }}
+```
+
+---
+
 ## API-Endpunkt
 
 ### Route
@@ -198,8 +287,12 @@ Für `custom` Präferenzen mitgeben:
 {
   "action": "custom",
   "preferences": {
-    "analytics": true,
-    "marketing": false
+    "marketing": {
+      "allowed": true,
+      "vendors": {
+        "google_ads": true
+      }
+    }
   },
   "csrf_token": "..."
 }
@@ -211,9 +304,9 @@ Für `custom` Präferenzen mitgeben:
 {
   "success": true,
   "preferences": {
-    "necessary": true,
-    "analytics": true,
-    "marketing": false
+    "necessary": { "allowed": true, "vendors": {} },
+    "analytics": { "allowed": true, "vendors": {} },
+    "marketing": { "allowed": false, "vendors": {} }
   }
 }
 ```

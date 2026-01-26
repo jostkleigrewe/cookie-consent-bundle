@@ -70,6 +70,17 @@ cookie_consent:
             description: Personalized marketing and ads.
             required: false
             default: false
+            vendors:
+                # DE: Einzelne Anbieter innerhalb der Marketing-Kategorie.
+                # EN: Individual vendors inside the marketing category.
+                google_ads:
+                    label: Google Ads
+                    description: Conversion tracking and remarketing.
+                    default: false
+                facebook_pixel:
+                    label: Meta Pixel
+                    description: Website tracking for ad optimization.
+                    default: false
 
     # DE: UI-Einstellungen für das Consent-Modal.
     # EN: UI settings for the consent modal.
@@ -89,6 +100,10 @@ cookie_consent:
         # DE: Dichte: normal (Standard-Abstände), compact (kompakter für kleinere Modals).
         # EN: Density: normal (standard spacing), compact (smaller footprint).
         density: normal
+
+        # DE: Position des Modals (z.B. center, bottom-right).
+        # EN: Modal position (e.g. center, bottom-right).
+        position: center
 
         # DE: URL zur Datenschutzerklärung (optional, wird im Modal verlinkt).
         # EN: URL to privacy policy (optional, linked in the modal).
@@ -142,6 +157,10 @@ cookie_consent:
         # DE: IP-Adressen anonymisieren (empfohlen für DSGVO).
         # EN: Anonymize IP addresses (recommended for GDPR).
         anonymize_ip: true
+
+        # DE: Aufbewahrung in Tagen (null = keine Bereinigung).
+        # EN: Retention in days (null = no pruning).
+        retention_days: ~
 
     # DE: Google Consent Mode v2 Integration.
     #     Ermöglicht datenschutzkonforme Nutzung von Google Analytics 4 und Google Ads.

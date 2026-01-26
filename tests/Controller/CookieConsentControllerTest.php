@@ -58,8 +58,8 @@ final class CookieConsentControllerTest extends WebTestCase
         $data = json_decode($response->getContent(), true, flags: JSON_THROW_ON_ERROR);
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => true,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => true, 'vendors' => []],
         ], $data['preferences']);
     }
 }

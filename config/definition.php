@@ -54,6 +54,18 @@ return static function (DefinitionConfigurator $definition): void {
                     ->scalarNode('description')->defaultNull()->end()
                     ->booleanNode('required')->defaultFalse()->end()
                     ->booleanNode('default')->defaultFalse()->end()
+                    ->arrayNode('vendors')
+                        ->useAttributeAsKey('name')
+                        ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('label')->defaultNull()->end()
+                            ->scalarNode('description')->defaultNull()->end()
+                            ->booleanNode('required')->defaultFalse()->end()
+                            ->booleanNode('default')->defaultFalse()->end()
+                        ->end()
+                        ->end()
+                        ->defaultValue([])
+                    ->end()
                 ->end()
             ->end()
             ->defaultValue([
@@ -110,6 +122,23 @@ return static function (DefinitionConfigurator $definition): void {
                         ->defaultValue('normal')
                     ->end()
 
+                    // DE: Position des Modals (z.B. center, bottom, top-right).
+                    // EN: Modal position (e.g. center, bottom, top-right).
+                    ->enumNode('position')
+                        ->values([
+                            'center',
+                            'top',
+                            'bottom',
+                            'left',
+                            'right',
+                            'top-left',
+                            'top-right',
+                            'bottom-left',
+                            'bottom-right',
+                        ])
+                        ->defaultValue('center')
+                    ->end()
+
                     ->scalarNode('privacy_url')->defaultNull()->end()
                     ->scalarNode('imprint_url')->defaultNull()->end()
                     ->booleanNode('reload_on_change')->defaultFalse()->end()
@@ -126,12 +155,19 @@ return static function (DefinitionConfigurator $definition): void {
                     ->arrayNode('protected_routes')->scalarPrototype()->end()->defaultValue([])->end()
                 ->end()
                 ->end()
-                ->arrayNode('logging')
+            ->arrayNode('logging')
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->booleanNode('enabled')->defaultFalse()->end()
                     ->scalarNode('level')->defaultValue('info')->end()
                     ->booleanNode('anonymize_ip')->defaultTrue()->end()
+                    ->scalarNode('retention_days')
+                        ->defaultNull()
+                        ->validate()
+                            ->ifTrue(static fn ($value) => $value !== null && !is_int($value))
+                            ->thenInvalid('retention_days must be an integer or null.')
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
 

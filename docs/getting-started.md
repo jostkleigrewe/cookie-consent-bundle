@@ -28,6 +28,25 @@ return [
 ];
 ```
 
+## Configuration
+
+Copy the example configuration to your project:
+
+```bash
+cp vendor/jostkleigrewe/cookie-consent-bundle/docs/examples/cookie_consent.yaml config/packages/
+```
+
+Or create `config/packages/cookie_consent.yaml` manually. See [Configuration](configuration.md) for all options.
+
+## Routes
+
+Add to `config/routes.yaml`:
+
+```yaml
+cookie_consent:
+  resource: '@CookieConsentBundle/config/routes.php'
+```
+
 ## Asset Setup (AssetMapper)
 
 The bundle registers its assets via AssetMapper. No build step required.
@@ -79,12 +98,19 @@ Add the modal to your base layout:
 <body>
     {% block body %}{% endblock %}
 
-    {{ cookie_consent_modal() }}
+    {% if cookie_consent_required() %}
+        {{ cookie_consent_modal() }}
+    {% endif %}
 </body>
 </html>
 ```
 
 The modal appears automatically when consent is required.
+
+## Integration Overview
+
+For components, helpers, data attributes, controller attributes, and events, see:
+**[Integration](integration.md)**.
 
 ## Verify Installation
 
@@ -95,4 +121,5 @@ The modal appears automatically when consent is required.
 ## Next Steps
 
 - **[Configuration](configuration.md)** - Customize categories, templates, and behavior
+- **[Integration](integration.md)** - Components, helpers, attributes, data attributes, events
 - **[Advanced](advanced.md)** - Storage backends, session enforcement, logging

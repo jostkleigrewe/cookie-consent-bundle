@@ -52,6 +52,11 @@ cookie_consent:
       label: Marketing
       description: Used for personalized advertising.
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          description: Conversion tracking and remarketing.
+          default: false
 
   # UI settings
   ui:
@@ -59,6 +64,7 @@ cookie_consent:
     variant: tabler           # plain, bootstrap, tabler
     theme: day                # day, night, auto
     density: normal           # normal, compact
+    position: center          # center, bottom, top, left, right, top-left, top-right, bottom-left, bottom-right
     privacy_url: '/privacy'   # optional
     imprint_url: '/imprint'   # optional
     reload_on_change: false
@@ -76,6 +82,7 @@ cookie_consent:
     enabled: false
     level: info
     anonymize_ip: true
+    retention_days: null
 
   # Google Consent Mode v2
   google_consent_mode:
@@ -85,6 +92,13 @@ cookie_consent:
       ad_storage: marketing
       ad_user_data: marketing
       ad_personalization: marketing
+```
+
+If `storage` is set to `doctrine` or `both`, Doctrine ORM is required. Generate migrations in your app (the bundle ships entities, not migrations):
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 ---
@@ -113,6 +127,20 @@ cookie_consent:
 |-------|-------------|
 | `normal` | Standard spacing and typography |
 | `compact` | Reduced padding for smaller footprint |
+
+### `position`
+
+| Value | Description |
+|-------|-------------|
+| `center` | Centered modal (default) |
+| `top` | Top center |
+| `bottom` | Bottom center |
+| `left` | Center left |
+| `right` | Center right |
+| `top-left` | Top left |
+| `top-right` | Top right |
+| `bottom-left` | Bottom left |
+| `bottom-right` | Bottom right |
 
 ---
 
@@ -149,6 +177,23 @@ templates/bundles/CookieConsentBundle/_partials/tabler/header.html.twig
 
 ---
 
+## Vendors
+
+Vendors are optional per category. If present, users can allow/deny individual vendors within a category.
+The vendor list automatically opens when the category is enabled and closes when it is disabled.
+Vendor `default` values are applied when a category is enabled in the modal.
+
+```yaml
+categories:
+  marketing:
+    vendors:
+      google_ads:
+        label: Google Ads
+        default: false
+```
+
+---
+
 ## Twig Helpers
 
 | Function | Description |
@@ -162,6 +207,7 @@ templates/bundles/CookieConsentBundle/_partials/tabler/header.html.twig
 | `cookie_consent_decided_at()` | Timestamp of decision (or null) |
 | `cookie_consent_required()` | Should the modal be shown? |
 | `cookie_consent_categories()` | Get configured categories |
+| `cookie_consent_vendor_has('category', 'vendor')` | Check if vendor is consented |
 
 ### Examples
 
@@ -172,6 +218,10 @@ templates/bundles/CookieConsentBundle/_partials/tabler/header.html.twig
 {# Conditional content #}
 {% if cookie_consent_has('analytics') %}
   <script src="https://example.com/analytics.js"></script>
+{% endif %}
+
+{% if cookie_consent_vendor_has('marketing', 'google_ads') %}
+  <script src="https://example.com/ads.js"></script>
 {% endif %}
 
 {# Show decision timestamp #}
@@ -194,6 +244,7 @@ Scripts load automatically when consent is given:
 ```html
 <script type="text/plain"
         data-consent-category="analytics"
+        data-consent-vendor="matomo"
         data-consent-src="https://example.com/analytics.js"></script>
 ```
 
@@ -201,38 +252,7 @@ Scripts load automatically when consent is given:
 
 ## Embed Components
 
-Gate third-party embeds with built-in components:
-
-```twig
-{# YouTube #}
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Vimeo #}
-{{ include('@CookieConsent/components/CookieConsentVimeoEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Google Maps #}
-{{ include('@CookieConsent/components/CookieConsentGoogleMapsEmbed.html.twig', {
-  src: 'https://www.google.com/maps/embed?pb=...'
-}) }}
-
-{# Generic embed #}
-{{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
-  src: 'https://example.com/embed',
-  title: 'Embedded content',
-  category: 'marketing',
-  type: 'iframe',
-  allow: 'autoplay; encrypted-media',
-  aspect_ratio: '16 / 9'
-}) }}
-```
-
-**Available components:** YouTube, Vimeo, Google Maps, Spotify, SoundCloud, Twitter/X, Instagram, TikTok, Calendly, Facebook, LinkedIn, Pinterest, Typeform, reCAPTCHA.
+All embed components are documented in **[Integration](integration.md)** (usage, full list, and best practices).
 
 For embeds to work without page reload, include the embed helper:
 

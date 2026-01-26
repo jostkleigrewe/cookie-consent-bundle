@@ -7,56 +7,63 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Policy;
 /**
  * ConsentPolicy - Beschreibt Cookie-Kategorien und Policy-Version
  *
- * DE: Immutables Wertobjekt das alle konfigurierten Cookie-Kategorien
+ * Immutables Wertobjekt das alle konfigurierten Cookie-Kategorien
  *     und deren Eigenschaften (Pflicht, Default, Label, Beschreibung) enthaelt.
  *     Die Policy-Version ermoeglicht Re-Consent bei Aenderungen.
  *
- * EN: Immutable value object containing all configured cookie categories
+ * Immutable value object containing all configured cookie categories
  *     and their properties (required, default, label, description).
  *     Policy version enables re-consent on changes.
  *
  * @example
- * // DE: Konfiguration in cookie_consent.yaml
- * // EN: Configuration in cookie_consent.yaml
+ * // Configuration in cookie_consent.yaml
  * cookie_consent:
- *     policy_version: '2.0'  # Bei Aenderung werden Nutzer erneut gefragt
+ *     policy_version: '2.0'  # On change users are asked again
  *     categories:
  *         necessary:
- *             label: 'Notwendig'
- *             description: 'Erforderlich fuer Basisfunktionen'
- *             required: true   # Kann nicht abgewaehlt werden
+ *             label: 'Necessary'
+ *             description: 'Required for basic site functionality'
+ *             required: true   # Cannot be deselected
  *         analytics:
- *             label: 'Statistiken'
- *             description: 'Hilft uns die Nutzung zu verstehen'
- *             default: false   # Standardmaessig deaktiviert
+ *             label: 'Analytics'
+ *             description: 'Helps us understand usage'
+ *             default: false   # Disabled by default
  */
 final class ConsentPolicy
 {
     /**
-     * DE: Normalisierte Kategorien mit allen Eigenschaften.
-     * EN: Normalized categories with all properties.
+     * Normalized categories with all properties.
      *
-     * @var array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
+     * @var array<string, array{label: ?string, description: ?string, required: bool, default: bool, vendors: array<string, array{label: ?string, description: ?string, required: bool, default: bool}>}>
      */
     private array $categories;
 
     /**
-     * @param array<string, array<string, mixed>> $categories DE: Rohe Kategorien-Konfiguration
-     *                                                         EN: Raw categories configuration
-     * @param string $policyVersion DE: Policy-Version (bei Aenderung: Re-Consent)
-     *                              EN: Policy version (on change: re-consent)
+     * @param array<string, array<string, mixed>> $categories Raw categories configuration
+     * @param string $policyVersion Policy version (on change: re-consent)
      */
     public function __construct(array $categories, private readonly string $policyVersion)
     {
-        // DE: Kategorien normalisieren und fehlende Werte mit Defaults auffuellen
-        // EN: Normalize categories and fill missing values with defaults
+        // Normalize categories and fill missing values with defaults
         $normalized = [];
         foreach ($categories as $name => $config) {
+            $vendors = [];
+            $vendorConfig = is_array($config['vendors'] ?? null) ? $config['vendors'] : [];
+            foreach ($vendorConfig as $vendorName => $vendor) {
+                $vendors[$vendorName] = [
+                    'label' => $vendor['label'] ?? $vendorName,
+                    'description' => $vendor['description'] ?? null,
+                    'required' => (bool) ($vendor['required'] ?? false),
+                    'default' => (bool) ($vendor['default'] ?? false),
+                ];
+            }
+
             $normalized[$name] = [
                 'label' => $config['label'] ?? $name,
                 'description' => $config['description'] ?? null,
                 'required' => (bool) ($config['required'] ?? false),
                 'default' => (bool) ($config['default'] ?? false),
+                'vendors' => $vendors,
             ];
         }
 
@@ -64,13 +71,10 @@ final class ConsentPolicy
     }
 
     /**
-     * DE: Gibt die Policy-Version zurueck.
-     *     Bei Aenderung dieser Version werden bestehende Consents ungueltig.
-     *
-     * EN: Returns the policy version.
+     * Returns the policy version.
      *     Changing this version invalidates existing consents.
      *
-     * @return string DE: Die Policy-Version | EN: The policy version
+     * @return string The policy version
      */
     public function getPolicyVersion(): string
     {
@@ -78,18 +82,16 @@ final class ConsentPolicy
     }
 
     /**
-     * DE: Gibt alle konfigurierten Kategorien zurueck.
+     * Returns all configured categories.
      *
-     * EN: Returns all configured categories.
-     *
-     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
-     *         DE: Kategoriename => Konfiguration | EN: Category name => configuration
+     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool, vendors: array<string, array{label: ?string, description: ?string, required: bool, default: bool}>}>
+     * Category name => configuration
      *
      * @example
      * foreach ($policy->getCategories() as $name => $config) {
      *     echo $config['label'];
      *     if ($config['required']) {
-     *         echo ' (Pflicht)';
+     *         echo ' (required)';
      *     }
      * }
      */
@@ -99,19 +101,13 @@ final class ConsentPolicy
     }
 
     /**
-     * DE: Normalisiert Praeferenzen basierend auf der Policy.
-     *     - Pflicht-Kategorien sind immer true
-     *     - Unbekannte Kategorien werden ignoriert
-     *     - Fehlende Kategorien erhalten ihren Default-Wert
-     *
-     * EN: Normalizes preferences based on the policy.
+     * Normalizes preferences based on the policy.
      *     - Required categories are always true
      *     - Unknown categories are ignored
      *     - Missing categories receive their default value
      *
-     * @param array<string, bool> $preferences DE: Rohe Praeferenzen vom Nutzer
-     *                                         EN: Raw preferences from user
-     * @return array<string, bool> DE: Normalisierte Praeferenzen | EN: Normalized preferences
+     * @param array<string, mixed> $preferences Raw preferences from user
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Normalized preferences
      *
      * @example
      * $normalized = $policy->normalizePreferences(['analytics' => true]);
@@ -122,58 +118,101 @@ final class ConsentPolicy
         $normalized = [];
 
         foreach ($this->categories as $name => $config) {
-            // DE: Pflicht-Kategorien immer aktiviert
-            // EN: Required categories always enabled
-            if ($config['required']) {
-                $normalized[$name] = true;
-                continue;
+            $rawCategory = $preferences[$name] ?? null;
+            $rawAllowed = null;
+            $rawVendors = null;
+
+            if (is_array($rawCategory)) {
+                if (array_key_exists('allowed', $rawCategory)) {
+                    $rawAllowed = (bool) $rawCategory['allowed'];
+                }
+                if (isset($rawCategory['vendors']) && is_array($rawCategory['vendors'])) {
+                    $rawVendors = $rawCategory['vendors'];
+                }
+            } elseif (is_bool($rawCategory)) {
+                $rawAllowed = $rawCategory;
             }
 
-            // DE: Nutzer-Praeferenz uebernehmen wenn vorhanden
-            // EN: Use user preference if provided
-            if (array_key_exists($name, $preferences)) {
-                $normalized[$name] = (bool) $preferences[$name];
-                continue;
+            $allowed = $config['required'] ? true : ($rawAllowed ?? $config['default']);
+            $vendors = [];
+
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                $vendorAllowed = null;
+                if (is_array($rawVendors) && array_key_exists($vendorName, $rawVendors)) {
+                    $vendorAllowed = (bool) $rawVendors[$vendorName];
+                }
+
+                if ($vendorConfig['required']) {
+                    $vendorAllowed = true;
+                }
+
+                if ($vendorAllowed === null) {
+                    $vendorAllowed = $vendorConfig['default'];
+                }
+
+                if (!$allowed) {
+                    $vendorAllowed = false;
+                }
+
+                $vendors[$vendorName] = $vendorAllowed;
             }
 
-            // DE: Sonst Default-Wert verwenden
-            // EN: Otherwise use default value
-            $normalized[$name] = $config['default'];
+            $normalized[$name] = [
+                'allowed' => $allowed,
+                'vendors' => $vendors,
+            ];
         }
 
         return $normalized;
     }
 
     /**
-     * DE: Gibt Praeferenzen zurueck bei denen alle Kategorien akzeptiert sind.
+     * Returns preferences where all categories are accepted.
      *
-     * EN: Returns preferences where all categories are accepted.
-     *
-     * @return array<string, bool> DE: Alle Kategorien auf true | EN: All categories set to true
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> All categories set to true
      */
     public function acceptAll(): array
     {
         $preferences = [];
         foreach ($this->categories as $name => $config) {
-            $preferences[$name] = true;
+            $vendors = [];
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                $vendors[$vendorName] = true;
+            }
+
+            $preferences[$name] = [
+                'allowed' => true,
+                'vendors' => $vendors,
+            ];
         }
 
         return $preferences;
     }
 
     /**
-     * DE: Gibt Praeferenzen zurueck bei denen nur Pflicht-Kategorien akzeptiert sind.
+     * Returns preferences where only required categories are accepted.
      *
-     * EN: Returns preferences where only required categories are accepted.
-     *
-     * @return array<string, bool> DE: Nur required=true Kategorien sind true
-     *                             EN: Only required=true categories are true
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Only required=true categories are true
      */
     public function rejectOptional(): array
     {
         $preferences = [];
         foreach ($this->categories as $name => $config) {
-            $preferences[$name] = $config['required'];
+            $allowed = $config['required'];
+            $vendors = [];
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                if (!$allowed) {
+                    $vendors[$vendorName] = false;
+                    continue;
+                }
+
+                $vendors[$vendorName] = $vendorConfig['required'] ? true : $vendorConfig['default'];
+            }
+
+            $preferences[$name] = [
+                'allowed' => $allowed,
+                'vendors' => $vendors,
+            ];
         }
 
         return $preferences;

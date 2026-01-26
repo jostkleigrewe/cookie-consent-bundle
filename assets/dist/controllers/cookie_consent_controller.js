@@ -169,6 +169,7 @@ export default class extends Controller {
     _bindEventHandlers() {
         this._handleTurboLoad = this._handleTurboLoad.bind(this);
         this._handleOpenEvent = this._handleOpenEvent.bind(this);
+        this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
     }
 
     /**
@@ -183,6 +184,10 @@ export default class extends Controller {
         // DE: Custom Event zum Öffnen des Banners (z.B. aus Footer-Link)
         // EN: Custom event to open the banner (e.g., from footer link)
         document.addEventListener('cookie-consent:open', this._handleOpenEvent);
+
+        // DE: Checkbox-Änderungen für Vendor-UI
+        // EN: Checkbox changes for vendor UI
+        this.element.addEventListener('change', this._handleCheckboxChange);
     }
 
     /**
@@ -192,6 +197,7 @@ export default class extends Controller {
     _removeEventListeners() {
         document.removeEventListener('turbo:load', this._handleTurboLoad);
         document.removeEventListener('cookie-consent:open', this._handleOpenEvent);
+        this.element.removeEventListener('change', this._handleCheckboxChange);
     }
 
     /**
@@ -202,6 +208,10 @@ export default class extends Controller {
         // DE: Bestehende Präferenzen anwenden (Scripts aktivieren/deaktivieren)
         // EN: Apply existing preferences (enable/disable scripts)
         this._applyConsent(this._parsedPreferences());
+
+        // DE: Vendor-Checkboxen mit Kategorie-Status synchronisieren
+        // EN: Sync vendor checkboxes with category status
+        this._syncVendorCheckboxes();
 
         // DE: Banner anzeigen, falls erforderlich
         // EN: Show banner if required
@@ -228,6 +238,30 @@ export default class extends Controller {
      */
     _handleOpenEvent() {
         this.show();
+    }
+
+    /**
+     * DE: Hält Vendor-Checkboxen mit der Kategorie-Checkbox synchron.
+     * EN: Keeps vendor checkboxes in sync with the category checkbox.
+     *
+     * @param {Event} event
+     */
+    _handleCheckboxChange(event) {
+        const checkbox = event.target;
+        if (!(checkbox instanceof HTMLInputElement)) {
+            return;
+        }
+
+        if (checkbox.dataset.consentType !== 'category') {
+            return;
+        }
+
+        const category = checkbox.dataset.consentCategoryName;
+        if (!category) {
+            return;
+        }
+
+        this._setVendorsEnabled(category, checkbox.checked);
     }
 
     // ============================================================
@@ -332,14 +366,18 @@ export default class extends Controller {
      * EN: Applies consent preferences to the page.
      *     Enables/disables elements based on data-consent-category.
      *
-     * @param {Object} preferences - Objekt mit Kategorie: boolean Paaren
+     * @param {Object} preferences - Objekt mit Kategorie: { allowed, vendors }
      */
     _applyConsent(preferences) {
         const normalized = preferences || {};
 
         document.querySelectorAll('[data-consent-category]').forEach((element) => {
             const category = element.dataset.consentCategory;
-            const allowed = Boolean(normalized[category]);
+            const categoryData = normalized[category] || {};
+            const categoryAllowed = Boolean(categoryData.allowed);
+            const vendor = element.dataset.consentVendor;
+            const vendors = categoryData.vendors || {};
+            const allowed = vendor ? categoryAllowed && Boolean(vendors[vendor]) : categoryAllowed;
             const mode = element.dataset.consentMode || 'hide';
 
             // DE: Spezialbehandlung für Script-Tags
@@ -357,6 +395,106 @@ export default class extends Controller {
         // DE: Google Consent Mode v2 aktualisieren (falls aktiviert)
         // EN: Update Google Consent Mode v2 (if enabled)
         this._updateGoogleConsentMode(normalized);
+    }
+
+    /**
+     * DE: Aktiviert/Deaktiviert Vendor-Checkboxen je Kategorie.
+     * EN: Enable/disable vendor checkboxes per category.
+     */
+    _syncVendorCheckboxes() {
+        const processedCategories = new Set();
+
+        this.checkboxTargets.forEach((checkbox) => {
+            if (checkbox.dataset.consentType !== 'vendor') {
+                return;
+            }
+
+            const category = checkbox.dataset.consentCategoryName;
+            if (!category) {
+                return;
+            }
+
+            const categoryCheckbox = this._findCategoryCheckbox(category);
+            if (!categoryCheckbox) {
+                return;
+            }
+
+            const enabled = categoryCheckbox.checked;
+            const required = checkbox.dataset.consentRequired === 'true';
+            checkbox.disabled = required || !enabled;
+
+            if (!processedCategories.has(category)) {
+                const list = this.element.querySelector(
+                    `[data-consent-vendor-list="true"][data-consent-category-name="${category}"]`
+                );
+                if (list instanceof HTMLElement) {
+                    if (enabled) {
+                        list.removeAttribute('hidden');
+                    } else {
+                        list.setAttribute('hidden', 'hidden');
+                    }
+                }
+                processedCategories.add(category);
+            }
+        });
+    }
+
+    /**
+     * DE: Setzt Vendor-Checkboxen einer Kategorie auf enabled/disabled.
+     * EN: Sets vendor checkboxes of a category to enabled/disabled.
+     *
+     * @param {string} category
+     * @param {boolean} enabled
+     */
+    _setVendorsEnabled(category, enabled) {
+        const list = this.element.querySelector(
+            `[data-consent-vendor-list="true"][data-consent-category-name="${category}"]`
+        );
+
+        this.checkboxTargets.forEach((checkbox) => {
+            if (checkbox.dataset.consentType !== 'vendor') {
+                return;
+            }
+
+            if (checkbox.dataset.consentCategoryName !== category) {
+                return;
+            }
+
+            if (checkbox.dataset.consentRequired === 'true') {
+                checkbox.disabled = true;
+                checkbox.checked = true;
+                return;
+            }
+
+            checkbox.disabled = !enabled;
+            if (enabled) {
+                checkbox.checked = checkbox.dataset.consentDefault === 'true';
+            } else {
+                checkbox.checked = false;
+            }
+        });
+
+        if (list instanceof HTMLElement) {
+            if (enabled) {
+                list.removeAttribute('hidden');
+            } else {
+                list.setAttribute('hidden', 'hidden');
+            }
+        }
+    }
+
+    /**
+     * DE: Findet die Kategorie-Checkbox für den Namen.
+     * EN: Finds the category checkbox for the name.
+     *
+     * @param {string} category
+     * @returns {HTMLInputElement|null}
+     */
+    _findCategoryCheckbox(category) {
+        return this.checkboxTargets.find((checkbox) => {
+            return checkbox.dataset.consentType === 'category'
+                && checkbox.dataset.consentCategoryName === category;
+        }) || null;
     }
 
     /**
@@ -426,13 +564,26 @@ export default class extends Controller {
      * DE: Sammelt die Präferenzen aus den Checkbox-Targets.
      * EN: Collects preferences from checkbox targets.
      *
-     * @returns {Object} Objekt mit Kategorie: boolean Paaren
+     * @returns {Object} Objekt mit Kategorie: { allowed, vendors }
      */
     _collectPreferences() {
         const preferences = {};
 
         this.checkboxTargets.forEach((checkbox) => {
-            preferences[checkbox.value] = checkbox.checked;
+            const type = checkbox.dataset.consentType || 'category';
+            const category = checkbox.dataset.consentCategoryName || checkbox.value;
+
+            if (!preferences[category]) {
+                preferences[category] = { allowed: false, vendors: {} };
+            }
+
+            if (type === 'vendor') {
+                const vendor = checkbox.dataset.consentVendor || checkbox.value;
+                preferences[category].vendors[vendor] = checkbox.checked;
+                return;
+            }
+
+            preferences[category].allowed = checkbox.checked;
         });
 
         return preferences;
@@ -522,7 +673,8 @@ export default class extends Controller {
         // EN: Determine consent status for each Google consent type
         const consentUpdate = {};
         for (const [googleType, bundleCategory] of Object.entries(mapping)) {
-            const hasConsent = Boolean(preferences[bundleCategory]);
+            const categoryData = preferences[bundleCategory] || {};
+            const hasConsent = Boolean(categoryData.allowed);
             consentUpdate[googleType] = hasConsent ? 'granted' : 'denied';
         }
 

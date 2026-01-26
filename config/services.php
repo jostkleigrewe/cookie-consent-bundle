@@ -7,12 +7,17 @@ use Jostkleigrewe\CookieConsentBundle\Consent\Config\IdentifierCookieConfig;
 use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\Service\AuditLogPersisterInterface;
+use Jostkleigrewe\CookieConsentBundle\Consent\Service\DoctrineAuditLogPersister;
+use Jostkleigrewe\CookieConsentBundle\Consent\Service\NullAuditLogPersister;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentIdProvider;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\CombinedConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentStorageFactory;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentStorageInterface;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\CookieConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Consent\Storage\DoctrineConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Consent\Storage\DoctrineOrmConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Command\PruneConsentLogsCommand;
 use Jostkleigrewe\CookieConsentBundle\Controller\CookieConsentController;
 use Jostkleigrewe\CookieConsentBundle\Controller\ShowcaseController;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
@@ -20,6 +25,7 @@ use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentRequirementResolver
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ControllerAttributeResolver;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Jostkleigrewe\CookieConsentBundle\Twig\ConsentTwigExtension;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ReferenceConfigurator;
 use Symfony\Component\Security\Http\FirewallMapInterface;
@@ -60,15 +66,53 @@ return static function (ContainerConfigurator $container): void {
             '$identifierConfig' => new ReferenceConfigurator(IdentifierCookieConfig::class),
         ]);
 
-    if (class_exists(Doctrine\DBAL\Connection::class)) {
-        $services->set(DoctrineConsentStorageAdapter::class);
-        $services->set(CombinedConsentStorageAdapter::class);
+    $doctrineStorage = null;
+
+    $services->set(NullAuditLogPersister::class);
+    $services->alias(AuditLogPersisterInterface::class, NullAuditLogPersister::class);
+
+    $hasDoctrineBundle = class_exists(\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class);
+
+    if ($hasDoctrineBundle && class_exists(EntityManagerInterface::class)) {
+        $services->set(DoctrineOrmConsentStorageAdapter::class);
+        $doctrineStorage = new ReferenceConfigurator(DoctrineOrmConsentStorageAdapter::class);
+
+        $services->set(DoctrineAuditLogPersister::class)
+            ->args([
+                '$anonymizeIp' => '%cookie_consent.logging.anonymize_ip%',
+                '$tokenStorage' => (new ReferenceConfigurator('security.token_storage'))->nullOnInvalid(),
+            ]);
+
+        $services->alias(AuditLogPersisterInterface::class, DoctrineAuditLogPersister::class);
+
+        $services->set(PruneConsentLogsCommand::class)
+            ->args([
+                '$logging' => '%cookie_consent.logging%',
+            ])
+            ->tag('console.command');
     }
+
+    if ($hasDoctrineBundle && class_exists(Doctrine\DBAL\Connection::class)) {
+        $services->set(DoctrineConsentStorageAdapter::class);
+        if ($doctrineStorage === null) {
+            $doctrineStorage = new ReferenceConfigurator(DoctrineConsentStorageAdapter::class);
+        }
+    }
+
+    if ($doctrineStorage !== null) {
+        $services->set(CombinedConsentStorageAdapter::class)
+            ->args([
+                '$cookieStorage' => new ReferenceConfigurator(CookieConsentStorageAdapter::class),
+                '$doctrineStorage' => $doctrineStorage,
+            ]);
+    }
+
 
     $services->set(ConsentLogger::class)
         ->args([
             '$logger' => (new ReferenceConfigurator('logger'))->nullOnInvalid(),
             '$logging' => '%cookie_consent.logging%',
+            '$auditLogPersister' => new ReferenceConfigurator(AuditLogPersisterInterface::class),
         ]);
 
     $services->set(ConsentCsrfTokenManager::class)

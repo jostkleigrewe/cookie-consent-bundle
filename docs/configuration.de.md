@@ -42,10 +42,16 @@ cookie_consent:
       label: Marketing
       description: Wird für personalisierte Werbung verwendet.
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          description: Conversion-Tracking und Remarketing.
+          default: false
 
   # UI-Einstellungen
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
+    position: center            # center, bottom, top, left, right, top-left, top-right, bottom-left, bottom-right
     privacy_url: '/datenschutz'   # optional
     imprint_url: '/impressum'     # optional
     reload_on_change: false
@@ -63,6 +69,7 @@ cookie_consent:
     enabled: false
     level: info
     anonymize_ip: true
+    retention_days: null
 
   # Google Consent Mode v2
   google_consent_mode:
@@ -72,6 +79,13 @@ cookie_consent:
       ad_storage: marketing
       ad_user_data: marketing
       ad_personalization: marketing
+```
+
+Wenn `storage` auf `doctrine` oder `both` steht, ist Doctrine ORM erforderlich. Erstelle die Migrationen in der App (das Bundle liefert Entities, keine Migrationen):
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 ---
@@ -99,6 +113,39 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 
 ---
 
+## Position
+
+| Wert | Beschreibung |
+|------|--------------|
+| `center` | Zentriert (Standard) |
+| `top` | Oben mittig |
+| `bottom` | Unten mittig |
+| `left` | Links mittig |
+| `right` | Rechts mittig |
+| `top-left` | Oben links |
+| `top-right` | Oben rechts |
+| `bottom-left` | Unten links |
+| `bottom-right` | Unten rechts |
+
+---
+
+## Vendoren
+
+Vendoren sind optional pro Kategorie. Falls vorhanden, kann der Nutzer Anbieter innerhalb der Kategorie erlauben/ablehnen.
+Die Vendor-Liste öffnet sich automatisch, wenn die Kategorie aktiviert wird, und schließt sich beim Deaktivieren.
+Vendor-`default`-Werte werden angewendet, wenn eine Kategorie im Modal aktiviert wird.
+
+```yaml
+categories:
+  marketing:
+    vendors:
+      google_ads:
+        label: Google Ads
+        default: false
+```
+
+---
+
 ## Twig-Helfer
 
 | Funktion | Beschreibung |
@@ -111,6 +158,7 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 | `cookie_consent_decided_at()` | Zeitstempel der Entscheidung (oder null) |
 | `cookie_consent_required()` | Soll das Modal angezeigt werden? |
 | `cookie_consent_categories()` | Gibt konfigurierte Kategorien zurück |
+| `cookie_consent_vendor_has('category', 'vendor')` | Prüft Vendor-Zustimmung |
 
 ### Beispiele
 
@@ -118,6 +166,10 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 {# Bedingte Inhalte #}
 {% if cookie_consent_has('analytics') %}
   <script src="https://example.com/analytics.js"></script>
+{% endif %}
+
+{% if cookie_consent_vendor_has('marketing', 'google_ads') %}
+  <script src="https://example.com/ads.js"></script>
 {% endif %}
 
 {# Entscheidungszeitpunkt anzeigen #}
@@ -140,6 +192,7 @@ Skripte werden automatisch geladen, wenn die Einwilligung erteilt wird:
 ```html
 <script type="text/plain"
         data-consent-category="analytics"
+        data-consent-vendor="matomo"
         data-consent-src="https://example.com/analytics.js"></script>
 ```
 
@@ -147,22 +200,7 @@ Skripte werden automatisch geladen, wenn die Einwilligung erteilt wird:
 
 ## Embed-Komponenten
 
-Drittanbieter-Embeds mit integrierten Komponenten absichern:
-
-```twig
-{# YouTube #}
-{{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
-  video_id: 'VIDEO_ID',
-  category: 'marketing'
-}) }}
-
-{# Google Maps #}
-{{ include('@CookieConsent/components/CookieConsentGoogleMapsEmbed.html.twig', {
-  src: 'https://www.google.com/maps/embed?pb=...'
-}) }}
-```
-
-**Verfügbar:** YouTube, Vimeo, Google Maps, Spotify, SoundCloud, Twitter/X, Instagram, TikTok, Calendly, Facebook, LinkedIn, Pinterest, Typeform, reCAPTCHA.
+Alle Embed-Komponenten sind in **[Integration](integration.de.md)** dokumentiert (Verwendung, vollständige Liste, Best Practices).
 
 Für Embeds ohne Seiten-Reload den Embed-Helfer einbinden:
 

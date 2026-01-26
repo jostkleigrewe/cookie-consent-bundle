@@ -7,6 +7,7 @@ namespace Jostkleigrewe\CookieConsentBundle\Tests\Event;
 use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\Service\NullAuditLogPersister;
 use Jostkleigrewe\CookieConsentBundle\Event\ConsentChangedEvent;
 use Jostkleigrewe\CookieConsentBundle\Tests\Support\InMemoryConsentStorage;
 use PHPUnit\Framework\TestCase;
@@ -35,11 +36,13 @@ final class ConsentChangedEventTest extends TestCase
         $manager = new ConsentManager(
             new InMemoryConsentStorage('1'),
             $policy,
-            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true]),
+            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true], new NullAuditLogPersister()),
             $dispatcher
         );
 
-        $manager->savePreferences(new Request(), new Response(), ['analytics' => true]);
+        $manager->savePreferences(new Request(), new Response(), [
+            'analytics' => ['allowed' => true, 'vendors' => []],
+        ]);
 
         self::assertTrue($called);
     }

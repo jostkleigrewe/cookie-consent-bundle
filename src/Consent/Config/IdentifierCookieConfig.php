@@ -7,11 +7,11 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
 /**
  * IdentifierCookieConfig - Konfiguration fuer das Identifier-Cookie
  *
- * DE: Spezialisierte Cookie-Konfiguration fuer das Identifier-Cookie.
+ * Spezialisierte Cookie-Konfiguration fuer das Identifier-Cookie.
  *     Das Identifier-Cookie speichert die Nutzer-ID fuer das Doctrine-Backend.
  *     Erbt alle Einstellungen von CookieConfig.
  *
- * EN: Specialized cookie configuration for the identifier cookie.
+ * Specialized cookie configuration for the identifier cookie.
  *     The identifier cookie stores the user ID for the Doctrine backend.
  *     Inherits all settings from CookieConfig.
  *

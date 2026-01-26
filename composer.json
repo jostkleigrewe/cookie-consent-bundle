@@ -23,7 +23,9 @@
         "symfony/ux-twig-component": "^2.0",
         "symfony/security-csrf": "^8.0",
         "symfony/security-http": "^8.0",
-        "symfony/twig-bundle": "^8.0"
+        "symfony/twig-bundle": "^8.0",
+        "doctrine/orm": "^3.6",
+        "symfony/console": "^8.0"
     },
     "require-dev": {
         "doctrine/dbal": "^4.0",
@@ -33,8 +35,8 @@
         "symfony/phpunit-bridge": "^7.1"
     },
     "suggest": {
-        "doctrine/dbal": "For database-backed consent storage",
-        "doctrine/orm": "If you prefer ORM and entities for consent storage"
+        "doctrine/dbal": "For database-backed consent storage (DBAL adapter)",
+        "symfony/security-bundle": "Optional: enables user-based audit logging via the security token storage"
     },
     "autoload": {
         "psr-4": {

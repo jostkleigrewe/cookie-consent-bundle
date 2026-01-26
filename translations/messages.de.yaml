@@ -9,4 +9,6 @@ cookie_consent:
   imprint: 'Impressum'
   badge: 'DSGVO'
   youtube_placeholder: 'Dieses Video ist blockiert, bis du die Kategorie %category% erlaubst.'
+  youtube_vendor_placeholder: 'Dieses Video ist blockiert, bis du %vendor% in der Kategorie %category% erlaubst.'
   embed_placeholder: 'Dieser Inhalt ist blockiert, bis du die Kategorie %category% erlaubst.'
+  embed_vendor_placeholder: 'Dieser Inhalt ist blockiert, bis du %vendor% in der Kategorie %category% erlaubst.'

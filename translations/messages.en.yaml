@@ -9,4 +9,6 @@ cookie_consent:
   imprint: 'Imprint'
   badge: 'GDPR'
   youtube_placeholder: 'This video is blocked until you allow the %category% category.'
+  youtube_vendor_placeholder: 'This video is blocked until you allow %vendor% in the %category% category.'
   embed_placeholder: 'This content is blocked until you allow the %category% category.'
+  embed_vendor_placeholder: 'This content is blocked until you allow %vendor% in the %category% category.'

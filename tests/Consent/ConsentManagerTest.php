@@ -7,6 +7,7 @@ namespace Jostkleigrewe\CookieConsentBundle\Tests\Consent;
 use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
 use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Consent\Service\NullAuditLogPersister;
 use Jostkleigrewe\CookieConsentBundle\Tests\Support\InMemoryConsentStorage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +25,14 @@ final class ConsentManagerTest extends TestCase
         $manager = new ConsentManager(
             new InMemoryConsentStorage('1'),
             $policy,
-            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true])
+            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true], new NullAuditLogPersister())
         );
 
         $preferences = $manager->getPreferences(new Request());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => false,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => false, 'vendors' => []],
         ], $preferences);
     }
 
@@ -45,14 +46,14 @@ final class ConsentManagerTest extends TestCase
         $manager = new ConsentManager(
             new InMemoryConsentStorage('1'),
             $policy,
-            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true])
+            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true], new NullAuditLogPersister())
         );
 
         $state = $manager->acceptAll(new Request(), new Response());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => true,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => true, 'vendors' => []],
         ], $state->getPreferences());
     }
 
@@ -66,14 +67,14 @@ final class ConsentManagerTest extends TestCase
         $manager = new ConsentManager(
             new InMemoryConsentStorage('1'),
             $policy,
-            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true])
+            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true], new NullAuditLogPersister())
         );
 
         $state = $manager->rejectOptional(new Request(), new Response());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => false,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => false, 'vendors' => []],
         ], $state->getPreferences());
     }
 }
