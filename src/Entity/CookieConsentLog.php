@@ -24,7 +24,7 @@ class CookieConsentLog
     #[ORM\Column(type: 'string', length: 32)]
     private string $action;
 
-    /** @var array<string, bool> */
+    /** @var array<string, array{allowed: bool, vendors: array<string, bool>}> */
     #[ORM\Column(type: 'json')]
     private array $preferences = [];
 
@@ -50,7 +50,7 @@ class CookieConsentLog
     private ?string $userId = null;
 
     /**
-     * @param array<string, bool> $preferences
+     * @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences
      */
     public function __construct(CookieConsent $consent, string $action, array $preferences, string $policyVersion, \DateTimeImmutable $decidedAt)
     {
@@ -86,13 +86,13 @@ class CookieConsentLog
         $this->action = $action;
     }
 
-    /** @return array<string, bool> */
+    /** @return array<string, array{allowed: bool, vendors: array<string, bool>}> */
     public function getPreferences(): array
     {
         return $this->preferences;
     }
 
-    /** @param array<string, bool> $preferences */
+    /** @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences */
     public function setPreferences(array $preferences): void
     {
         $this->preferences = $preferences;

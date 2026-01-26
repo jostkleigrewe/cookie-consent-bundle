@@ -34,7 +34,9 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  *     body: JSON.stringify({
  *         csrf_token: '...',
  *         action: 'custom',
- *         preferences: { analytics: true, marketing: false }
+ *         preferences: {
+ *             marketing: { allowed: true, vendors: { google_ads: true } }
+ *         }
  *     })
  * });
  *

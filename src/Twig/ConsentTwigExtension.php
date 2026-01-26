@@ -92,6 +92,7 @@ final class ConsentTwigExtension extends AbstractExtension
         return [
             new TwigFunction('cookie_consent_modal', [$this, 'renderModal'], ['is_safe' => ['html']]),
             new TwigFunction('cookie_consent_has', [$this, 'hasConsentFor']),
+            new TwigFunction('cookie_consent_vendor_has', [$this, 'hasVendorConsentFor']),
             new TwigFunction('cookie_consent_preferences', [$this, 'getPreferences']),
             new TwigFunction('cookie_consent_preferences_raw', [$this, 'getRawPreferences']),
             new TwigFunction('cookie_consent_has_decision', [$this, 'hasDecision']),
@@ -160,13 +161,50 @@ final class ConsentTwigExtension extends AbstractExtension
             return false;
         }
 
-        return $this->consentManager->getPreferences($request)[$category] ?? false;
+        $preferences = $this->consentManager->getPreferences($request);
+        $categoryData = $preferences[$category] ?? null;
+        if (!is_array($categoryData)) {
+            return false;
+        }
+
+        return (bool) $categoryData['allowed'];
+    }
+
+    /**
+     * Checks if a specific vendor is allowed within a category.
+     *
+     * @param string $category Category name
+     * @param string $vendor Vendor name
+     * @return bool true if allowed
+     *
+     * @example
+     * {% if cookie_consent_vendor_has('marketing', 'google_ads') %}
+     *     {# Google Ads einbinden #}
+     * {% endif %}
+     */
+    public function hasVendorConsentFor(string $category, string $vendor): bool
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request === null) {
+            return false;
+        }
+
+        $preferences = $this->consentManager->getPreferences($request);
+        $categoryData = $preferences[$category] ?? null;
+        if (!is_array($categoryData)) {
+            return false;
+        }
+
+        $allowed = (bool) $categoryData['allowed'];
+        $vendors = $categoryData['vendors'];
+
+        return $allowed && (bool) ($vendors[$vendor] ?? false);
     }
 
     /**
      * Returns the raw (non-normalized) preferences.
      *
-     * @return array<string, bool> Raw preferences
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Raw preferences
      */
     public function getRawPreferences(): array
     {
@@ -221,7 +259,7 @@ final class ConsentTwigExtension extends AbstractExtension
     /**
      * Returns the normalized preferences.
      *
-     * @return array<string, bool> Category => allowed
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Category => preferences
      *
      * @example
      * {% set prefs = cookie_consent_preferences() %}
@@ -256,7 +294,7 @@ final class ConsentTwigExtension extends AbstractExtension
     /**
      * Returns all configured categories.
      *
-     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
+     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool, vendors: array<string, array{label: ?string, description: ?string, required: bool, default: bool}>}>
      *
      * @example
      * {% for name, config in cookie_consent_categories() %}

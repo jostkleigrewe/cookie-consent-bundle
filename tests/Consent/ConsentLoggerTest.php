@@ -28,7 +28,9 @@ final class ConsentLoggerTest extends TestCase
             'necessary' => ['required' => true, 'default' => true],
         ], '1');
 
-        $state = ConsentState::empty('1')->withPreferences(['necessary' => true]);
+        $state = ConsentState::empty('1')->withPreferences([
+            'necessary' => ['allowed' => true, 'vendors' => []],
+        ]);
 
         $logger->log('accept_all', $state, $policy, new Request(), null);
 
@@ -49,7 +51,9 @@ final class ConsentLoggerTest extends TestCase
             'necessary' => ['required' => true, 'default' => true],
         ], '1');
 
-        $state = ConsentState::empty('1')->withPreferences(['necessary' => true]);
+        $state = ConsentState::empty('1')->withPreferences([
+            'necessary' => ['allowed' => true, 'vendors' => []],
+        ]);
 
         $logger->log('accept_all', $state, $policy, new Request(), new Response());
 

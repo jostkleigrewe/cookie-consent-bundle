@@ -196,6 +196,60 @@ document.dispatchEvent(new CustomEvent('cookie-consent:open'));
 
 ---
 
+## Vendor-Prüfung (Twig + Data-Attribute)
+
+### Twig-Helfer
+
+```twig
+{% if cookie_consent_vendor_has('marketing', 'youtube') %}
+  <script src="https://www.youtube.com/iframe_api"></script>
+{% endif %}
+```
+
+### Data-Attribute für Skripte/Inhalte
+
+```html
+<script
+  type="text/plain"
+  data-consent-category="marketing"
+  data-consent-vendor="youtube"
+  data-consent-mode="hide"
+  src="https://www.youtube.com/iframe_api">
+</script>
+```
+
+### Embed-Komponenten
+
+Alle Embed-Komponenten akzeptieren optional den Key `vendor` für Vendor-Consent.
+
+```twig
+{{ component('CookieConsentYoutubeEmbed', {
+  video_id: 'dQw4w9WgXcQ',
+  category: 'marketing',
+  vendor: 'youtube'
+}) }}
+```
+
+Beispiele für weitere Komponenten:
+
+```twig
+{{ component('CookieConsentVimeoEmbed', { video_id: '12345', category: 'marketing', vendor: 'vimeo' }) }}
+{{ component('CookieConsentGoogleMapsEmbed', { src: map_url, category: 'marketing', vendor: 'google_maps' }) }}
+{{ component('CookieConsentSpotifyEmbed', { src: spotify_url, category: 'marketing', vendor: 'spotify' }) }}
+{{ component('CookieConsentInstagramEmbed', { post_url: post_url, category: 'marketing', vendor: 'instagram' }) }}
+{{ component('CookieConsentTikTokEmbed', { video_url: video_url, category: 'marketing', vendor: 'tiktok' }) }}
+{{ component('CookieConsentTwitterEmbed', { tweet_url: tweet_url, category: 'marketing', vendor: 'twitter' }) }}
+{{ component('CookieConsentLinkedInEmbed', { post_url: post_url, category: 'marketing', vendor: 'linkedin' }) }}
+{{ component('CookieConsentPinterestEmbed', { pin_url: pin_url, category: 'marketing', vendor: 'pinterest' }) }}
+{{ component('CookieConsentSoundCloudEmbed', { src: soundcloud_url, category: 'marketing', vendor: 'soundcloud' }) }}
+{{ component('CookieConsentFacebookPageEmbed', { src: page_url, category: 'marketing', vendor: 'facebook' }) }}
+{{ component('CookieConsentRecaptcha', { category: 'marketing', vendor: 'recaptcha' }) }}
+{{ component('CookieConsentTypeformEmbed', { src: typeform_url, category: 'marketing', vendor: 'typeform' }) }}
+{{ component('CookieConsentCalendlyEmbed', { src: calendly_url, category: 'marketing', vendor: 'calendly' }) }}
+```
+
+---
+
 ## API-Endpunkt
 
 ### Route
@@ -222,8 +276,12 @@ Für `custom` Präferenzen mitgeben:
 {
   "action": "custom",
   "preferences": {
-    "analytics": true,
-    "marketing": false
+    "marketing": {
+      "allowed": true,
+      "vendors": {
+        "google_ads": true
+      }
+    }
   },
   "csrf_token": "..."
 }
@@ -235,9 +293,9 @@ Für `custom` Präferenzen mitgeben:
 {
   "success": true,
   "preferences": {
-    "necessary": true,
-    "analytics": true,
-    "marketing": false
+    "necessary": { "allowed": true, "vendors": {} },
+    "analytics": { "allowed": true, "vendors": {} },
+    "marketing": { "allowed": false, "vendors": {} }
   }
 }
 ```

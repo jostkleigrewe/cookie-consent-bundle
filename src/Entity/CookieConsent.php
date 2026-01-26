@@ -14,7 +14,7 @@ class CookieConsent
     #[ORM\Column(type: 'string', length: 32)]
     private string $id;
 
-    /** @var array<string, bool> */
+    /** @var array<string, array{allowed: bool, vendors: array<string, bool>}> */
     #[ORM\Column(type: 'json')]
     private array $preferences = [];
 
@@ -35,13 +35,13 @@ class CookieConsent
         return $this->id;
     }
 
-    /** @return array<string, bool> */
+    /** @return array<string, array{allowed: bool, vendors: array<string, bool>}> */
     public function getPreferences(): array
     {
         return $this->preferences;
     }
 
-    /** @param array<string, bool> $preferences */
+    /** @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences */
     public function setPreferences(array $preferences): void
     {
         $this->preferences = $preferences;

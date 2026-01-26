@@ -14,6 +14,7 @@ A Symfony 8 bundle for GDPR-compliant cookie consent with Twig integration, Stim
 - **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
 - **Stimulus.js** - Turbo-friendly, no full page reload needed
 - **Flexible Storage** - Cookie, Doctrine, or both combined
+- **Vendor-Level Consent** - Optional per-vendor toggles inside categories
 - **Session Protection** - Prevents session cookies without consent
 - **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
 - **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
@@ -93,6 +94,10 @@ cookie_consent:
     marketing:
       label: Marketing
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          default: false
 
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
@@ -129,7 +134,8 @@ Gate third-party content with built-in components:
 ```twig
 {{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
   video_id: 'dQw4w9WgXcQ',
-  category: 'marketing'
+  category: 'marketing',
+  vendor: 'youtube'
 }) }}
 ```
 

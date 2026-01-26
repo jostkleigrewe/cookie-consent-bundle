@@ -262,6 +262,66 @@
 .cookie-consent-checkbox {
     margin-top: 0.2rem;
     accent-color: var(--cc-accent);
+    appearance: auto;
+    -webkit-appearance: auto;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* ==========================================================================
+   Vendors
+   ========================================================================== */
+
+.cookie-consent-vendors {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-left: 1rem;
+    border-left: 1px dashed var(--cc-border);
+}
+
+.cookie-consent-vendor {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.cookie-consent-vendor-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.cookie-consent-vendor-description {
+    color: var(--cc-text-description);
+    font-size: 0.82rem;
+}
+
+.cookie-consent-vendor-checkbox {
+    margin-right: 0.4rem;
+    accent-color: var(--cc-accent);
+    appearance: auto;
+    -webkit-appearance: auto;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 1rem;
+    height: 1rem;
+}
+
+.cookie-consent-vendors-toggle {
+    margin-left: 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--cc-accent);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+}
+
+.cookie-consent-vendors-toggle:hover {
+    text-decoration: underline;
 }
 
 /* ==========================================================================

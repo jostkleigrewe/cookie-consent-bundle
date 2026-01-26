@@ -24,7 +24,10 @@ use Symfony\Component\HttpFoundation\Response;
  * Cookie format (JSON):
  * {
  *     "version": "1.0",
- *     "preferences": {"necessary": true, "analytics": false},
+ *     "preferences": {
+ *         "necessary": {"allowed": true, "vendors": {}},
+ *         "analytics": {"allowed": false, "vendors": {}}
+ *     },
  *     "decided_at": "2024-01-15T10:30:00+00:00"
  * }
  *

@@ -26,3 +26,29 @@
 .cookie-consent-variant-tabler .cookie-consent-category-label {
     display: inline;
 }
+
+.cookie-consent-variant-tabler .cookie-consent-vendors {
+    margin-left: 1.75rem;
+    margin-top: 0.5rem;
+}
+
+.cookie-consent-variant-tabler .cookie-consent-vendor-toggle {
+    padding-left: 2.25em;
+}
+
+.cookie-consent-variant-tabler .cookie-consent-vendor-toggle .form-check-input {
+    width: 1.8em;
+    margin-left: -2.25em;
+    margin-top: 0.2em;
+}
+
+.cookie-consent-variant-tabler .cookie-consent-vendor-label {
+    font-size: 0.95em;
+    opacity: 0.85;
+}
+
+.cookie-consent-variant-tabler .cookie-consent-vendor-description {
+    font-size: 0.85em;
+    opacity: 0.75;
+    margin-left: 0.1rem;
+}

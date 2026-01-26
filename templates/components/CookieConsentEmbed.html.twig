@@ -1,12 +1,22 @@
 {# DE: Generischer Embed mit Consent-Placeholder. #}
 {# EN: Generic embed with consent placeholder. #}
 {% set category = category|default('marketing') %}
+{% set vendor = vendor|default(null) %}
 {% set title = title|default('Embedded content') %}
 {% set type = type|default('iframe') %}
+{% set categories = cookie_consent_categories() %}
+{% set category_config = categories[category] ?? {} %}
+{% set category_label = category_config.label ?? category|title %}
+{% set vendor_label = vendor ? ((category_config.vendors[vendor].label ?? vendor|title)) : null %}
+{% set placeholder_default = vendor
+    ? 'cookie_consent.embed_vendor_placeholder'|trans({'%category%': category_label, '%vendor%': vendor_label})
+    : 'cookie_consent.embed_placeholder'|trans({'%category%': category_label})
+%}
 
 <div
     data-cookie-consent-embed
     data-category="{{ category }}"
+    {% if vendor %}data-vendor="{{ vendor }}"{% endif %}
     data-type="{{ type }}"
     data-src="{{ src|default('') }}"
     data-title="{{ title }}"
@@ -18,7 +28,7 @@
     data-preferences='{{ cookie_consent_preferences()|json_encode|e('html_attr') }}'
 >
     <div class="cookie-consent-embed-placeholder">
-        <p>{{ placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category})) }}</p>
+        <p>{{ placeholder|default(placeholder_default) }}</p>
         {{ component('CookieSettingsButton', { label: button_label|default('cookie_consent.settings'|trans) }) }}
     </div>
 </div>

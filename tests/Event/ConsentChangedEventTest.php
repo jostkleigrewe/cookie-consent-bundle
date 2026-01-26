@@ -40,7 +40,9 @@ final class ConsentChangedEventTest extends TestCase
             $dispatcher
         );
 
-        $manager->savePreferences(new Request(), new Response(), ['analytics' => true]);
+        $manager->savePreferences(new Request(), new Response(), [
+            'analytics' => ['allowed' => true, 'vendors' => []],
+        ]);
 
         self::assertTrue($called);
     }

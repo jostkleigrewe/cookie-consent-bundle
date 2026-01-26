@@ -14,6 +14,7 @@ Ein Symfony 8 Bundle für DSGVO-konforme Cookie-Einwilligung mit Twig-Integratio
 - **Mehrere Themes** - Tabler (hell/dunkel), Bootstrap oder eigene Templates
 - **Stimulus.js** - Turbo-kompatibel, kein vollständiger Seiten-Reload nötig
 - **Flexible Speicherung** - Cookie, Doctrine oder beides kombiniert
+- **Vendor-Ebene** - Optionale Vendor-Toggles innerhalb von Kategorien
 - **Session-Schutz** - Verhindert Session-Cookies ohne Einwilligung
 - **Google Consent Mode v2** - Integrierte GA4- und Google Ads-Unterstützung
 - **Embed-Komponenten** - YouTube, Vimeo, Google Maps u.v.m. mit Consent-Gates
@@ -93,6 +94,10 @@ cookie_consent:
     marketing:
       label: Marketing
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          default: false
 
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
@@ -129,7 +134,8 @@ Drittanbieter-Inhalte mit integrierten Komponenten absichern:
 ```twig
 {{ include('@CookieConsent/components/CookieConsentYoutubeEmbed.html.twig', {
   video_id: 'dQw4w9WgXcQ',
-  category: 'marketing'
+  category: 'marketing',
+  vendor: 'youtube'
 }) }}
 ```
 

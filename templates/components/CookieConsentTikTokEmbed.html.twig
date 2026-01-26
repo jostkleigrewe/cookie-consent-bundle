@@ -1,14 +1,24 @@
 {# DE: TikTok-Embed mit Consent-Placeholder. #}
 {# EN: TikTok embed with consent placeholder. #}
 {% set category = category|default('marketing') %}
+{% set vendor = vendor|default(null) %}
 {% set title = title|default('TikTok video') %}
 {% set video_url = video_url|default('') %}
+{% set categories = cookie_consent_categories() %}
+{% set category_config = categories[category] ?? {} %}
+{% set category_label = category_config.label ?? category|title %}
+{% set vendor_label = vendor ? ((category_config.vendors[vendor].label ?? vendor|title)) : null %}
+{% set placeholder_default = vendor
+    ? 'cookie_consent.embed_vendor_placeholder'|trans({'%category%': category_label, '%vendor%': vendor_label})
+    : 'cookie_consent.embed_placeholder'|trans({'%category%': category_label})
+%}
 
 {{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
     type: 'html',
     html: '<blockquote class="tiktok-embed" cite="' ~ video_url ~ '"></blockquote>',
     title: title,
     category: category,
+    vendor: vendor,
     script_src: 'https://www.tiktok.com/embed.js',
-    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+    placeholder: placeholder|default(placeholder_default)
 }) }}

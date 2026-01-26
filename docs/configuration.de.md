@@ -42,6 +42,11 @@ cookie_consent:
       label: Marketing
       description: Wird für personalisierte Werbung verwendet.
       default: false
+      vendors:
+        google_ads:
+          label: Google Ads
+          description: Conversion-Tracking und Remarketing.
+          default: false
 
   # UI-Einstellungen
   ui:
@@ -124,6 +129,23 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 
 ---
 
+## Vendoren
+
+Vendoren sind optional pro Kategorie. Falls vorhanden, kann der Nutzer Anbieter innerhalb der Kategorie erlauben/ablehnen.
+Die Vendor-Liste öffnet sich automatisch, wenn die Kategorie aktiviert wird, und schließt sich beim Deaktivieren.
+Vendor-`default`-Werte werden angewendet, wenn eine Kategorie im Modal aktiviert wird.
+
+```yaml
+categories:
+  marketing:
+    vendors:
+      google_ads:
+        label: Google Ads
+        default: false
+```
+
+---
+
 ## Twig-Helfer
 
 | Funktion | Beschreibung |
@@ -136,6 +158,7 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 | `cookie_consent_decided_at()` | Zeitstempel der Entscheidung (oder null) |
 | `cookie_consent_required()` | Soll das Modal angezeigt werden? |
 | `cookie_consent_categories()` | Gibt konfigurierte Kategorien zurück |
+| `cookie_consent_vendor_has('category', 'vendor')` | Prüft Vendor-Zustimmung |
 
 ### Beispiele
 
@@ -143,6 +166,10 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 {# Bedingte Inhalte #}
 {% if cookie_consent_has('analytics') %}
   <script src="https://example.com/analytics.js"></script>
+{% endif %}
+
+{% if cookie_consent_vendor_has('marketing', 'google_ads') %}
+  <script src="https://example.com/ads.js"></script>
 {% endif %}
 
 {# Entscheidungszeitpunkt anzeigen #}
@@ -165,6 +192,7 @@ Skripte werden automatisch geladen, wenn die Einwilligung erteilt wird:
 ```html
 <script type="text/plain"
         data-consent-category="analytics"
+        data-consent-vendor="matomo"
         data-consent-src="https://example.com/analytics.js"></script>
 ```
 

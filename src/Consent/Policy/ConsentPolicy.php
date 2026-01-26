@@ -34,7 +34,7 @@ final class ConsentPolicy
     /**
      * Normalized categories with all properties.
      *
-     * @var array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
+     * @var array<string, array{label: ?string, description: ?string, required: bool, default: bool, vendors: array<string, array{label: ?string, description: ?string, required: bool, default: bool}>}>
      */
     private array $categories;
 
@@ -47,11 +47,23 @@ final class ConsentPolicy
         // Normalize categories and fill missing values with defaults
         $normalized = [];
         foreach ($categories as $name => $config) {
+            $vendors = [];
+            $vendorConfig = is_array($config['vendors'] ?? null) ? $config['vendors'] : [];
+            foreach ($vendorConfig as $vendorName => $vendor) {
+                $vendors[$vendorName] = [
+                    'label' => $vendor['label'] ?? $vendorName,
+                    'description' => $vendor['description'] ?? null,
+                    'required' => (bool) ($vendor['required'] ?? false),
+                    'default' => (bool) ($vendor['default'] ?? false),
+                ];
+            }
+
             $normalized[$name] = [
                 'label' => $config['label'] ?? $name,
                 'description' => $config['description'] ?? null,
                 'required' => (bool) ($config['required'] ?? false),
                 'default' => (bool) ($config['default'] ?? false),
+                'vendors' => $vendors,
             ];
         }
 
@@ -72,7 +84,7 @@ final class ConsentPolicy
     /**
      * Returns all configured categories.
      *
-     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool}>
+     * @return array<string, array{label: ?string, description: ?string, required: bool, default: bool, vendors: array<string, array{label: ?string, description: ?string, required: bool, default: bool}>}>
      * Category name => configuration
      *
      * @example
@@ -94,8 +106,8 @@ final class ConsentPolicy
      *     - Unknown categories are ignored
      *     - Missing categories receive their default value
      *
-     * @param array<string, bool> $preferences Raw preferences from user
-     * @return array<string, bool> Normalized preferences
+     * @param array<string, mixed> $preferences Raw preferences from user
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Normalized preferences
      *
      * @example
      * $normalized = $policy->normalizePreferences(['analytics' => true]);
@@ -106,20 +118,49 @@ final class ConsentPolicy
         $normalized = [];
 
         foreach ($this->categories as $name => $config) {
-            // Required categories always enabled
-            if ($config['required']) {
-                $normalized[$name] = true;
-                continue;
+            $rawCategory = $preferences[$name] ?? null;
+            $rawAllowed = null;
+            $rawVendors = null;
+
+            if (is_array($rawCategory)) {
+                if (array_key_exists('allowed', $rawCategory)) {
+                    $rawAllowed = (bool) $rawCategory['allowed'];
+                }
+                if (isset($rawCategory['vendors']) && is_array($rawCategory['vendors'])) {
+                    $rawVendors = $rawCategory['vendors'];
+                }
+            } elseif (is_bool($rawCategory)) {
+                $rawAllowed = $rawCategory;
             }
 
-            // Use user preference if provided
-            if (array_key_exists($name, $preferences)) {
-                $normalized[$name] = (bool) $preferences[$name];
-                continue;
+            $allowed = $config['required'] ? true : ($rawAllowed ?? $config['default']);
+            $vendors = [];
+
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                $vendorAllowed = null;
+                if (is_array($rawVendors) && array_key_exists($vendorName, $rawVendors)) {
+                    $vendorAllowed = (bool) $rawVendors[$vendorName];
+                }
+
+                if ($vendorConfig['required']) {
+                    $vendorAllowed = true;
+                }
+
+                if ($vendorAllowed === null) {
+                    $vendorAllowed = $vendorConfig['default'];
+                }
+
+                if (!$allowed) {
+                    $vendorAllowed = false;
+                }
+
+                $vendors[$vendorName] = $vendorAllowed;
             }
 
-            // Otherwise use default value
-            $normalized[$name] = $config['default'];
+            $normalized[$name] = [
+                'allowed' => $allowed,
+                'vendors' => $vendors,
+            ];
         }
 
         return $normalized;
@@ -128,13 +169,21 @@ final class ConsentPolicy
     /**
      * Returns preferences where all categories are accepted.
      *
-     * @return array<string, bool> All categories set to true
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> All categories set to true
      */
     public function acceptAll(): array
     {
         $preferences = [];
         foreach ($this->categories as $name => $config) {
-            $preferences[$name] = true;
+            $vendors = [];
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                $vendors[$vendorName] = true;
+            }
+
+            $preferences[$name] = [
+                'allowed' => true,
+                'vendors' => $vendors,
+            ];
         }
 
         return $preferences;
@@ -143,13 +192,27 @@ final class ConsentPolicy
     /**
      * Returns preferences where only required categories are accepted.
      *
-     * @return array<string, bool> Only required=true categories are true
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Only required=true categories are true
      */
     public function rejectOptional(): array
     {
         $preferences = [];
         foreach ($this->categories as $name => $config) {
-            $preferences[$name] = $config['required'];
+            $allowed = $config['required'];
+            $vendors = [];
+            foreach ($config['vendors'] as $vendorName => $vendorConfig) {
+                if (!$allowed) {
+                    $vendors[$vendorName] = false;
+                    continue;
+                }
+
+                $vendors[$vendorName] = $vendorConfig['required'] ? true : $vendorConfig['default'];
+            }
+
+            $preferences[$name] = [
+                'allowed' => $allowed,
+                'vendors' => $vendors,
+            ];
         }
 
         return $preferences;

@@ -70,6 +70,17 @@ cookie_consent:
             description: Personalized marketing and ads.
             required: false
             default: false
+            vendors:
+                # DE: Einzelne Anbieter innerhalb der Marketing-Kategorie.
+                # EN: Individual vendors inside the marketing category.
+                google_ads:
+                    label: Google Ads
+                    description: Conversion tracking and remarketing.
+                    default: false
+                facebook_pixel:
+                    label: Meta Pixel
+                    description: Website tracking for ad optimization.
+                    default: false
 
     # DE: UI-Einstellungen für das Consent-Modal.
     # EN: UI settings for the consent modal.

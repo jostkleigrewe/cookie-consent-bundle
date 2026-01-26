@@ -16,10 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Doctrine ORM storage adapter and audit log persistence with optional `user_id`
 - Log retention config (`logging.retention_days`) and `cookie-consent:prune-logs` command
 - Doctrine ORM + Symfony Console as required dependencies
+- Optional vendor-level consent per category (new preference schema)
 
 ### Changed
 - CI workflow runs `composer ci` for validation, tests, and static analysis
 - Audit logging persistence now uses Doctrine ORM when available
+- Preference payload now uses `{ allowed, vendors }` per category
+- Vendor lists now auto-open when a category is enabled and auto-close on disable
+- Vendor defaults are applied when enabling a category in the modal
+- Tabler vendor entries use a switch layout with reduced emphasis
+- Embed placeholders now use category/vendor labels from config
+- Embed components accept optional vendor parameters with docs examples
+
+### Removed
+- Vendor list toggle button and `ui.vendors` configuration options
 
 ## [0.2.0] - 2026-01-25
 

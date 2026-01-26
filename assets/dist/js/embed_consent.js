@@ -24,7 +24,7 @@
  *      data-title="Video Title"
  *      data-category="marketing"
  *      data-aspect-ratio="16 / 9"
- *      data-preferences='{"marketing": false}'>
+ *      data-preferences='{"marketing":{"allowed":false,"vendors":{}}}'>
  *   <p>Bitte akzeptieren Sie Marketing-Cookies / Please accept marketing cookies</p>
  * </div>
  *
@@ -200,8 +200,8 @@
      *     Iterates through all elements with [data-cookie-consent-embed]
      *     and renders them if the corresponding category is allowed.
      *
-     * @param {Object|null} preferences - DE: Objekt mit Kategorie: boolean Paaren
-     *                                    EN: Object with category: boolean pairs
+     * @param {Object|null} preferences - DE: Objekt mit Kategorie: { allowed, vendors }
+     *                                    EN: Object with category: { allowed, vendors }
      *
      * @example
      * applyConsent({ marketing: true, analytics: false });
@@ -217,10 +217,15 @@
             // DE: Standard-Kategorie ist 'marketing' (häufigster Fall)
             // EN: Default category is 'marketing' (most common case)
             const category = el.dataset.category || 'marketing';
+            const vendor = el.dataset.vendor || null;
+            const categoryData = preferences[category] || {};
+            const categoryAllowed = Boolean(categoryData.allowed);
+            const vendors = categoryData.vendors || {};
+            const allowed = vendor ? categoryAllowed && Boolean(vendors[vendor]) : categoryAllowed;
 
-            // DE: Nur rendern wenn Kategorie erlaubt
-            // EN: Only render if category is allowed
-            if (preferences[category]) {
+            // DE: Nur rendern wenn Kategorie/Vendor erlaubt
+            // EN: Only render if category/vendor is allowed
+            if (allowed) {
                 renderEmbed(el);
             }
         });

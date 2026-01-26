@@ -93,11 +93,11 @@ final class ConsentManager
      *     Considers required categories and defaults.
      *
      * @param Request $request Current HTTP request
-     * @return array<string, bool> Category => allowed/not allowed
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Category => preferences
      *
      * @example
      * $prefs = $consentManager->getPreferences($request);
-     * // ['necessary' => true, 'analytics' => false, 'marketing' => false]
+     * // ['necessary' => ['allowed' => true, 'vendors' => []], ...]
      */
     public function getPreferences(Request $request): array
     {
@@ -115,7 +115,7 @@ final class ConsentManager
      *
      * @param Request $request Current HTTP request
      * @param Response $response Response for cookie header
-     * @param array<string, bool> $preferences Preferences to save
+     * @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences Preferences to save
      * @param string $action Action for logging ('custom', 'accept_all', etc.)
      * @return ConsentState The saved consent state
      */

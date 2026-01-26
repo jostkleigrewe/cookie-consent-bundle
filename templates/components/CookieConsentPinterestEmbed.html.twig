@@ -1,14 +1,24 @@
 {# DE: Pinterest-Embed mit Consent-Placeholder. #}
 {# EN: Pinterest embed with consent placeholder. #}
 {% set category = category|default('marketing') %}
+{% set vendor = vendor|default(null) %}
 {% set title = title|default('Pinterest') %}
 {% set pin_url = pin_url|default('') %}
+{% set categories = cookie_consent_categories() %}
+{% set category_config = categories[category] ?? {} %}
+{% set category_label = category_config.label ?? category|title %}
+{% set vendor_label = vendor ? ((category_config.vendors[vendor].label ?? vendor|title)) : null %}
+{% set placeholder_default = vendor
+    ? 'cookie_consent.embed_vendor_placeholder'|trans({'%category%': category_label, '%vendor%': vendor_label})
+    : 'cookie_consent.embed_placeholder'|trans({'%category%': category_label})
+%}
 
 {{ include('@CookieConsent/components/CookieConsentEmbed.html.twig', {
     type: 'html',
     html: '<a data-pin-do="embedPin" href="' ~ pin_url ~ '"></a>',
     title: title,
     category: category,
+    vendor: vendor,
     script_src: 'https://assets.pinterest.com/js/pinit.js',
-    placeholder: placeholder|default('cookie_consent.embed_placeholder'|trans({'%category%': category}))
+    placeholder: placeholder|default(placeholder_default)
 }) }}

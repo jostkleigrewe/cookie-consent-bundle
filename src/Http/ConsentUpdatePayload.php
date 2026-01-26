@@ -15,13 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
  *     Parst und validiert JSON-Payload aus dem Request:
  *     - csrf_token: Required field, CSRF protection
  *     - action: 'accept_all', 'reject_optional', oder 'custom'
- *     - preferences: Objekt mit Kategorie => boolean Paaren
+ *     - preferences: Objekt mit Kategorie => { allowed, vendors }
  *
  * Immutable DTO representing a validated consent update request.
  *     Parses and validates JSON payload from request:
  *     - csrf_token: Required, CSRF protection
  *     - action: 'accept_all', 'reject_optional', or 'custom'
- *     - preferences: Object with category => boolean pairs
+ *     - preferences: Object with category => { allowed, vendors }
  *
  * @example
  * // Expected JSON format
@@ -29,8 +29,12 @@ use Symfony\Component\HttpFoundation\Response;
  *     "csrf_token": "abc123...",
  *     "action": "custom",
  *     "preferences": {
- *         "analytics": true,
- *         "marketing": false
+ *         "marketing": {
+ *             "allowed": true,
+ *             "vendors": {
+ *                 "google_ads": true
+ *             }
+ *         }
  *     }
  * }
  *
@@ -58,9 +62,9 @@ final readonly class ConsentUpdatePayload
     public const ACTION_CUSTOM = 'custom';
 
     /**
-     * @param string                $action The action
-     * @param array<string, bool>   $preferences The preferences
-     * @param string                $csrfToken The CSRF token
+     * @param string               $action The action
+     * @param array<string, mixed> $preferences The preferences
+     * @param string               $csrfToken The CSRF token
      */
     private function __construct(
         private string  $action,
@@ -124,10 +128,9 @@ final readonly class ConsentUpdatePayload
         }
 
         // Validate each preference against policy
-        $allowedCategories = array_keys($policy->getCategories());
+        $allowedCategories = $policy->getCategories();
         foreach ($preferences as $key => $value) {
-            // Category must be known
-            if (!is_string($key) || !in_array($key, $allowedCategories, true)) {
+            if (!is_string($key) || !array_key_exists($key, $allowedCategories)) {
                 throw new ConsentUpdateException(
                     'preferences_unknown_category',
                     Response::HTTP_BAD_REQUEST,
@@ -135,13 +138,53 @@ final readonly class ConsentUpdatePayload
                 );
             }
 
-            // Value must be boolean
-            if (!is_bool($value)) {
+            if (is_bool($value)) {
+                continue;
+            }
+
+            if (!is_array($value)) {
                 throw new ConsentUpdateException(
                     'preferences_invalid_value',
                     Response::HTTP_BAD_REQUEST,
                     'Invalid preference value.'
                 );
+            }
+
+            if (array_key_exists('allowed', $value) && !is_bool($value['allowed'])) {
+                throw new ConsentUpdateException(
+                    'preferences_invalid_value',
+                    Response::HTTP_BAD_REQUEST,
+                    'Invalid preference value.'
+                );
+            }
+
+            if (array_key_exists('vendors', $value)) {
+                if (!is_array($value['vendors'])) {
+                    throw new ConsentUpdateException(
+                        'preferences_invalid_value',
+                        Response::HTTP_BAD_REQUEST,
+                        'Invalid preference value.'
+                    );
+                }
+
+                $allowedVendors = $allowedCategories[$key]['vendors'];
+                foreach ($value['vendors'] as $vendorName => $vendorAllowed) {
+                    if (!is_string($vendorName) || !array_key_exists($vendorName, $allowedVendors)) {
+                        throw new ConsentUpdateException(
+                            'preferences_unknown_vendor',
+                            Response::HTTP_BAD_REQUEST,
+                            'Unknown preference vendor.'
+                        );
+                    }
+
+                    if (!is_bool($vendorAllowed)) {
+                        throw new ConsentUpdateException(
+                            'preferences_invalid_value',
+                            Response::HTTP_BAD_REQUEST,
+                            'Invalid preference value.'
+                        );
+                    }
+                }
             }
         }
 
@@ -161,7 +204,7 @@ final readonly class ConsentUpdatePayload
     /**
      * Returns the chosen preferences.
      *
-     * @return array<string, bool> Category => allowed
+     * @return array<string, mixed> Category => preferences
      */
     public function getPreferences(): array
     {

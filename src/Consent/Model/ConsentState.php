@@ -22,14 +22,16 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Model;
  *
  * @example
  * // Create state with preferences
- * $state = $state->withPreferences(['analytics' => true]);
+ * $state = $state->withPreferences([
+ *     'analytics' => ['allowed' => true, 'vendors' => []],
+ * ]);
  * $state->hasDecision(); // true
  * $state->isAllowed('analytics'); // true
  */
 final class ConsentState
 {
     /**
-     * @param array<string, bool> $preferences Chosen preferences
+     * @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences Chosen preferences
      * @param string $policyVersion Policy version at decision time
      * @param \DateTimeImmutable|null $decidedAt Decision timestamp (null = none)
      */
@@ -64,7 +66,7 @@ final class ConsentState
     /**
      * Returns the stored preferences.
      *
-     * @return array<string, bool> Category => allowed
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}> Category => allowed
      */
     public function getPreferences(): array
     {
@@ -82,9 +84,21 @@ final class ConsentState
      *     // Analytics-Tracking aktivieren
      * }
      */
-    public function isAllowed(string $category): bool
+    public function isAllowed(string $category, ?string $vendor = null): bool
     {
-        return $this->preferences[$category] ?? false;
+        $categoryData = $this->preferences[$category] ?? null;
+        if (!is_array($categoryData)) {
+            return false;
+        }
+
+        $allowed = (bool) $categoryData['allowed'];
+        if ($vendor === null) {
+            return $allowed;
+        }
+
+        $vendors = $categoryData['vendors'];
+
+        return $allowed && (bool) ($vendors[$vendor] ?? false);
     }
 
     /**
@@ -111,14 +125,14 @@ final class ConsentState
      * Creates a new state with the given preferences.
      *     Automatically sets current time as decision timestamp.
      *
-     * @param array<string, bool> $preferences New preferences
+     * @param array<string, array{allowed: bool, vendors: array<string, bool>}> $preferences New preferences
      * @return self New instance with preferences
      *
      * @example
      * $newState = $state->withPreferences([
-     *     'necessary' => true,
-     *     'analytics' => true,
-     *     'marketing' => false,
+ *     'necessary' => ['allowed' => true, 'vendors' => []],
+ *     'analytics' => ['allowed' => true, 'vendors' => []],
+ *     'marketing' => ['allowed' => false, 'vendors' => []],
      * ]);
      */
     public function withPreferences(array $preferences): self

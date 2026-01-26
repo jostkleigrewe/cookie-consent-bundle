@@ -31,8 +31,8 @@ final class ConsentManagerTest extends TestCase
         $preferences = $manager->getPreferences(new Request());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => false,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => false, 'vendors' => []],
         ], $preferences);
     }
 
@@ -52,8 +52,8 @@ final class ConsentManagerTest extends TestCase
         $state = $manager->acceptAll(new Request(), new Response());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => true,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => true, 'vendors' => []],
         ], $state->getPreferences());
     }
 
@@ -73,8 +73,8 @@ final class ConsentManagerTest extends TestCase
         $state = $manager->rejectOptional(new Request(), new Response());
 
         self::assertSame([
-            'necessary' => true,
-            'analytics' => false,
+            'necessary' => ['allowed' => true, 'vendors' => []],
+            'analytics' => ['allowed' => false, 'vendors' => []],
         ], $state->getPreferences());
     }
 }
