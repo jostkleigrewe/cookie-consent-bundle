@@ -77,6 +77,7 @@ cookie_consent:
     enabled: false
     level: info
     anonymize_ip: true
+    retention_days: null
 
   # Google Consent Mode v2
   google_consent_mode:
@@ -86,6 +87,13 @@ cookie_consent:
       ad_storage: marketing
       ad_user_data: marketing
       ad_personalization: marketing
+```
+
+If `storage` is set to `doctrine` or `both`, Doctrine ORM is required. Generate migrations in your app (the bundle ships entities, not migrations):
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 ---

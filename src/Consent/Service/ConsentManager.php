@@ -125,7 +125,7 @@ final class ConsentManager
         $state = ConsentState::empty($this->policy->getPolicyVersion())->withPreferences($normalized);
 
         $this->storage->save($request, $response, $state);
-        $this->logger->log($action, $state, $this->policy, $request);
+        $this->logger->log($action, $state, $this->policy, $request, $response);
 
         if ($this->eventDispatcher !== null) {
             $this->eventDispatcher->dispatch(

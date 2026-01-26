@@ -15,7 +15,7 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
  *
  * Available backends:
  * - 'cookie': CookieConsentStorageAdapter (default)
- * - 'doctrine': DoctrineConsentStorageAdapter
+ * - 'doctrine': Doctrine ORM adapter (preferred) or DBAL adapter
  * - 'both': CombinedConsentStorageAdapter
  *
  * @example
@@ -27,13 +27,15 @@ final readonly class ConsentStorageFactory
 {
     /**
      * @param CookieConsentStorageAdapter $cookieStorage Cookie adapter
-     * @param DoctrineConsentStorageAdapter|null $doctrineStorage Doctrine adapter (null if not installed)
+     * @param DoctrineOrmConsentStorageAdapter|null $ormStorage Doctrine ORM adapter (null if not installed)
+     * @param DoctrineConsentStorageAdapter|null $dbalStorage Doctrine DBAL adapter (null if not installed)
      * @param CombinedConsentStorageAdapter|null $combinedStorage Combined adapter
      */
     public function __construct(
         private CookieConsentStorageAdapter $cookieStorage,
-        private ?DoctrineConsentStorageAdapter $doctrineStorage,
-        private ?CombinedConsentStorageAdapter $combinedStorage,
+        private ?DoctrineOrmConsentStorageAdapter $ormStorage = null,
+        private ?DoctrineConsentStorageAdapter $dbalStorage = null,
+        private ?CombinedConsentStorageAdapter $combinedStorage = null,
     ) {
     }
 
@@ -58,20 +60,21 @@ final readonly class ConsentStorageFactory
      * Returns Doctrine adapter or throws exception.
      *
      * @param string $storage Configured value (for error message)
-     * @return DoctrineConsentStorageAdapter
+     * @return ConsentStorageInterface
      *
      * @throws \LogicException If Doctrine not installed
      */
-    private function requireDoctrine(string $storage): DoctrineConsentStorageAdapter
+    private function requireDoctrine(string $storage): ConsentStorageInterface
     {
-        if ($this->doctrineStorage === null) {
+        $adapter = $this->ormStorage ?? $this->dbalStorage;
+        if ($adapter === null) {
             throw new \LogicException(sprintf(
-                'cookie_consent.storage="%s" requires doctrine/dbal. Install doctrine/dbal or set storage="cookie".',
+                'cookie_consent.storage="%s" requires doctrine/orm or doctrine/dbal. Install Doctrine or set storage="cookie".',
                 $storage
             ));
         }
 
-        return $this->doctrineStorage;
+        return $adapter;
     }
 
     /**
@@ -86,7 +89,7 @@ final readonly class ConsentStorageFactory
     {
         if ($this->combinedStorage === null) {
             throw new \LogicException(sprintf(
-                'cookie_consent.storage="%s" requires doctrine/dbal. Install doctrine/dbal or set storage="cookie".',
+                'cookie_consent.storage="%s" requires doctrine/orm or doctrine/dbal. Install Doctrine or set storage="cookie".',
                 $storage
             ));
         }

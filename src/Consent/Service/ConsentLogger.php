@@ -7,8 +7,9 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Service;
 use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
 use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\IpUtils;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ConsentLogger - Audit-Logging fuer Consent-Aktionen
@@ -20,39 +21,18 @@ use Symfony\Component\HttpFoundation\IpUtils;
  * Logs consent decisions for GDPR accountability requirements.
  *     Supports IP anonymization and configurable log levels.
  *     Can be disabled if no audit trail is needed.
- *
- * @example
- * // config/packages/cookie_consent.yaml
- * cookie_consent:
- *     logging:
- *         enabled: true
- *         level: info
- *         anonymize_ip: true  # GDPR: anonymize IP
- *
- * @example
- * // Log entry example
- * [2024-01-15 10:30:00] app.INFO: Cookie consent accept_all: 3 accepted, 0 rejected (version 1.0) {
- *     "action": "accept_all",
- *     "preferences": {"necessary": true, "analytics": true, "marketing": true},
- *     "policy_version": "1.0",
- *     "decided_at": "2024-01-15T10:30:00+00:00",
- *     "accepted_categories": ["necessary", "analytics", "marketing"],
- *     "rejected_categories": [],
- *     "ip_address": "192.168.1.x",
- *     "user_agent": "Mozilla/5.0...",
- *     "request_uri": "/contact"
- * }
  */
 final class ConsentLogger
 {
     /**
      * @param LoggerInterface|null $logger PSR-3 logger (null = no logging)
-     * @param array{enabled: bool, level: string, anonymize_ip: bool} $logging
+     * @param array{enabled: bool, level: string, anonymize_ip: bool, retention_days?: int|null} $logging
      * Logging configuration
      */
     public function __construct(
         private readonly ?LoggerInterface $logger,
         private readonly array $logging,
+        private readonly ?AuditLogPersisterInterface $auditLogPersister = null,
     ) {
     }
 
@@ -63,11 +43,12 @@ final class ConsentLogger
      * @param ConsentState $state The saved consent state
      * @param ConsentPolicy $policy The current policy
      * @param Request|null $request HTTP request for context data
+     * @param Response|null $response HTTP response (needed to ensure consent ID)
      */
-    public function log(string $action, ConsentState $state, ConsentPolicy $policy, ?Request $request): void
+    public function log(string $action, ConsentState $state, ConsentPolicy $policy, ?Request $request, ?Response $response = null): void
     {
-        // Logging disabled or no logger? Abort.
-        if (!$this->logging['enabled'] || $this->logger === null) {
+        // Logging disabled? Abort.
+        if (!$this->logging['enabled']) {
             return;
         }
 
@@ -96,8 +77,6 @@ final class ConsentLogger
         // Add request context (IP, user agent, etc.)
         if ($request !== null) {
             $ipAddress = $request->getClientIp();
-
-            // Anonymize IP if configured (GDPR compliant)
             if ($this->logging['anonymize_ip'] && $ipAddress !== null) {
                 $ipAddress = IpUtils::anonymize($ipAddress);
             }
@@ -106,6 +85,10 @@ final class ConsentLogger
             $context['user_agent'] = $request->headers->get('User-Agent');
             $context['referrer'] = $request->headers->get('Referer');
             $context['request_uri'] = $request->getRequestUri();
+        }
+
+        if ($request !== null && $response !== null && $this->auditLogPersister !== null) {
+            $this->auditLogPersister->persist($action, $state, $policy, $request, $response);
         }
 
         // Format log message
@@ -118,12 +101,14 @@ final class ConsentLogger
         );
 
         // Log with configured log level
-        match ($this->logging['level']) {
-            'debug' => $this->logger->debug($message, $context),
-            'notice' => $this->logger->notice($message, $context),
-            'warning' => $this->logger->warning($message, $context),
-            'error' => $this->logger->error($message, $context),
-            default => $this->logger->info($message, $context),
-        };
+        if ($this->logger !== null) {
+            match ($this->logging['level']) {
+                'debug' => $this->logger->debug($message, $context),
+                'notice' => $this->logger->notice($message, $context),
+                'warning' => $this->logger->warning($message, $context),
+                'error' => $this->logger->error($message, $context),
+                default => $this->logger->info($message, $context),
+            };
+        }
     }
 }

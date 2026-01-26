@@ -25,13 +25,20 @@ cookie_consent:
   storage: doctrine
 ```
 
-Create the table:
+Doctrine ORM is required for `doctrine` or `both`. Generate migrations in your app (bundle ships entities, not migrations):
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
+```
+
+If you only use DBAL, create the table manually:
 
 ```sql
 CREATE TABLE cookie_consent (
-  id VARCHAR(64) PRIMARY KEY,
+  id VARCHAR(32) PRIMARY KEY,
   preferences JSON NOT NULL,
-  policy_version VARCHAR(32) NOT NULL,
+  policy_version VARCHAR(16) NOT NULL,
   decided_at DATETIME NULL
 );
 ```
@@ -122,6 +129,7 @@ cookie_consent:
     enabled: true
     level: info
     anonymize_ip: true
+    retention_days: 180
 ```
 
 ### Logged Data
@@ -131,8 +139,24 @@ cookie_consent:
 - Policy version and decision timestamp
 - Accepted/rejected categories
 - Request context (IP, User-Agent, Referrer, URI)
+- User ID (if authenticated)
 
 IPs are anonymized when `anonymize_ip: true`.
+
+### Database Audit Log
+
+When Doctrine ORM is available, audit entries are stored in `cookie_consent_log`.
+The current state is stored in `cookie_consent`.
+
+### Retention / Pruning
+
+Use the configured retention window or override it:
+Set `retention_days` to `null` to disable pruning.
+
+```bash
+bin/console cookie-consent:prune-logs
+bin/console cookie-consent:prune-logs --days=90
+```
 
 ---
 

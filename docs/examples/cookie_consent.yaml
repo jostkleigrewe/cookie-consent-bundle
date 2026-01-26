@@ -147,6 +147,10 @@ cookie_consent:
         # EN: Anonymize IP addresses (recommended for GDPR).
         anonymize_ip: true
 
+        # DE: Aufbewahrung in Tagen (null = keine Bereinigung).
+        # EN: Retention in days (null = no pruning).
+        retention_days: ~
+
     # DE: Google Consent Mode v2 Integration.
     #     Ermöglicht datenschutzkonforme Nutzung von Google Analytics 4 und Google Ads.
     #     Wenn aktiviert, wird gtag('consent', 'update', ...) automatisch aufgerufen.

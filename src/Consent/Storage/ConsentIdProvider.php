@@ -77,6 +77,11 @@ final readonly class ConsentIdProvider
             return $existing;
         }
 
+        $existing = $this->getIdFromResponse($response);
+        if ($existing !== null) {
+            return $existing;
+        }
+
         // Generate new cryptographically secure ID (32 hex chars)
         $id = bin2hex(random_bytes(16));
 
@@ -99,6 +104,24 @@ final readonly class ConsentIdProvider
         $response->headers->setCookie($cookie);
 
         return $id;
+    }
+
+    private function getIdFromResponse(Response $response): ?string
+    {
+        foreach ($response->headers->getCookies() as $cookie) {
+            if ($cookie->getName() !== $this->identifierConfig->name) {
+                continue;
+            }
+
+            $value = $cookie->getValue();
+            if ($value === '') {
+                return null;
+            }
+
+            return $value;
+        }
+
+        return null;
     }
 
     /**

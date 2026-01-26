@@ -77,7 +77,7 @@ final class CookieConsentBundle extends AbstractBundle
         $needsDoctrine = in_array($storage, ['doctrine', 'both'], true);
         if ($needsDoctrine && !class_exists(\Doctrine\DBAL\Connection::class)) {
             throw new \LogicException(sprintf(
-                'cookie_consent.storage="%s" requires doctrine/dbal. Install doctrine/dbal or set storage="cookie".',
+                'cookie_consent.storage="%s" requires doctrine/dbal or doctrine/orm. Install Doctrine or set storage="cookie".',
                 $storage
             ));
         }

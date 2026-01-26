@@ -31,13 +31,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class CombinedConsentStorageAdapter implements ConsentStorageInterface
 {
-    /**
-     * @param CookieConsentStorageAdapter $cookieStorage Cookie backend
-     * @param DoctrineConsentStorageAdapter $doctrineStorage Doctrine backend
-     */
     public function __construct(
         private readonly CookieConsentStorageAdapter $cookieStorage,
-        private readonly DoctrineConsentStorageAdapter $doctrineStorage,
+        private readonly ConsentStorageInterface $doctrineStorage,
     ) {
     }
 

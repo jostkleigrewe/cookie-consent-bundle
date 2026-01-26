@@ -96,11 +96,22 @@ cookie_consent:
 
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
+    position: center
     privacy_url: '/datenschutz'
     reload_on_change: false
 
+  logging:
+    retention_days: null
+
   google_consent_mode:
     enabled: false
+```
+
+Wenn `storage` auf `doctrine` oder `both` steht, erstelle die Migrationen in der App (das Bundle liefert Entities, keine Migrationen). Das erfordert Doctrine ORM:
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 
 Erhöhe `policy_version` bei Änderungen an den Kategorien, um eine erneute Einwilligung zu erzwingen.

@@ -12,9 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHPStan configuration (level 6) and CI integration
 - Composer scripts: `test`, `phpstan`, `ci`
 - Modal position variants via `ui.position` (center/top/bottom/corners)
+- ORM entities for current consent and audit log (`cookie_consent`, `cookie_consent_log`)
+- Doctrine ORM storage adapter and audit log persistence with optional `user_id`
+- Log retention config (`logging.retention_days`) and `cookie-consent:prune-logs` command
+- Doctrine ORM + Symfony Console as required dependencies
 
 ### Changed
 - CI workflow runs `composer ci` for validation, tests, and static analysis
+- Audit logging persistence now uses Doctrine ORM when available
 
 ## [0.2.0] - 2026-01-25
 
