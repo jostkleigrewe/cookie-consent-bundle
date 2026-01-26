@@ -89,6 +89,55 @@
 }
 
 /* ==========================================================================
+   Modal Position
+   ========================================================================== */
+
+.cookie-consent-position-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.cookie-consent-position-top {
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.cookie-consent-position-bottom {
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.cookie-consent-position-left {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cookie-consent-position-right {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.cookie-consent-position-top-left {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.cookie-consent-position-top-right {
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.cookie-consent-position-bottom-left {
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.cookie-consent-position-bottom-right {
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+/* ==========================================================================
    Dialog Container
    ========================================================================== */
 

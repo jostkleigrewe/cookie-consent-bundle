@@ -59,6 +59,7 @@ cookie_consent:
     variant: tabler           # plain, bootstrap, tabler
     theme: day                # day, night, auto
     density: normal           # normal, compact
+    position: center          # center, bottom, top, left, right, top-left, top-right, bottom-left, bottom-right
     privacy_url: '/privacy'   # optional
     imprint_url: '/imprint'   # optional
     reload_on_change: false
@@ -113,6 +114,20 @@ cookie_consent:
 |-------|-------------|
 | `normal` | Standard spacing and typography |
 | `compact` | Reduced padding for smaller footprint |
+
+### `position`
+
+| Value | Description |
+|-------|-------------|
+| `center` | Centered modal (default) |
+| `top` | Top center |
+| `bottom` | Bottom center |
+| `left` | Center left |
+| `right` | Center right |
+| `top-left` | Top left |
+| `top-right` | Top right |
+| `bottom-left` | Bottom left |
+| `bottom-right` | Bottom right |
 
 ---
 

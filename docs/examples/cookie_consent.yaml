@@ -90,6 +90,10 @@ cookie_consent:
         # EN: Density: normal (standard spacing), compact (smaller footprint).
         density: normal
 
+        # DE: Position des Modals (z.B. center, bottom-right).
+        # EN: Modal position (e.g. center, bottom-right).
+        position: center
+
         # DE: URL zur Datenschutzerklärung (optional, wird im Modal verlinkt).
         # EN: URL to privacy policy (optional, linked in the modal).
         privacy_url: /privacy

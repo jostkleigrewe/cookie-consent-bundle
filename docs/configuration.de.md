@@ -46,6 +46,7 @@ cookie_consent:
   # UI-Einstellungen
   ui:
     template: '@CookieConsent/styles/tabler/modal.html.twig'
+    position: center            # center, bottom, top, left, right, top-left, top-right, bottom-left, bottom-right
     privacy_url: '/datenschutz'   # optional
     imprint_url: '/impressum'     # optional
     reload_on_change: false
@@ -96,6 +97,22 @@ Template in die App kopieren und anpassen:
 ```
 templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 ```
+
+---
+
+## Position
+
+| Wert | Beschreibung |
+|------|--------------|
+| `center` | Zentriert (Standard) |
+| `top` | Oben mittig |
+| `bottom` | Unten mittig |
+| `left` | Links mittig |
+| `right` | Rechts mittig |
+| `top-left` | Oben links |
+| `top-right` | Oben rechts |
+| `bottom-left` | Unten links |
+| `bottom-right` | Unten rechts |
 
 ---
 

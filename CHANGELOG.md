@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHPUnit Bridge setup with functional/kernel tests
 - PHPStan configuration (level 6) and CI integration
 - Composer scripts: `test`, `phpstan`, `ci`
+- Modal position variants via `ui.position` (center/top/bottom/corners)
 
 ### Changed
 - CI workflow runs `composer ci` for validation, tests, and static analysis

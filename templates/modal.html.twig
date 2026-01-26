@@ -5,6 +5,7 @@
 {% set variant = variant|default('tabler') %}
 {% set theme = theme|default('day') %}
 {% set density = density|default('normal') %}
+{% set position = position|default('center') %}
 
 {# Eindeutiger ID-Suffix fuer mehrere Modals auf einer Seite #}
 {% set id_suffix = id_suffix|default([variant, theme, density]|join('-')) %}
@@ -14,6 +15,7 @@
     'cookie-consent-modal',
     'cookie-consent-variant-' ~ variant,
     'cookie-consent-theme-' ~ theme,
+    'cookie-consent-position-' ~ position,
     density == 'compact' ? 'cookie-consent-density-compact' : ''
 ]|filter(v => v)|join(' ') %}
 

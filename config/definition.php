@@ -110,6 +110,23 @@ return static function (DefinitionConfigurator $definition): void {
                         ->defaultValue('normal')
                     ->end()
 
+                    // DE: Position des Modals (z.B. center, bottom, top-right).
+                    // EN: Modal position (e.g. center, bottom, top-right).
+                    ->enumNode('position')
+                        ->values([
+                            'center',
+                            'top',
+                            'bottom',
+                            'left',
+                            'right',
+                            'top-left',
+                            'top-right',
+                            'bottom-left',
+                            'bottom-right',
+                        ])
+                        ->defaultValue('center')
+                    ->end()
+
                     ->scalarNode('privacy_url')->defaultNull()->end()
                     ->scalarNode('imprint_url')->defaultNull()->end()
                     ->booleanNode('reload_on_change')->defaultFalse()->end()

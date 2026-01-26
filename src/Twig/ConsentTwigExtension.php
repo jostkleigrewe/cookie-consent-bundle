@@ -62,6 +62,7 @@ final class ConsentTwigExtension extends AbstractExtension
      *     variant: string,
      *     theme: string,
      *     density: string,
+     *     position: string,
      *     privacy_url: ?string,
      *     imprint_url: ?string,
      *     reload_on_change: bool
@@ -103,7 +104,7 @@ final class ConsentTwigExtension extends AbstractExtension
     /**
      * Renders the cookie consent modal with optional overrides.
      *
-     * @param array{variant?: string, theme?: string, density?: string} $overrides
+     * @param array{variant?: string, theme?: string, density?: string, position?: string} $overrides
      * Optional UI overrides
      * @return string Rendered HTML
      *
@@ -134,6 +135,7 @@ final class ConsentTwigExtension extends AbstractExtension
             'variant' => $overrides['variant'] ?? $this->ui['variant'],
             'theme' => $overrides['theme'] ?? $this->ui['theme'],
             'density' => $overrides['density'] ?? $this->ui['density'],
+            'position' => $overrides['position'] ?? $this->ui['position'],
 
             // Google Consent Mode v2 configuration.
             'google_consent_mode' => $this->googleConsentMode,
