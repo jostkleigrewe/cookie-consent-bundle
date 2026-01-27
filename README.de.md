@@ -2,11 +2,23 @@
 
 [![Packagist Version](https://img.shields.io/packagist/v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
 [![PHP Version](https://img.shields.io/packagist/php-v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![CI](https://github.com/jostkleigrewe/cookie-consent-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/jostkleigrewe/cookie-consent-bundle/actions/workflows/ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/jostkleigrewe/cookie-consent-bundle)](https://github.com/jostkleigrewe/cookie-consent-bundle/releases)
 [![Lizenz](https://img.shields.io/packagist/l/jostkleigrewe/cookie-consent-bundle)](LICENSE)
 
 Ein Symfony 8 Bundle für DSGVO-konforme Cookie-Einwilligung mit Twig-Integration, Stimulus.js und flexiblen Speicher-Backends.
 
 **[English Version](README.md)**
+
+## Warum dieses Bundle?
+
+- ✅ Symfony-native Einbindung mit Twig, Stimulus und AssetMapper
+- ✅ Vendor-Ebene + Consent Mode v2 für moderne Ad-Stacks
+- ✅ Session-sicher: verhindert unerwünschte Session-Cookies
+
+## Screenshot
+
+![Cookie Consent Modal](docs/assets/cookie-consent-modal.png)
 
 ## Features
 
@@ -25,6 +37,7 @@ Ein Symfony 8 Bundle für DSGVO-konforme Cookie-Einwilligung mit Twig-Integratio
 - PHP 8.4+
 - Symfony 8.0+
 - Twig Bundle, Security Bundle, Stimulus Bundle
+- Doctrine ORM + DoctrineBundle (optional, nur für `storage: doctrine|both`)
 
 ## Schnellstart
 
@@ -127,6 +140,8 @@ Erhöhe `policy_version` bei Änderungen an den Kategorien, um eine erneute Einw
 - **[Konfiguration](docs/configuration.de.md)** - Alle Optionen, Templates, Twig-Helfer
 - **[Erweitert](docs/advanced.de.md)** - Speicher-Backends, Session-Erzwingung, Logging, Events
 - **[Integration](docs/integration.de.md)** - Komponenten, Helper, Attribute, Data-Attributes, Events
+- **[Changelog](CHANGELOG.md)** - Releases und Änderungen
+- **[Contributing](CONTRIBUTING.de.md)** - Entwicklungsablauf und Guidelines
 
 ## Embed-Komponenten
 
