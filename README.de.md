@@ -134,6 +134,12 @@ bin/console doctrine:migrations:migrate
 
 Erhöhe `policy_version` bei Änderungen an den Kategorien, um eine erneute Einwilligung zu erzwingen.
 
+Wenn `logging.retention_days` gesetzt ist, führe den Cleanup‑Command regelmäßig aus:
+
+```bash
+bin/console cookie-consent:cleanup
+```
+
 ## Dokumentation
 
 - **[Erste Schritte](docs/getting-started.de.md)** - Installation, Assets, erste Schritte

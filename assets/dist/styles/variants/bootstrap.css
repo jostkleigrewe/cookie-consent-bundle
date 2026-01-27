@@ -33,10 +33,9 @@
     padding: 0.55rem 1.25rem;
 }
 
-/* Category layout for plain checkbox style */
-.cookie-consent-variant-bootstrap .cookie-consent-category {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.75rem;
-    align-items: start;
+/* Inline toggle row for categories/vendors */
+.cookie-consent-variant-bootstrap .cookie-consent-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }

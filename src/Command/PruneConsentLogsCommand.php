@@ -6,7 +6,6 @@ namespace Jostkleigrewe\CookieConsentBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Jostkleigrewe\CookieConsentBundle\Entity\CookieConsentLog;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,6 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(
     name: 'cookie-consent:prune-logs',
     description: 'Deletes cookie consent audit logs older than the configured retention period.',
+    aliases: ['cookie-consent:cleanup'],
 )]
 final class PruneConsentLogsCommand extends Command
 {
