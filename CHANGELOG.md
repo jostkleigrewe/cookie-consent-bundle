@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.4.0] - 2026-01-30
+
+### Added
+- Showcase layout can now automatically extend the application's `base.html.twig` if available.
+- New `@CookieConsent/showcase_base.html.twig` as fallback for the showcase.
+- Alias `cookie-consent:cleanup` for `cookie-consent:prune-logs` command.
+
+### Changed
+- Showcase controller now correctly pre-fills preferences based on category/vendor `default` and `required` settings.
+- Improved Bootstrap and Plain theme category templates for better layout consistency.
+- Updated documentation (README and CONTRIBUTING) in both English and German.
+
 ## [0.3.0] - 2026-01-26
 
 ### Added
@@ -72,6 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings button component to re-open modal
 - Browser events: `cookie-consent:changed`, `cookie-consent:open`
 
-[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.2.0...HEAD
-[0.1.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.1.0
+[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/releases/tag/v0.1.0
