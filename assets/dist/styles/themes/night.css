@@ -1,26 +1,42 @@
 /**
- * Cookie Consent - Night Theme (Dark)
- * DE: Dunkles Farbschema.
- * EN: Dark color scheme.
+ * Cookie Consent Bundle - Night Theme (Dark)
+ *
+ * Dark color scheme with adjusted contrast and accent colors.
+ * Also includes auto theme that follows system preference.
  */
 
+/* ==========================================================================
+   Night Theme
+   Explicit dark mode via theme: 'night' config
+   ========================================================================== */
+
 .cookie-consent-theme-night {
+    /* Background colors - dark slate palette */
     --cc-bg: #0f172a;
     --cc-bg-secondary: #1e293b;
+
+    /* Text colors - lighter for dark backgrounds */
     --cc-text: #e2e8f0;
     --cc-text-muted: #cbd5e1;
     --cc-text-description: #94a3b8;
+
+    /* Borders */
     --cc-border: rgba(148, 163, 184, 0.2);
     --cc-border-solid: #334155;
+
+    /* Overlay with radial gradient for depth */
     --cc-overlay: radial-gradient(circle at top, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.92));
 
+    /* Accent - sky blue for better visibility on dark */
     --cc-accent: #38bdf8;
     --cc-accent-hover: #0ea5e9;
     --cc-accent-text: #0f172a;
 
+    /* Badge */
     --cc-badge-bg: rgba(56, 189, 248, 0.2);
     --cc-badge-text: #bae6fd;
 
+    /* Buttons - inverted for dark mode */
     --cc-btn-primary-bg: #38bdf8;
     --cc-btn-primary-text: #0f172a;
     --cc-btn-primary-border: #38bdf8;
@@ -33,29 +49,32 @@
     --cc-btn-outline-text: #e2e8f0;
     --cc-btn-outline-border: #475569;
 
+    /* Category cards - semi-transparent for depth */
     --cc-category-bg: rgba(15, 23, 42, 0.85);
     --cc-category-border: rgba(148, 163, 184, 0.25);
 
+    /* Enhanced shadow for dark backgrounds */
     --cc-shadow: 0 30px 70px rgba(2, 6, 23, 0.6);
     --cc-radius: 20px;
 }
 
-/* Night theme link colors */
 .cookie-consent-theme-night .cookie-consent-links a {
     color: var(--cc-text-muted);
 }
 
-/* Tabler-specific night adjustments */
+/* Tabler variant gets gradient banner */
 .cookie-consent-variant-tabler.cookie-consent-theme-night .cookie-consent-banner {
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.4));
 }
 
 /* ==========================================================================
-   Auto Theme (follows system preference)
+   Auto Theme
+   Follows system preference via prefers-color-scheme media query
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
     .cookie-consent-theme-auto {
+        /* Mirror night theme variables for system dark mode */
         --cc-bg: #0f172a;
         --cc-bg-secondary: #1e293b;
         --cc-text: #e2e8f0;

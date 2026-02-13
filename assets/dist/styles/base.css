@@ -1,11 +1,13 @@
 /**
- * Cookie Consent - Base Styles
- * DE: Basis-Layout und CSS Custom Properties.
- * EN: Base layout and CSS custom properties.
+ * Cookie Consent Bundle - Base Styles
+ *
+ * Foundation layer providing layout structure and CSS custom properties.
+ * All values can be overridden by themes and variants via custom properties.
  */
 
 /* ==========================================================================
    CSS Custom Properties (Design Tokens)
+   Defaults are light theme (day) - overridden by themes/night.css for dark mode
    ========================================================================== */
 
 .cookie-consent-modal {
@@ -45,7 +47,7 @@
     --cc-category-bg: #f8fafc;
     --cc-category-border: rgba(148, 163, 184, 0.2);
 
-    /* Spacing - overridden by density */
+    /* Spacing - overridden by density modifier */
     --cc-padding-x: 1.75rem;
     --cc-padding-y: 1.5rem;
     --cc-gap: 0.85rem;
@@ -59,7 +61,7 @@
     /* Border radius */
     --cc-radius: 18px;
     --cc-radius-sm: 12px;
-    --cc-btn-radius: 999px;
+    --cc-btn-radius: 999px; /* Pill-shaped buttons */
 
     /* Shadows */
     --cc-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
@@ -70,13 +72,14 @@
 
 /* ==========================================================================
    Modal Overlay
+   Full-screen backdrop with centered content
    ========================================================================== */
 
 .cookie-consent-modal {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1055;
+    z-index: 1055; /* Above Bootstrap modals (1050) */
     padding: 1.75rem 1rem;
     align-items: center;
     justify-content: center;
@@ -89,7 +92,8 @@
 }
 
 /* ==========================================================================
-   Modal Position
+   Modal Position Variants
+   Configurable positioning via position config option
    ========================================================================== */
 
 .cookie-consent-position-center {
@@ -139,6 +143,7 @@
 
 /* ==========================================================================
    Dialog Container
+   Width constraints for the modal content
    ========================================================================== */
 
 .cookie-consent-dialog {
@@ -152,6 +157,7 @@
 
 /* ==========================================================================
    Modal Content
+   Main content wrapper with scrollable body
    ========================================================================== */
 
 .cookie-consent-modal .modal-content {
@@ -161,7 +167,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 3.5rem);
+    max-height: calc(100vh - 3.5rem); /* Leave space for modal padding */
     background: var(--cc-bg);
     color: var(--cc-text);
     box-shadow: var(--cc-shadow);
@@ -169,6 +175,7 @@
 
 /* ==========================================================================
    Header (Plain/Bootstrap style)
+   Standard header with title and description stacked vertically
    ========================================================================== */
 
 .cookie-consent-header {
@@ -192,6 +199,7 @@
 
 /* ==========================================================================
    Banner (Tabler style header)
+   Alternative header with badge and horizontal layout
    ========================================================================== */
 
 .cookie-consent-banner {
@@ -215,6 +223,7 @@
 
 /* ==========================================================================
    Body
+   Scrollable content area containing categories
    ========================================================================== */
 
 .cookie-consent-body {
@@ -224,6 +233,7 @@
 
 /* ==========================================================================
    Categories
+   Consent category cards (essential, analytics, marketing, etc.)
    ========================================================================== */
 
 .cookie-consent-categories {
@@ -232,7 +242,7 @@
     margin-top: 1.25rem;
 }
 
-/* Remove margin-top when in tabler banner style (description in banner) */
+/* Tabler variant has description in banner, so no top margin needed */
 .cookie-consent-variant-tabler .cookie-consent-categories {
     margin-top: 0;
 }
@@ -259,20 +269,22 @@
     font-size: var(--cc-category-description-size);
 }
 
-.cookie-consent-checkbox {
+/* High specificity to override framework resets (Bootstrap/Tabler hide native checkboxes) */
+.cookie-consent-modal .cookie-consent-checkbox {
     margin-top: 0.2rem;
     accent-color: var(--cc-accent);
     appearance: auto;
     -webkit-appearance: auto;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
     width: 1rem;
     height: 1rem;
 }
 
 /* ==========================================================================
    Vendors
+   Second level of consent within categories (e.g., Google Analytics, Facebook)
    ========================================================================== */
 
 .cookie-consent-vendors {
@@ -280,7 +292,7 @@
     gap: 0.5rem;
     margin-top: 0.75rem;
     padding-left: 1rem;
-    border-left: 1px dashed var(--cc-border);
+    border-left: 1px dashed var(--cc-border); /* Visual hierarchy indicator */
 }
 
 .cookie-consent-vendor {
@@ -298,14 +310,15 @@
     font-size: 0.82rem;
 }
 
-.cookie-consent-vendor-checkbox {
+/* High specificity to override framework resets */
+.cookie-consent-modal .cookie-consent-vendor-checkbox {
     margin-right: 0.4rem;
     accent-color: var(--cc-accent);
     appearance: auto;
     -webkit-appearance: auto;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
     width: 1rem;
     height: 1rem;
 }
@@ -326,6 +339,7 @@
 
 /* ==========================================================================
    Footer
+   Action buttons and legal links
    ========================================================================== */
 
 .cookie-consent-footer {
@@ -338,7 +352,8 @@
 }
 
 /* ==========================================================================
-   Actions (Buttons)
+   Action Buttons
+   Primary actions: Accept All, Save Preferences, Reject All
    ========================================================================== */
 
 .cookie-consent-actions {
@@ -379,7 +394,8 @@
 }
 
 /* ==========================================================================
-   Links
+   Legal Links
+   Privacy policy, imprint, cookie settings
    ========================================================================== */
 
 .cookie-consent-links {
@@ -400,6 +416,7 @@
 
 /* ==========================================================================
    Embed Placeholders
+   Shown instead of blocked content (YouTube, maps, etc.) until consent given
    ========================================================================== */
 
 .cookie-consent-embed-placeholder,
@@ -418,6 +435,7 @@
 
 /* ==========================================================================
    Density: Compact
+   Reduced spacing for minimal footprint
    ========================================================================== */
 
 .cookie-consent-density-compact {
@@ -448,7 +466,8 @@
 }
 
 /* ==========================================================================
-   Responsive
+   Responsive Adjustments
+   Mobile-friendly spacing below 640px
    ========================================================================== */
 
 @media (max-width: 640px) {

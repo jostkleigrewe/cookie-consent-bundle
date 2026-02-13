@@ -1,83 +1,30 @@
 /**
  * Cookie Consent Bundle - Main Stylesheet
- * DE: Haupt-Stylesheet das alle Module importiert.
- * EN: Main stylesheet that imports all modules.
  *
- * Import-Reihenfolge:
- * 1. Base (Layout + Custom Properties)
- * 2. Themes (Farbschemata)
- * 3. Variants (Framework-spezifisch)
+ * Entry point that imports all modules in correct cascade order.
+ * Import order matters: base -> themes -> variants (specificity increases).
  */
 
+/* ==========================================================================
+   Base Layer
+   Foundation: layout, custom properties, component structure
+   ========================================================================== */
+
 @import url('./base.css');
+
+/* ==========================================================================
+   Theme Layer
+   Color schemes that override base custom properties
+   ========================================================================== */
+
 @import url('./themes/day.css');
 @import url('./themes/night.css');
+
+/* ==========================================================================
+   Variant Layer
+   Framework-specific overrides (highest specificity)
+   ========================================================================== */
+
 @import url('./variants/plain.css');
 @import url('./variants/bootstrap.css');
 @import url('./variants/tabler.css');
-
-/* ==========================================================================
-   Legacy Class Aliases (Backwards Compatibility)
-   DE: Aliase fuer alte Klassennamen zur Abwaertskompatibilitaet.
-   EN: Aliases for old class names for backwards compatibility.
-   ========================================================================== */
-
-/* Old variant classes -> new theme classes */
-.cookie-consent-variant-day {
-    /* Map to theme-day variables */
-}
-
-.cookie-consent-variant-night {
-    /* Map to theme-night variables */
-}
-
-/* Combined old selectors for backwards compatibility */
-.cookie-consent-variant-tabler.cookie-consent-variant-day {
-    --cc-bg: #f8fafc;
-    --cc-category-bg: #ffffff;
-}
-
-.cookie-consent-variant-tabler.cookie-consent-variant-day .cookie-consent-banner {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(255, 255, 255, 0.6));
-}
-
-.cookie-consent-variant-tabler.cookie-consent-variant-day .modal-content {
-    border: 1px solid var(--cc-border-solid);
-}
-
-.cookie-consent-variant-tabler.cookie-consent-variant-night {
-    --cc-bg: #0f172a;
-    --cc-bg-secondary: #1e293b;
-    --cc-text: #e2e8f0;
-    --cc-text-muted: #cbd5e1;
-    --cc-text-description: #94a3b8;
-    --cc-border: rgba(148, 163, 184, 0.2);
-    --cc-border-solid: #334155;
-    --cc-overlay: radial-gradient(circle at top, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.92));
-
-    --cc-accent: #38bdf8;
-    --cc-badge-bg: rgba(56, 189, 248, 0.2);
-    --cc-badge-text: #bae6fd;
-
-    --cc-btn-primary-bg: #38bdf8;
-    --cc-btn-primary-text: #0f172a;
-    --cc-btn-primary-border: #38bdf8;
-
-    --cc-btn-secondary-bg: #0f172a;
-    --cc-btn-secondary-text: #e2e8f0;
-    --cc-btn-secondary-border: #334155;
-
-    --cc-btn-outline-bg: transparent;
-    --cc-btn-outline-text: #e2e8f0;
-    --cc-btn-outline-border: #475569;
-
-    --cc-category-bg: rgba(15, 23, 42, 0.85);
-    --cc-category-border: rgba(148, 163, 184, 0.25);
-
-    --cc-shadow: 0 30px 70px rgba(2, 6, 23, 0.6);
-    --cc-radius: 20px;
-}
-
-.cookie-consent-variant-tabler.cookie-consent-variant-night .cookie-consent-banner {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.4));
-}

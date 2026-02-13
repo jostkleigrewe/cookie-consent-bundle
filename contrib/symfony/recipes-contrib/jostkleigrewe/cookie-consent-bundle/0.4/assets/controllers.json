@@ -1,0 +1,10 @@
+{
+    "controllers": {
+        "@jostkleigrewe/cookie-consent-bundle": {
+            "cookie-consent": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        }
+    }
+}

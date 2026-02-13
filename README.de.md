@@ -57,7 +57,18 @@
 composer require jostkleigrewe/cookie-consent-bundle
 ```
 
-### 2. Assets konfigurieren
+### 2. Routen registrieren
+
+Erstelle `config/routes/cookie_consent.yaml`:
+
+```yaml
+cookie_consent:
+    resource: '@CookieConsentBundle/config/routes.php'
+```
+
+Dies registriert den `/_cookie-consent` Endpunkt, der für Consent-Updates benötigt wird.
+
+### 3. Assets konfigurieren
 
 **Option A: Twig-Helper (CSP-kompatibel, empfohlen)**
 
@@ -88,14 +99,14 @@ import '@jostkleigrewe/cookie-consent-bundle/styles/cookie_consent.css';
 }
 ```
 
-### 3. Modal einbinden
+### 4. Modal einbinden
 
 ```twig
 {# templates/base.html.twig #}
 {{ cookie_consent_modal() }}
 ```
 
-### 4. Inhalte nach Einwilligung steuern
+### 5. Inhalte nach Einwilligung steuern
 
 ```twig
 {% if cookie_consent_has('analytics') %}
@@ -234,6 +245,26 @@ Siehe **[Integration](docs/integration.de.md)** für Komponenten, Helper, Data-A
 - `google_consent_mode.enabled: true` gesetzt?
 - `gtag` vor dem Consent-Modal geladen?
 - Kategorie-Mapping stimmt mit deinen Kategorien überein?
+
+### Tabler-Variante Styling-Probleme (fehlender Border-Radius, Labels unter Checkbox)
+- **Ursache:** Tabler lädt nach dem Bundle-CSS und überschreibt `.modal-content` und `form-switch` Styles
+- **Lösung:** Auf aktuelle Bundle-Version updaten (>= 0.4.2) mit Tabler-spezifischen Fixes
+- **Manueller Fix:** CSS mit höherer Spezifität hinzufügen:
+```css
+.cookie-consent-modal.cookie-consent-variant-tabler .modal-content {
+    border: 0;
+    border-radius: var(--cc-radius, 18px);
+    box-shadow: var(--cc-shadow, 0 24px 60px rgba(15, 23, 42, 0.25));
+}
+.cookie-consent-variant-tabler .cookie-consent-toggle.form-switch {
+    display: block;
+    padding-left: 2.5rem;
+}
+.cookie-consent-variant-tabler .cookie-consent-toggle.form-switch .form-check-input {
+    float: left;
+    margin-left: -2.5rem;
+}
+```
 
 ## Entwicklung
 

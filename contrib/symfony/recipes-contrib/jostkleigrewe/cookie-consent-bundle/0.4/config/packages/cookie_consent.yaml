@@ -1,0 +1,24 @@
+# Documentation: https://github.com/jostkleigrewe/cookie-consent-bundle
+cookie_consent:
+    policy_version: '1'
+    storage: cookie
+
+    categories:
+        necessary:
+            label: Necessary
+            required: true
+            default: true
+        analytics:
+            label: Analytics
+            default: false
+        marketing:
+            label: Marketing
+            default: false
+
+    ui:
+        template: '@CookieConsent/styles/tabler/modal.html.twig'
+        position: center
+        privacy_url: '/privacy'
+
+    google_consent_mode:
+        enabled: false

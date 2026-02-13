@@ -1,48 +1,18 @@
 /**
- * Cookie Consent - Day Theme (Light)
- * DE: Helles Farbschema.
- * EN: Light color scheme.
+ * Cookie Consent Bundle - Day Theme (Light)
+ *
+ * Light color scheme. Base defaults already use day theme colors,
+ * so this file only contains variant-specific overrides.
  */
 
-.cookie-consent-theme-day {
-    --cc-bg: #ffffff;
-    --cc-bg-secondary: #f8fafc;
-    --cc-text: #0f172a;
-    --cc-text-muted: #475569;
-    --cc-text-description: #64748b;
-    --cc-border: rgba(148, 163, 184, 0.2);
-    --cc-border-solid: #e2e8f0;
-    --cc-overlay: rgba(15, 23, 42, 0.55);
+/* ==========================================================================
+   Tabler Variant Adjustments
+   Tabler has different background expectations for light mode
+   ========================================================================== */
 
-    --cc-accent: #2563eb;
-    --cc-accent-hover: #1d4ed8;
-    --cc-accent-text: #ffffff;
-
-    --cc-badge-bg: rgba(37, 99, 235, 0.12);
-    --cc-badge-text: #1d4ed8;
-
-    --cc-btn-primary-bg: #2563eb;
-    --cc-btn-primary-text: #ffffff;
-    --cc-btn-primary-border: #2563eb;
-
-    --cc-btn-secondary-bg: #0f172a;
-    --cc-btn-secondary-text: #ffffff;
-    --cc-btn-secondary-border: #0f172a;
-
-    --cc-btn-outline-bg: #ffffff;
-    --cc-btn-outline-text: #0f172a;
-    --cc-btn-outline-border: #cbd5e1;
-
-    --cc-category-bg: #ffffff;
-    --cc-category-border: #e2e8f0;
-
-    --cc-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
-}
-
-/* Tabler-specific day adjustments */
 .cookie-consent-variant-tabler.cookie-consent-theme-day {
-    --cc-bg: #f8fafc;
-    --cc-category-bg: #ffffff;
+    --cc-bg: #f8fafc; /* Slightly off-white to match Tabler's body background */
+    --cc-category-bg: #ffffff; /* Categories stand out against modal background */
 }
 
 .cookie-consent-variant-tabler.cookie-consent-theme-day .cookie-consent-banner {
@@ -50,5 +20,5 @@
 }
 
 .cookie-consent-variant-tabler.cookie-consent-theme-day .modal-content {
-    border: 1px solid var(--cc-border-solid);
+    border: 1px solid var(--cc-border-solid); /* Subtle border for definition */
 }
