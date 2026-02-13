@@ -19,11 +19,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Showcase layout can now automatically extend the application's `base.html.twig` if available.
 - New `@CookieConsent/showcase_base.html.twig` as fallback for the showcase.
 - Alias `cookie-consent:cleanup` for `cookie-consent:prune-logs` command.
+- AssetMapper availability check in `prependExtension()` for compatibility with non-AssetMapper projects.
+- Bilingual PHPDoc comments (DE/EN) for bundle class, entities, and core services.
+- Compatibility matrix in README (PHP/Symfony version support).
+- Troubleshooting section in README.
+- Storage modes documentation table in README.
+- SEO keywords section in README for better discoverability.
 
 ### Changed
 - Showcase controller now correctly pre-fills preferences based on category/vendor `default` and `required` settings.
 - Improved Bootstrap and Plain theme category templates for better layout consistency.
 - Updated documentation (README and CONTRIBUTING) in both English and German.
+- Expanded `composer.json` keywords for better Packagist discoverability (33 keywords).
+- Improved `composer.json` description with more relevant terms.
+- Entity classes `CookieConsent` and `CookieConsentLog` are now `final`.
+- German comments now use proper umlauts (ä, ö, ü, ß) instead of ae, oe, ue, ss.
+
+### Removed
+- Empty `public/` directory (assets are served via AssetMapper from `assets/dist/`).
 
 ## [0.3.0] - 2026-01-26
 
