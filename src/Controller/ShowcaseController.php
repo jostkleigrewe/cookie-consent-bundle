@@ -56,6 +56,11 @@ final readonly class ShowcaseController
      */
     public function __invoke(): Response
     {
+        $loader = $this->twig->getLoader();
+        $layoutTemplate = $loader->exists('base.html.twig')
+            ? 'base.html.twig'
+            : '@CookieConsent/showcase_base.html.twig';
+
         // Define all possible combinations.
         $variants = ['tabler', 'bootstrap', 'plain'];
         $themes = ['day', 'night'];
@@ -79,10 +84,7 @@ final readonly class ShowcaseController
         // Example data for the modal.
         $templateData = [
             'categories' => $this->policy->getCategories(),
-            'preferences' => array_map(
-                fn(array $cat) => $cat['default'],
-                $this->policy->getCategories()
-            ),
+            'preferences' => $this->buildPreferences($this->policy->getCategories()),
             'policy_version' => $this->policy->getPolicyVersion(),
             'consent_endpoint' => $this->urlGenerator->generate('cookie_consent_update'),
             'csrf_token' => $this->csrfTokenManager->getToken(ConsentCsrfTokenManager::TOKEN_ID)->getValue(),
@@ -103,10 +105,43 @@ final readonly class ShowcaseController
 
         // Render showcase template
         $content = $this->twig->render('@CookieConsent/showcase.html.twig', [
+            'layout_template' => $layoutTemplate,
             'combinations' => $combinations,
             'template_data' => $templateData,
         ]);
 
         return new Response($content);
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $categories
+     * @return array<string, array{allowed: bool, vendors: array<string, bool>}>
+     */
+    private function buildPreferences(array $categories): array
+    {
+        $preferences = [];
+
+        foreach ($categories as $name => $category) {
+            $allowed = (bool) ($category['default'] ?? false);
+            if (!empty($category['required'])) {
+                $allowed = true;
+            }
+
+            $vendors = [];
+            foreach (($category['vendors'] ?? []) as $vendorName => $vendorConfig) {
+                $vendorAllowed = (bool) ($vendorConfig['default'] ?? false);
+                if (!empty($vendorConfig['required'])) {
+                    $vendorAllowed = true;
+                }
+                $vendors[$vendorName] = $vendorAllowed;
+            }
+
+            $preferences[$name] = [
+                'allowed' => $allowed,
+                'vendors' => $vendors,
+            ];
+        }
+
+        return $preferences;
     }
 }

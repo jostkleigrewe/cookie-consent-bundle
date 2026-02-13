@@ -158,6 +158,19 @@ bin/console cookie-consent:prune-logs
 bin/console cookie-consent:prune-logs --days=90
 ```
 
+Alias:
+
+```bash
+bin/console cookie-consent:cleanup
+```
+
+Recommended scheduling:
+
+```bash
+# Cron (daily at 03:30)
+30 3 * * * /path/to/project/bin/console cookie-consent:cleanup
+```
+
 ---
 
 ## Events

@@ -16,6 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(
     name: 'cookie-consent:prune-logs',
     description: 'Deletes cookie consent audit logs older than the configured retention period.',
+    aliases: ['cookie-consent:cleanup'],
 )]
 final class PruneConsentLogsCommand extends Command
 {

@@ -6,9 +6,13 @@ namespace Jostkleigrewe\CookieConsentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * DE: Speichert den aktuellen Consent-Status eines Nutzers (Preferences, Policy-Version, Zeitstempel).
+ * EN: Stores the current consent state of a user (preferences, policy version, timestamp).
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'cookie_consent')]
-class CookieConsent
+final class CookieConsent
 {
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 32)]

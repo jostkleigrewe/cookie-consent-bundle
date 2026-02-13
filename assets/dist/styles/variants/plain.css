@@ -27,6 +27,13 @@
     border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
+/* Align checkboxes with labels (plain layout) */
+.cookie-consent-variant-plain .cookie-consent-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
 /* Plain buttons with border */
 .cookie-consent-variant-plain .cookie-consent-btn {
     border: 1px solid var(--cc-border-solid);

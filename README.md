@@ -1,30 +1,53 @@
-# Cookie Consent Bundle
+# Symfony Cookie Consent Bundle – GDPR/DSGVO Cookie Banner with Google Consent Mode v2
 
 [![Packagist Version](https://img.shields.io/packagist/v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
 [![PHP Version](https://img.shields.io/packagist/php-v/jostkleigrewe/cookie-consent-bundle)](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
+[![CI](https://github.com/jostkleigrewe/cookie-consent-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/jostkleigrewe/cookie-consent-bundle/actions/workflows/ci.yml)
 [![License](https://img.shields.io/packagist/l/jostkleigrewe/cookie-consent-bundle)](LICENSE)
 
-A Symfony 8 bundle for GDPR-compliant cookie consent with Twig integration, Stimulus.js, and flexible storage backends.
+> **A modern Symfony 8 bundle for GDPR/DSGVO-compliant cookie consent management.** Includes Google Consent Mode v2 support, Twig components, Stimulus.js integration, and AssetMapper compatibility. Perfect for cookie banners, consent modals, and privacy-compliant websites.
 
-**[Deutsche Version](README.de.md)**
+**[🇩🇪 Deutsche Version](README.de.md)** · **[📦 Packagist](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)** · **[📖 Documentation](docs/getting-started.md)**
+
+## Why this bundle?
+
+- ✅ Symfony-native consent handling with Twig, Stimulus, and AssetMapper
+- ✅ Vendor-level toggles + Consent Mode v2 for modern ad stacks
+- ✅ Session-safe by design: prevents unwanted session cookies
+
+## Screenshot
+
+![Cookie Consent Modal](docs/assets/cookie-consent-modal.png)
 
 ## Features
 
-- 🎯 **GDPR-Compliant** - Cookie consent with policy versioning and audit logging
-- 🎨 **Multiple Themes** - Tabler (light/dark), Bootstrap, or bring your own
-- ⚡ **Stimulus.js** - Turbo-friendly, no full page reload needed
-- 🧭 **Flexible Storage** - Cookie, Doctrine, or both combined
-- 🧩 **Vendor-Level Consent** - Optional per-vendor toggles inside categories
-- 🛡️ **Session Protection** - Prevents session cookies without consent
-- 📊 **Google Consent Mode v2** - Built-in GA4 and Google Ads integration
-- 🎬 **Embed Components** - YouTube, Vimeo, Google Maps, and more with consent gates
-- 🧪 **Twig Helpers** - `cookie_consent_has()`, `cookie_consent_modal()`, and more
+- 🎯 **GDPR & DSGVO Compliant** – Cookie consent with policy versioning and audit logging
+- 📊 **Google Consent Mode v2** – Built-in GA4, Google Ads, and gtag integration
+- 🎨 **Multiple Themes** – Tabler (light/dark), Bootstrap 5, or custom templates
+- ⚡ **Stimulus.js & Turbo** – Hotwire-compatible, no full page reload needed
+- 🗂️ **AssetMapper Ready** – No Webpack/Encore required, works out of the box
+- 🧭 **Flexible Storage** – Cookie-only, Doctrine ORM, or combined (hybrid)
+- 🧩 **Vendor-Level Consent** – Optional per-vendor toggles (Google Ads, Meta, etc.)
+- 🛡️ **Session Protection** – Prevents session cookies without explicit consent
+- 🎬 **Embed Components** – YouTube, Vimeo, Google Maps, Spotify, Instagram, TikTok with consent gates
+- 🧪 **Twig Helpers** – `cookie_consent_has()`, `cookie_consent_modal()`, and more
+- 📝 **Audit Logging** – Track consent changes with optional database persistence
 
 ## Requirements
 
 - PHP 8.4+
 - Symfony 8.0+
 - Twig Bundle, Security Bundle, Stimulus Bundle
+- Doctrine ORM + DoctrineBundle (optional, only for `storage: doctrine|both`)
+
+## Compatibility
+
+| Bundle Version | PHP       | Symfony   |
+|----------------|-----------|-----------|
+| 0.4.x          | 8.4+      | 8.0+      |
+| 0.3.x          | 8.3+      | 7.1+      |
+| 0.2.x          | 8.2+      | 7.0+      |
 
 ## Quick Start
 
@@ -112,6 +135,14 @@ cookie_consent:
     enabled: false
 ```
 
+### Storage Modes
+
+| Mode       | Description                                        | Use Case                          |
+|------------|----------------------------------------------------|-----------------------------------|
+| `cookie`   | Browser cookie only (default)                      | Simple sites, no DB required      |
+| `doctrine` | Database only via Doctrine ORM                     | Server-side consent verification  |
+| `both`     | Cookie + Database (cookie as primary, DB as backup)| Full audit trail + fast access    |
+
 If `storage` is set to `doctrine` or `both`, generate migrations in your app (bundle ships entities, not migrations). This requires Doctrine ORM:
 
 ```bash
@@ -121,12 +152,20 @@ bin/console doctrine:migrations:migrate
 
 Increment `policy_version` when changing categories to require re-consent.
 
+If `logging.retention_days` is set, run the cleanup command regularly:
+
+```bash
+bin/console cookie-consent:cleanup
+```
+
 ## Documentation
 
 - **[Getting Started](docs/getting-started.md)** - Installation, assets, first steps
 - **[Configuration](docs/configuration.md)** - All options, templates, Twig helpers
 - **[Advanced](docs/advanced.md)** - Storage backends, session enforcement, logging, events
 - **[Integration](docs/integration.md)** - Components, helpers, attributes, data attributes, events
+- **[Changelog](CHANGELOG.md)** - Releases and notable changes
+- **[Contributing](CONTRIBUTING.md)** - Development workflow and guidelines
 
 ## Embed Components
 
@@ -156,6 +195,33 @@ Available: YouTube, Vimeo, Google Maps, Spotify, Twitter/X, Instagram, TikTok, a
 
 See **[Integration](docs/integration.md)** for Twig components, helpers, data attributes, controller attributes, and events.
 
+## Troubleshooting
+
+### Modal doesn't appear
+- Ensure `{{ cookie_consent_modal() }}` is in your base template
+- Check browser console for JavaScript errors
+- Verify Stimulus controller is loaded: `@jostkleigrewe/cookie-consent-bundle/cookie-consent`
+
+### Assets not loading (404)
+- Run `bin/console cache:clear`
+- Check AssetMapper paths: `bin/console debug:asset-map | grep cookie`
+- Ensure `assets/app.js` imports the CSS
+
+### Session cookie created before consent
+- Check `enforcement.require_consent_for_session` is `true`
+- Add routes to `stateless_routes` if they should work without session
+- Verify `#[ConsentStateless]` attribute on stateless controllers
+
+### Doctrine storage not working
+- Run migrations: `bin/console doctrine:migrations:diff && bin/console doctrine:migrations:migrate`
+- Check `storage: doctrine` or `storage: both` is set
+- Verify `doctrine/orm` and `doctrine/doctrine-bundle` are installed
+
+### Google Consent Mode not updating
+- Ensure `google_consent_mode.enabled: true`
+- Check `gtag` is loaded before the consent modal
+- Verify category mapping matches your categories
+
 ## Contributing
 
 ```bash
@@ -170,5 +236,11 @@ MIT - see [LICENSE](LICENSE).
 ## Resources
 
 - [Packagist](https://packagist.org/packages/jostkleigrewe/cookie-consent-bundle)
-- [GitHub](https://github.com/jostkleigrewe/cookie-consent-bundle)
+- [GitHub Repository](https://github.com/jostkleigrewe/cookie-consent-bundle)
+- [Documentation](docs/getting-started.md)
 - [Report Issues](https://github.com/jostkleigrewe/cookie-consent-bundle/issues)
+- [Changelog](CHANGELOG.md)
+
+## Keywords
+
+Symfony cookie consent, GDPR cookie banner, DSGVO cookie modal, Google Consent Mode v2, Symfony 8 bundle, cookie management, consent management platform, CMP, Twig cookie component, Stimulus.js cookie, AssetMapper, Doctrine consent storage, YouTube embed consent, privacy compliance, e-privacy.
