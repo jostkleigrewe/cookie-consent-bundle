@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Controller;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

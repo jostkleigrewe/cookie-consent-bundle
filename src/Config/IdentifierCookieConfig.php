@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
+namespace Jostkleigrewe\CookieConsentBundle\Config;
 
 /**
  * IdentifierCookieConfig - Konfiguration fuer das Identifier-Cookie

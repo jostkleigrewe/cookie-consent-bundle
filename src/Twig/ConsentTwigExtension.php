@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Twig;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Config\GoogleConsentModeConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\UiConfig;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Symfony\Component\Asset\Packages;
@@ -62,18 +64,8 @@ final class ConsentTwigExtension extends AbstractExtension
      * @param UrlGeneratorInterface $urlGenerator URL generator
      * @param ConsentCsrfTokenManager $csrfTokenManager CSRF manager
      * @param Packages $packages Asset packages for URL generation
-     * @param array{
-     *     template: string,
-     *     variant: string,
-     *     theme: string,
-     *     density: string,
-     *     position: string,
-     *     privacy_url: ?string,
-     *     imprint_url: ?string,
-     *     reload_on_change: bool
-     * } $ui UI configuration
-     * @param array{enabled: bool, mapping: array<string, string>} $googleConsentMode
-     * Google Consent Mode configuration
+     * @param UiConfig $ui UI configuration DTO
+     * @param GoogleConsentModeConfig $googleConsentMode Google Consent Mode configuration DTO
      */
     public function __construct(
         private readonly Environment $twig,
@@ -83,8 +75,8 @@ final class ConsentTwigExtension extends AbstractExtension
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly ConsentCsrfTokenManager $csrfTokenManager,
         private readonly Packages $packages,
-        private readonly array $ui,
-        private readonly array $googleConsentMode,
+        private readonly UiConfig $ui,
+        private readonly GoogleConsentModeConfig $googleConsentMode,
     ) {
     }
 
@@ -146,7 +138,7 @@ final class ConsentTwigExtension extends AbstractExtension
             return '';
         }
 
-        return $this->twig->render($this->ui['template'], [
+        return $this->twig->render($this->ui->template, [
             'categories' => $this->policy->getCategories(),
             'preferences' => $this->consentManager->getPreferences($request),
             'policy_version' => $this->policy->getPolicyVersion(),
@@ -156,15 +148,15 @@ final class ConsentTwigExtension extends AbstractExtension
             'csrf_token' => $this->csrfTokenManager->getToken(ConsentCsrfTokenManager::TOKEN_ID)->getValue(),
 
             'consent_required' => $this->isConsentRequired(),
-            'privacy_url' => $this->ui['privacy_url'],
-            'imprint_url' => $this->ui['imprint_url'],
-            'reload_on_change' => $this->ui['reload_on_change'],
+            'privacy_url' => $this->ui->privacyUrl,
+            'imprint_url' => $this->ui->imprintUrl,
+            'reload_on_change' => $this->ui->reloadOnChange,
 
             // Layout options with override capability.
-            'variant' => $overrides['variant'] ?? $this->ui['variant'],
-            'theme' => $overrides['theme'] ?? $this->ui['theme'],
-            'density' => $overrides['density'] ?? $this->ui['density'],
-            'position' => $overrides['position'] ?? $this->ui['position'],
+            'variant' => $overrides['variant'] ?? $this->ui->variant,
+            'theme' => $overrides['theme'] ?? $this->ui->theme,
+            'density' => $overrides['density'] ?? $this->ui->density,
+            'position' => $overrides['position'] ?? $this->ui->position,
 
             // Google Consent Mode v2 configuration.
             'google_consent_mode' => $this->googleConsentMode,

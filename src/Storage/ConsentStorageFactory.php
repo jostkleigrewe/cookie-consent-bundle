@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
+namespace Jostkleigrewe\CookieConsentBundle\Storage;
 
 /**
  * ConsentStorageFactory - Factory fuer Storage-Backend-Auswahl

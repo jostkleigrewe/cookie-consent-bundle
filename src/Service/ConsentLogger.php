@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Service;
+namespace Jostkleigrewe\CookieConsentBundle\Service;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\LogLevel;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * ConsentLogger - Audit-Logging fuer Consent-Aktionen
+ * ConsentLogger - Audit-Logging für Consent-Aktionen
  *
- * Protokolliert Consent-Entscheidungen fuer DSGVO-Nachweispflichten.
- *     Unterstuetzt IP-Anonymisierung und konfigurierbare Log-Levels.
- *     Kann deaktiviert werden wenn kein Audit-Trail benoetigt wird.
+ * Protokolliert Consent-Entscheidungen für DSGVO-Nachweispflichten.
+ *     Unterstützt IP-Anonymisierung und konfigurierbare Log-Levels.
+ *     Kann deaktiviert werden wenn kein Audit-Trail benötigt wird.
  *
  * Logs consent decisions for GDPR accountability requirements.
  *     Supports IP anonymization and configurable log levels.
@@ -26,12 +28,12 @@ final class ConsentLogger
 {
     /**
      * @param LoggerInterface|null $logger PSR-3 logger (null = no logging)
-     * @param array{enabled: bool, level: string, anonymize_ip: bool, retention_days?: int|null} $logging
-     * Logging configuration
+     * @param LoggingConfig $logging Logging configuration DTO
+     * @param AuditLogPersisterInterface|null $auditLogPersister Audit log persister
      */
     public function __construct(
         private readonly ?LoggerInterface $logger,
-        private readonly array $logging,
+        private readonly LoggingConfig $logging,
         private readonly ?AuditLogPersisterInterface $auditLogPersister = null,
     ) {
     }
@@ -48,7 +50,7 @@ final class ConsentLogger
     public function log(string $action, ConsentState $state, ConsentPolicy $policy, ?Request $request, ?Response $response = null): void
     {
         // Logging disabled? Abort.
-        if (!$this->logging['enabled']) {
+        if (!$this->logging->enabled) {
             return;
         }
 
@@ -77,7 +79,7 @@ final class ConsentLogger
         // Add request context (IP, user agent, etc.)
         if ($request !== null) {
             $ipAddress = $request->getClientIp();
-            if ($this->logging['anonymize_ip'] && $ipAddress !== null) {
+            if ($this->logging->anonymizeIp && $ipAddress !== null) {
                 $ipAddress = IpUtils::anonymize($ipAddress);
             }
 
@@ -100,14 +102,14 @@ final class ConsentLogger
             $state->getPolicyVersion()
         );
 
-        // Log with configured log level
+        // Log with configured log level (exhaustive match on enum)
         if ($this->logger !== null) {
-            match ($this->logging['level']) {
-                'debug' => $this->logger->debug($message, $context),
-                'notice' => $this->logger->notice($message, $context),
-                'warning' => $this->logger->warning($message, $context),
-                'error' => $this->logger->error($message, $context),
-                default => $this->logger->info($message, $context),
+            match ($this->logging->level) {
+                LogLevel::Debug => $this->logger->debug($message, $context),
+                LogLevel::Info => $this->logger->info($message, $context),
+                LogLevel::Notice => $this->logger->notice($message, $context),
+                LogLevel::Warning => $this->logger->warning($message, $context),
+                LogLevel::Error => $this->logger->error($message, $context),
             };
         }
     }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
+namespace Jostkleigrewe\CookieConsentBundle\Storage;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use RuntimeException;
