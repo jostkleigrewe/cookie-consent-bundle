@@ -1,0 +1,9 @@
+{
+    "bundles": {
+        "Jostkleigrewe\\CookieConsentBundle\\CookieConsentBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/",
+        "assets/": "%ROOT_DIR%/%ASSETS_DIR%/"
+    }
+}

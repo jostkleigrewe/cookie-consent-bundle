@@ -1,53 +1,90 @@
 /**
- * Cookie Consent - Tabler Variant
- * DE: Variante mit Tabler-kompatiblen Styles.
- * EN: Variant with Tabler-compatible styles.
+ * Cookie Consent Bundle - Tabler Variant
  *
- * Nutzt Tabler/Bootstrap form-switch im Template und ergaenzt
- * cookie-consent-spezifische Styles.
+ * Styles for Tabler UI framework integration.
+ * Uses Tabler's form-switch component in templates and adds
+ * cookie-consent-specific overrides.
+ *
+ * Note: High specificity (.cookie-consent-modal prefix) required
+ * because Tabler applies aggressive global styles.
  */
 
 .cookie-consent-variant-tabler {
     --cc-radius: 18px;
 }
 
-/* Ensure switch toggle works with Tabler */
-.cookie-consent-variant-tabler .form-check.form-switch {
-    padding-left: 2.5em;
+/* ==========================================================================
+   Modal Content Fix
+   Tabler overrides .modal-content for fullscreen modals - reset to our styles
+   ========================================================================== */
+
+.cookie-consent-modal.cookie-consent-variant-tabler .modal-content {
+    border: 0;
+    border-radius: var(--cc-radius);
+    box-shadow: var(--cc-shadow);
+    background: var(--cc-bg);
 }
 
-.cookie-consent-variant-tabler .form-check.form-switch .form-check-input {
-    width: 2em;
-    margin-left: -2.5em;
+/* ==========================================================================
+   Form Switch Layout Fix
+   Base CSS sets display:grid on .cookie-consent-toggle, breaking
+   Tabler's form-switch float-based layout - restore native behavior
+   ========================================================================== */
+
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-toggle.form-switch {
+    display: block;
+    padding-left: 2.5rem; /* Space for floated switch */
+    min-height: 1.5rem;
+}
+
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-toggle.form-switch .form-check-input {
+    float: left;
+    width: 2rem;
+    margin-left: -2.5rem; /* Pull into padding space */
     margin-top: 0.25em;
 }
 
-/* Category labels inline with switch */
-.cookie-consent-variant-tabler .cookie-consent-category-label {
+/* ==========================================================================
+   Category Labels and Descriptions
+   Adjust for inline switch layout
+   ========================================================================== */
+
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-category-label {
     display: inline;
+    margin-left: 0;
 }
 
-.cookie-consent-variant-tabler .cookie-consent-vendors {
-    margin-left: 1.75rem;
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-category-description {
+    margin-top: 0.25rem;
+    padding-left: 0;
+}
+
+/* ==========================================================================
+   Vendor Section
+   Nested under categories with visual indentation
+   ========================================================================== */
+
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-vendors {
+    margin-left: 1.75rem; /* Align with category content */
     margin-top: 0.5rem;
 }
 
-.cookie-consent-variant-tabler .cookie-consent-vendor-toggle {
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-vendor-toggle {
     padding-left: 2.25em;
 }
 
-.cookie-consent-variant-tabler .cookie-consent-vendor-toggle .form-check-input {
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-vendor-toggle .form-check-input {
     width: 1.8em;
     margin-left: -2.25em;
     margin-top: 0.2em;
 }
 
-.cookie-consent-variant-tabler .cookie-consent-vendor-label {
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-vendor-label {
     font-size: 0.95em;
-    opacity: 0.85;
+    opacity: 0.85; /* Subtle visual hierarchy */
 }
 
-.cookie-consent-variant-tabler .cookie-consent-vendor-description {
+.cookie-consent-modal.cookie-consent-variant-tabler .cookie-consent-vendor-description {
     font-size: 0.85em;
     opacity: 0.75;
     margin-left: 0.1rem;

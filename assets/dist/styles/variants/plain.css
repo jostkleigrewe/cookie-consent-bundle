@@ -1,23 +1,28 @@
 /**
- * Cookie Consent - Plain Variant
- * DE: Framework-agnostische Variante mit eigenen Styles.
- * EN: Framework-agnostic variant with custom styles.
+ * Cookie Consent Bundle - Plain Variant
+ *
+ * Framework-agnostic variant with custom styles.
+ * Does not rely on Bootstrap, Tabler, or other CSS frameworks.
+ * Uses native checkboxes instead of custom form controls.
  */
+
+/* ==========================================================================
+   Base Overrides
+   Visual adjustments for standalone usage
+   ========================================================================== */
 
 .cookie-consent-variant-plain {
     --cc-overlay: rgba(15, 23, 42, 0.45);
     --cc-radius: 16px;
-    --cc-btn-radius: 10px;
-}
-
-.cookie-consent-variant-plain {
-    backdrop-filter: blur(6px);
+    --cc-btn-radius: 10px; /* Rounded but not pill-shaped */
+    backdrop-filter: blur(6px); /* Modern frosted glass effect */
 }
 
 .cookie-consent-variant-plain .modal-content {
     box-shadow: 0 28px 70px rgba(15, 23, 42, 0.2);
 }
 
+/* Gradient header for visual interest */
 .cookie-consent-variant-plain .cookie-consent-header {
     background: linear-gradient(120deg, var(--cc-bg-secondary), var(--cc-bg));
 }
@@ -27,14 +32,22 @@
     border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
-/* Align checkboxes with labels (plain layout) */
+/* ==========================================================================
+   Toggle Row Layout
+   Checkbox and label aligned horizontally
+   ========================================================================== */
+
 .cookie-consent-variant-plain .cookie-consent-toggle-row {
     display: flex;
     align-items: center;
     gap: 0.6rem;
 }
 
-/* Plain buttons with border */
+/* ==========================================================================
+   Button Styles
+   Subtle border for better definition
+   ========================================================================== */
+
 .cookie-consent-variant-plain .cookie-consent-btn {
     border: 1px solid var(--cc-border-solid);
 }

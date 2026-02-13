@@ -1,39 +1,54 @@
 /**
- * Cookie Consent - Bootstrap Variant
- * DE: Variante mit Bootstrap-kompatiblen Styles.
- * EN: Variant with Bootstrap-compatible styles.
+ * Cookie Consent Bundle - Bootstrap Variant
  *
- * Nutzt native Bootstrap-Klassen im Template (btn, form-check-input, etc.)
- * und ergaenzt nur cookie-consent-spezifische Styles.
+ * Styles for Bootstrap 5 integration.
+ * Uses native Bootstrap classes in templates (btn, form-check-input, etc.)
+ * and adds only cookie-consent-specific overrides.
  */
 
+/* ==========================================================================
+   Base Overrides
+   Bootstrap-compatible visual adjustments
+   ========================================================================== */
+
 .cookie-consent-variant-bootstrap {
-    --cc-overlay: rgba(0, 0, 0, 0.55);
+    --cc-overlay: rgba(0, 0, 0, 0.55); /* Match Bootstrap modal backdrop */
     --cc-radius: 14px;
+    --cc-header-bg: #f8f9fa;
+    --cc-header-border: #e9ecef;
+    --cc-content-border: #dee2e6;
 }
 
 .cookie-consent-variant-bootstrap .modal-content {
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--cc-content-border);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
 .cookie-consent-variant-bootstrap .cookie-consent-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+    background: var(--cc-header-bg);
+    border-bottom: 1px solid var(--cc-header-border);
 }
 
 .cookie-consent-variant-bootstrap .cookie-consent-category {
     background: var(--cc-bg);
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--cc-header-border);
 }
 
-/* Bootstrap native buttons get pill shape */
+/* ==========================================================================
+   Button Styles
+   Apply pill shape to native Bootstrap buttons
+   ========================================================================== */
+
 .cookie-consent-variant-bootstrap .cookie-consent-actions .btn {
-    border-radius: 999px;
+    border-radius: var(--cc-btn-radius);
     padding: 0.55rem 1.25rem;
 }
 
-/* Inline toggle row for categories/vendors */
+/* ==========================================================================
+   Toggle Row Layout
+   Checkbox and label aligned horizontally (matches plain variant)
+   ========================================================================== */
+
 .cookie-consent-variant-bootstrap .cookie-consent-toggle-row {
     display: flex;
     align-items: center;
