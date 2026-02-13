@@ -33,6 +33,7 @@ import '@jostkleigrewe/cookie-consent-bundle/embed_consent.js';
 
 | Need | Use | Example |
 | --- | --- | --- |
+| CSS (CSP-safe) | `cookie_consent_styles()` | `{{ cookie_consent_styles() }}` (in `<head>`) |
 | Modal | `cookie_consent_modal()` | `{% if cookie_consent_required() %}{{ cookie_consent_modal() }}{% endif %}` |
 | Re-open modal | `<twig:CookieSettingsButton />` | `<twig:CookieSettingsButton label="Cookie settings" />` |
 | Check category | `cookie_consent_has()` | `{% if cookie_consent_has('analytics') %}` |
@@ -130,7 +131,16 @@ import '@jostkleigrewe/cookie-consent-bundle/embed_consent.js';
 
 ## 4) Twig Helpers
 
-Check consent in templates:
+### Include CSS (CSP-compatible)
+
+```twig
+{# In <head> of your base template #}
+{{ cookie_consent_styles() }}
+```
+
+This renders a standard `<link rel="stylesheet">` tag. Use this instead of JavaScript CSS imports when you have a strict Content-Security-Policy (`style-src 'self'`).
+
+### Check consent in templates
 
 ```twig
 {% if cookie_consent_has('analytics') %}

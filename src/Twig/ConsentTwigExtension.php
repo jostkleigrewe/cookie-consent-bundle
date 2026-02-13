@@ -8,6 +8,7 @@ use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
 use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -23,6 +24,7 @@ use Twig\TwigFunction;
  *     Enables easy template integration without controller logic.
  *
  * Available functions:
+ * - cookie_consent_styles()       - Renders the CSS link tag (CSP-compatible)
  * - cookie_consent_modal()        - Renders the consent modal
  * - cookie_consent_has(category)  - Checks whether a category is allowed
  * - cookie_consent_preferences()  - Returns normalized preferences
@@ -50,6 +52,8 @@ use Twig\TwigFunction;
  */
 final class ConsentTwigExtension extends AbstractExtension
 {
+    private const string CSS_ASSET_PATH = '@jostkleigrewe/cookie-consent-bundle/styles/cookie_consent.css';
+
     /**
      * @param Environment $twig Twig environment for rendering
      * @param ConsentManager $consentManager Consent service
@@ -57,6 +61,7 @@ final class ConsentTwigExtension extends AbstractExtension
      * @param RequestStack $requestStack Request stack
      * @param UrlGeneratorInterface $urlGenerator URL generator
      * @param ConsentCsrfTokenManager $csrfTokenManager CSRF manager
+     * @param Packages $packages Asset packages for URL generation
      * @param array{
      *     template: string,
      *     variant: string,
@@ -77,6 +82,7 @@ final class ConsentTwigExtension extends AbstractExtension
         private readonly RequestStack $requestStack,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly ConsentCsrfTokenManager $csrfTokenManager,
+        private readonly Packages $packages,
         private readonly array $ui,
         private readonly array $googleConsentMode,
     ) {
@@ -90,6 +96,7 @@ final class ConsentTwigExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('cookie_consent_styles', [$this, 'renderStyles'], ['is_safe' => ['html']]),
             new TwigFunction('cookie_consent_modal', [$this, 'renderModal'], ['is_safe' => ['html']]),
             new TwigFunction('cookie_consent_has', [$this, 'hasConsentFor']),
             new TwigFunction('cookie_consent_vendor_has', [$this, 'hasVendorConsentFor']),
@@ -100,6 +107,27 @@ final class ConsentTwigExtension extends AbstractExtension
             new TwigFunction('cookie_consent_required', [$this, 'isConsentRequired']),
             new TwigFunction('cookie_consent_categories', [$this, 'getCategories']),
         ];
+    }
+
+    /**
+     * Renders the CSS stylesheet link tag.
+     *
+     * DE: Rendert ein <link>-Tag für das Bundle-CSS. CSP-kompatibel, da kein
+     *     JavaScript-Import verwendet wird.
+     * EN: Renders a <link> tag for the bundle CSS. CSP-compatible since no
+     *     JavaScript import is used.
+     *
+     * @return string HTML link tag
+     *
+     * @example
+     * {# In <head> of base.html.twig #}
+     * {{ cookie_consent_styles() }}
+     */
+    public function renderStyles(): string
+    {
+        $url = $this->packages->getUrl(self::CSS_ASSET_PATH);
+
+        return sprintf('<link rel="stylesheet" href="%s">', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
     }
 
     /**

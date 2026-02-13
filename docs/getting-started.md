@@ -53,10 +53,30 @@ The bundle registers its assets via AssetMapper. No build step required.
 
 ### 1. Import the CSS
 
+There are two ways to include the CSS – choose based on your project's requirements:
+
+#### Option A: Twig helper (CSP-compatible, recommended)
+
+Add to your base template's `<head>`:
+
+```twig
+{# templates/base.html.twig #}
+<head>
+    {# ... #}
+    {{ cookie_consent_styles() }}
+</head>
+```
+
+This renders a standard `<link rel="stylesheet">` tag, fully compatible with strict Content-Security-Policy headers (`style-src 'self'`).
+
+#### Option B: JavaScript import
+
 ```javascript
 // assets/app.js
 import '@jostkleigrewe/cookie-consent-bundle/styles/cookie_consent.css';
 ```
+
+> **CSP Note:** When using strict Content-Security-Policy (`style-src 'self'` without `data:`), bundlers may convert CSS imports to `data:` URLs, which get blocked by the CSP. Use **Option A** if you encounter styling issues in CSP-protected environments.
 
 ### 2. Enable the Stimulus controller
 
