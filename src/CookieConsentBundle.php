@@ -70,6 +70,23 @@ final class CookieConsentBundle extends AbstractBundle
         // Set parameters (for usage in services.php or controllers).
         foreach ($config as $key => $value) {
             $container->parameters()->set('cookie_consent.' . $key, $value);
+
+            // DE: Nested Arrays auch als einzelne Parameter setzen (für services.php).
+            //     Symfony unterstützt keine %param.nested.key% Notation.
+            // EN: Also set nested arrays as individual parameters (for services.php).
+            //     Symfony does not support %param.nested.key% notation.
+            if (\is_array($value)) {
+                foreach ($value as $nestedKey => $nestedValue) {
+                    // DE: Nur skalare Werte als Parameter (keine tiefen Arrays).
+                    // EN: Only scalar values as parameters (no deep arrays).
+                    if (!\is_array($nestedValue)) {
+                        $container->parameters()->set(
+                            sprintf('cookie_consent.%s.%s', $key, $nestedKey),
+                            $nestedValue
+                        );
+                    }
+                }
+            }
         }
 
         // Load service definitions
