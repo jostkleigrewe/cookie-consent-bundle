@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [0.4.0] - 2026-01-30
+## [0.4.0] - 2026-02-13
 
 ### Added
 - Showcase layout can now automatically extend the application's `base.html.twig` if available.

@@ -6,11 +6,15 @@ namespace Jostkleigrewe\CookieConsentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * DE: Audit-Log für Consent-Änderungen (Action, IP, UserAgent, Zeitstempel).
+ * EN: Audit log for consent changes (action, IP, user agent, timestamp).
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'cookie_consent_log')]
 #[ORM\Index(columns: ['consent_id'], name: 'idx_cookie_consent_log_consent_id')]
 #[ORM\Index(columns: ['decided_at'], name: 'idx_cookie_consent_log_decided_at')]
-class CookieConsentLog
+final class CookieConsentLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

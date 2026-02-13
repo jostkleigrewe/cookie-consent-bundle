@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 /**
  * CookieConsentBundle - DSGVO/GDPR Cookie Consent Bundle
  *
- * Symfony Bundle fuer DSGVO-konforme Cookie-Zustimmung.
+ * Symfony Bundle für DSGVO-konforme Cookie-Zustimmung.
  *     Stellt Modal, Storage-Backends, Event-System und Twig-Integration bereit.
  *
  * Symfony bundle for GDPR-compliant cookie consent.
@@ -40,7 +41,9 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 final class CookieConsentBundle extends AbstractBundle
 {
     /**
-     * Loads the bundle configuration schema definition.
+     * DE: Lädt das Konfigurations-Schema des Bundles.
+     *     Definiert alle verfügbaren Konfigurationsoptionen.
+     * EN: Loads the bundle configuration schema definition.
      *     Defines all available configuration options.
      *
      * @param DefinitionConfigurator $definition Schema configurator
@@ -51,7 +54,9 @@ final class CookieConsentBundle extends AbstractBundle
     }
 
     /**
-     * Loads services and sets parameters based on configuration.
+     * DE: Lädt Services und setzt Parameter basierend auf der Konfiguration.
+     *     Prüft ob Doctrine verfügbar ist wenn DB-Storage konfiguriert wurde.
+     * EN: Loads services and sets parameters based on configuration.
      *     Checks if Doctrine is available when DB storage is configured.
      *
      * @param array<string, mixed> $config Resolved bundle configuration
@@ -87,23 +92,28 @@ final class CookieConsentBundle extends AbstractBundle
      * Registers Twig template path and AssetMapper path with other bundles.
      *     Executed BEFORE loadExtension (prepend).
      *
+     * DE: Registriert Twig-Namespace und optional AssetMapper-Pfad.
+     * EN: Registers Twig namespace and optionally AssetMapper path.
+     *
      * @param ContainerConfigurator $container Container configurator
      * @param ContainerBuilder $builder Container builder
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        // Register @CookieConsent Twig namespace
+        // DE: @CookieConsent Twig-Namespace immer registrieren
+        // EN: Always register @CookieConsent Twig namespace
         $container->extension('twig', [
             'paths' => [
                 $this->getPath() . '/templates' => 'CookieConsent',
             ],
         ]);
 
-        if (!$builder->hasExtension('framework')) {
+        // DE: AssetMapper nur registrieren wenn verfügbar
+        // EN: Only register AssetMapper if available
+        if (!$this->isAssetMapperAvailable($builder)) {
             return;
         }
 
-        // Register assets for Symfony AssetMapper (no build step needed)
         $builder->prependExtensionConfig('framework', [
             'asset_mapper' => [
                 'paths' => [
@@ -114,7 +124,33 @@ final class CookieConsentBundle extends AbstractBundle
     }
 
     /**
-     * Registers bundle routes (e.g., POST /_cookie-consent).
+     * Checks if Symfony AssetMapper is available in the host application.
+     *
+     * DE: Prüft ob AssetMapper verfügbar ist (Interface existiert + FrameworkBundle config).
+     * EN: Checks if AssetMapper is available (interface exists + FrameworkBundle config).
+     *
+     * @param ContainerBuilder $builder Container builder
+     * @return bool true if AssetMapper can be used
+     */
+    private function isAssetMapperAvailable(ContainerBuilder $builder): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // DE: Prüfe ob FrameworkBundle AssetMapper-Config hat
+        // EN: Check if FrameworkBundle has AssetMapper config
+        $bundlesMetadata = $builder->getParameter('kernel.bundles_metadata');
+        if (!\is_array($bundlesMetadata) || !isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return is_file($bundlesMetadata['FrameworkBundle']['path'] . '/Resources/config/asset_mapper.php');
+    }
+
+    /**
+     * DE: Registriert Bundle-Routen (z.B. POST /_cookie-consent).
+     * EN: Registers bundle routes (e.g., POST /_cookie-consent).
      *
      * @param RoutingConfigurator $routes Routing configurator
      */

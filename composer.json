@@ -1,13 +1,53 @@
 {
     "name": "jostkleigrewe/cookie-consent-bundle",
-    "description": "Symfony 8 bundle for GDPR-compliant cookie consent with Twig, Stimulus, and Turbo integration.",
+    "description": "Symfony 8 bundle for GDPR/DSGVO cookie consent with Google Consent Mode v2, Twig components, Stimulus.js, and AssetMapper. Supports cookie, Doctrine, or combined storage. Includes YouTube, Vimeo, Google Maps embed components.",
     "type": "symfony-bundle",
     "license": "MIT",
-    "keywords": ["symfony", "symfony8", "symfony-ux", "bundle", "gdpr", "dsgvo", "cookie", "cookie-consent", "cookie-banner", "consent", "consent-management", "cmp", "privacy", "stimulus", "turbo"],
+    "keywords": [
+        "symfony",
+        "symfony8",
+        "symfony-ux",
+        "symfony-bundle",
+        "bundle",
+        "gdpr",
+        "dsgvo",
+        "cookie",
+        "cookie-consent",
+        "cookie-banner",
+        "cookie-modal",
+        "consent",
+        "consent-management",
+        "consent-mode",
+        "google-consent-mode",
+        "cmp",
+        "privacy",
+        "datenschutz",
+        "e-privacy",
+        "stimulus",
+        "turbo",
+        "hotwire",
+        "asset-mapper",
+        "twig",
+        "twig-component",
+        "doctrine",
+        "audit-log",
+        "google-analytics",
+        "ga4",
+        "gtag",
+        "youtube-embed",
+        "vimeo-embed",
+        "google-maps-embed"
+    ],
     "homepage": "https://github.com/jostkleigrewe/cookie-consent-bundle",
     "authors": [
         {
             "name": "Sven Jostkleigrewe"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/jostkleigrewe"
         }
     ],
     "require": {
