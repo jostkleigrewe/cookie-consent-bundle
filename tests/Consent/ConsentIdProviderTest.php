@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Tests\Consent;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Config\IdentifierCookieConfig;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentIdProvider;
+use Jostkleigrewe\CookieConsentBundle\Config\IdentifierCookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Storage\ConsentIdProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

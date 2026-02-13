@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Model;
+namespace Jostkleigrewe\CookieConsentBundle\Model;
 
 /**
  * ConsentState - Immutables Wertobjekt fuer den Consent-Zustand

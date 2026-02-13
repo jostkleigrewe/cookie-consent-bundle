@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
+namespace Jostkleigrewe\CookieConsentBundle\Config;
 
 /**
- * CookieConfig - Konfiguration fuer Browser-Cookies
+ * CookieConfig - Konfiguration für Browser-Cookies
  *
  * Immutables Wertobjekt mit allen Cookie-Einstellungen.
- *     Wird fuer das Consent-Cookie und das Identifier-Cookie verwendet.
+ *     Wird für das Consent-Cookie und das Identifier-Cookie verwendet.
  *
  * Immutable value object with all cookie settings.
  *     Used for both consent cookie and identifier cookie.
@@ -24,8 +24,7 @@ namespace Jostkleigrewe\CookieConsentBundle\Consent\Config;
  *         secure: null         # Auto-detect HTTPS
  *         same_site: lax       # 'lax' | 'strict' | 'none'
  *         http_only: true      # Not readable via JavaScript
- */
-/**
+ *
  * @phpstan-consistent-constructor
  */
 class CookieConfig
@@ -51,23 +50,24 @@ class CookieConfig
     }
 
     /**
-     * Creates CookieConfig from a configuration array.
-     *     Used by the DI container.
+     * DE: Erstellt CookieConfig aus einem Konfigurations-Array.
+     *     Das Array muss alle Keys enthalten (wird durch Symfony Config Definition garantiert).
+     * EN: Creates CookieConfig from a configuration array.
+     *     The array must contain all keys (guaranteed by Symfony Config Definition).
      *
      * @param array{name: string, lifetime: int, path: string, domain: ?string, secure: ?bool, same_site: string, http_only: bool} $config
-     * Configuration array
      * @return static New CookieConfig instance
      */
     final public static function fromArray(array $config): static
     {
         return new static(
-            $config['name'],
-            $config['lifetime'],
-            $config['path'],
-            $config['domain'],
-            $config['secure'],
-            $config['same_site'],
-            $config['http_only']
+            name: $config['name'],
+            lifetime: $config['lifetime'],
+            path: $config['path'],
+            domain: $config['domain'],
+            secure: $config['secure'],
+            sameSite: $config['same_site'],
+            httpOnly: $config['http_only'],
         );
     }
 }

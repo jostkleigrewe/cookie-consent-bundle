@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Tests\Consent;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\AuditLogPersisterInterface;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\LogLevel;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Service\AuditLogPersisterInterface;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +19,11 @@ final class ConsentLoggerTest extends TestCase
     public function testLogSkipsPersistenceWhenResponseMissing(): void
     {
         $persister = new FakeAuditLogPersister();
-        $logger = new ConsentLogger(null, [
-            'enabled' => true,
-            'level' => 'info',
-            'anonymize_ip' => true,
-            'retention_days' => null,
-        ], $persister);
+        $logger = new ConsentLogger(
+            null,
+            new LoggingConfig(enabled: true, level: LogLevel::Info, anonymizeIp: true, retentionDays: null),
+            $persister
+        );
 
         $policy = new ConsentPolicy([
             'necessary' => ['required' => true, 'default' => true],
@@ -40,12 +41,11 @@ final class ConsentLoggerTest extends TestCase
     public function testLogPersistsWhenResponsePresent(): void
     {
         $persister = new FakeAuditLogPersister();
-        $logger = new ConsentLogger(null, [
-            'enabled' => true,
-            'level' => 'info',
-            'anonymize_ip' => true,
-            'retention_days' => null,
-        ], $persister);
+        $logger = new ConsentLogger(
+            null,
+            new LoggingConfig(enabled: true, level: LogLevel::Info, anonymizeIp: true, retentionDays: null),
+            $persister
+        );
 
         $policy = new ConsentPolicy([
             'necessary' => ['required' => true, 'default' => true],

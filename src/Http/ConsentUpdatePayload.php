@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Http;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

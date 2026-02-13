@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Service;
+namespace Jostkleigrewe\CookieConsentBundle\Service;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class NullAuditLogPersister implements AuditLogPersisterInterface
+interface AuditLogPersisterInterface
 {
     public function persist(
         string $action,
@@ -17,6 +17,5 @@ final class NullAuditLogPersister implements AuditLogPersisterInterface
         ConsentPolicy $policy,
         Request $request,
         Response $response
-    ): void {
-    }
+    ): void;
 }

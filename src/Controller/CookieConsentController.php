@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Controller;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentManager;
 use Jostkleigrewe\CookieConsentBundle\Http\ConsentUpdateException;
 use Jostkleigrewe\CookieConsentBundle\Http\ConsentUpdatePayload;
 use Symfony\Component\HttpFoundation\JsonResponse;

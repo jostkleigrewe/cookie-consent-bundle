@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\EventSubscriber;
 
+use Jostkleigrewe\CookieConsentBundle\Config\EnforcementConfig;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
 /**
- * ConsentRequirementResolver - Bestimmt ob ein Request Consent benoetigt
+ * ConsentRequirementResolver - Bestimmt ob ein Request Consent benötigt
  *
- * Zentrale Logik zur Bestimmung ob fuer einen Request Cookie-Consent
- *     erforderlich ist. Beruecksichtigt:
+ * Zentrale Logik zur Bestimmung ob für einen Request Cookie-Consent
+ *     erforderlich ist. Berücksichtigt:
  *     - Controller-Attribute (#[ConsentRequired], #[ConsentStateless])
  *     - Configured paths and routes
  *     - Symfony Firewall-Status (stateful vs stateless)
@@ -32,19 +33,13 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 final class ConsentRequirementResolver
 {
     /**
-     * @param array{
-     *     require_consent_for_session: bool,
-     *     stateless_paths: string[],
-     *     stateless_routes: string[],
-     *     protected_paths: string[],
-     *     protected_routes: string[]
-     * } $enforcement Enforcement configuration
+     * @param EnforcementConfig $enforcement Enforcement configuration DTO
      * @param ControllerAttributeResolver $attributeResolver Attribute resolver
      * @param FirewallMapInterface|null $firewallMap Symfony firewall map (optional)
      * @param LoggerInterface|null $logger Logger for debugging
      */
     public function __construct(
-        private readonly array $enforcement,
+        private readonly EnforcementConfig $enforcement,
         private readonly ControllerAttributeResolver $attributeResolver,
         private readonly ?FirewallMapInterface $firewallMap = null,
         private readonly ?LoggerInterface $logger = null,
@@ -70,7 +65,7 @@ final class ConsentRequirementResolver
         }
 
         // Step 3: Session enforcement enabled?
-        if (!$this->enforcement['require_consent_for_session']) {
+        if (!$this->enforcement->requireConsentForSession) {
             return false;
         }
 
@@ -92,12 +87,12 @@ final class ConsentRequirementResolver
         }
 
         // Then check configured routes
-        if ($this->matchesRoute($request, $this->enforcement['stateless_routes'])) {
+        if ($this->matchesRoute($request, $this->enforcement->statelessRoutes)) {
             return true;
         }
 
         // Finally check configured paths
-        return $this->matchesPath($request, $this->enforcement['stateless_paths']);
+        return $this->matchesPath($request, $this->enforcement->statelessPaths);
     }
 
     /**
@@ -112,11 +107,11 @@ final class ConsentRequirementResolver
             return true;
         }
 
-        if ($this->matchesRoute($request, $this->enforcement['protected_routes'])) {
+        if ($this->matchesRoute($request, $this->enforcement->protectedRoutes)) {
             return true;
         }
 
-        return $this->matchesPath($request, $this->enforcement['protected_paths']);
+        return $this->matchesPath($request, $this->enforcement->protectedPaths);
     }
 
     /**

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
+namespace Jostkleigrewe\CookieConsentBundle\Storage;
 
 use DateTimeImmutable;
-use Jostkleigrewe\CookieConsentBundle\Consent\Config\IdentifierCookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\IdentifierCookieConfig;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

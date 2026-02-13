@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Tests\Kernel;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentManager;
 use Jostkleigrewe\CookieConsentBundle\Tests\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;

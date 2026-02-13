@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Service;
+namespace Jostkleigrewe\CookieConsentBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentIdProvider;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Storage\ConsentIdProvider;
 use Jostkleigrewe\CookieConsentBundle\Entity\CookieConsent;
 use Jostkleigrewe\CookieConsentBundle\Entity\CookieConsentLog;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -16,10 +17,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class DoctrineAuditLogPersister implements AuditLogPersisterInterface
 {
+    /**
+     * @param EntityManagerInterface $entityManager Doctrine entity manager
+     * @param ConsentIdProvider $idProvider Consent ID provider
+     * @param LoggingConfig $logging Logging configuration DTO
+     * @param object|null $tokenStorage Security token storage (optional)
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ConsentIdProvider $idProvider,
-        private readonly bool $anonymizeIp,
+        private readonly LoggingConfig $logging,
         private readonly ?object $tokenStorage = null,
     ) {
     }
@@ -53,7 +60,7 @@ final class DoctrineAuditLogPersister implements AuditLogPersisterInterface
         );
 
         $ipAddress = $request->getClientIp();
-        if ($this->anonymizeIp && $ipAddress !== null) {
+        if ($this->logging->anonymizeIp && $ipAddress !== null) {
             $ipAddress = IpUtils::anonymize($ipAddress);
         }
 

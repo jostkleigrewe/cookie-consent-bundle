@@ -67,7 +67,10 @@ final class CookieConsentBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        // Set parameters (for usage in services.php or controllers).
+        // DE: Parameter für Services setzen. Config-Arrays werden als Ganzes übergeben
+        //     und über Config-DTOs (z.B. UiConfig, LoggingConfig) typsicher verarbeitet.
+        // EN: Set parameters for services. Config arrays are passed as-is
+        //     and processed type-safely via Config DTOs (e.g. UiConfig, LoggingConfig).
         foreach ($config as $key => $value) {
             $container->parameters()->set('cookie_consent.' . $key, $value);
         }

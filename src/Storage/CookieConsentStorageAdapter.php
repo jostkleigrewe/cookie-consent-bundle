@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jostkleigrewe\CookieConsentBundle\Consent\Storage;
+namespace Jostkleigrewe\CookieConsentBundle\Storage;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Config\CookieConfig;
-use Jostkleigrewe\CookieConsentBundle\Consent\Model\ConsentState;
+use Jostkleigrewe\CookieConsentBundle\Config\CookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Model\ConsentState;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

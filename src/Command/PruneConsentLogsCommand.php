@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jostkleigrewe\CookieConsentBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
 use Jostkleigrewe\CookieConsentBundle\Entity\CookieConsentLog;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,11 +22,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class PruneConsentLogsCommand extends Command
 {
     /**
-     * @param array{enabled: bool, level: string, anonymize_ip: bool, retention_days?: int|null} $logging
+     * @param EntityManagerInterface $entityManager Doctrine entity manager
+     * @param LoggingConfig $logging Logging configuration DTO
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly array $logging,
+        private readonly LoggingConfig $logging,
     ) {
         parent::__construct();
     }
@@ -46,7 +48,7 @@ final class PruneConsentLogsCommand extends Command
 
         $days = $input->getOption('days');
         if ($days === null) {
-            $days = $this->logging['retention_days'] ?? null;
+            $days = $this->logging->retentionDays;
         }
 
         if ($days === null) {

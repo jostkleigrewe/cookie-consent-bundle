@@ -2,21 +2,25 @@
 
 declare(strict_types=1);
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Config\CookieConfig;
-use Jostkleigrewe\CookieConsentBundle\Consent\Config\IdentifierCookieConfig;
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\AuditLogPersisterInterface;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\DoctrineAuditLogPersister;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\NullAuditLogPersister;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentIdProvider;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\CombinedConsentStorageAdapter;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentStorageFactory;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\ConsentStorageInterface;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\CookieConsentStorageAdapter;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\DoctrineConsentStorageAdapter;
-use Jostkleigrewe\CookieConsentBundle\Consent\Storage\DoctrineOrmConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Config\CookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\EnforcementConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\GoogleConsentModeConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\IdentifierCookieConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\UiConfig;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentLogger;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Service\AuditLogPersisterInterface;
+use Jostkleigrewe\CookieConsentBundle\Service\DoctrineAuditLogPersister;
+use Jostkleigrewe\CookieConsentBundle\Service\NullAuditLogPersister;
+use Jostkleigrewe\CookieConsentBundle\Storage\ConsentIdProvider;
+use Jostkleigrewe\CookieConsentBundle\Storage\CombinedConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Storage\ConsentStorageFactory;
+use Jostkleigrewe\CookieConsentBundle\Storage\ConsentStorageInterface;
+use Jostkleigrewe\CookieConsentBundle\Storage\CookieConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Storage\DoctrineConsentStorageAdapter;
+use Jostkleigrewe\CookieConsentBundle\Storage\DoctrineOrmConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Command\PruneConsentLogsCommand;
 use Jostkleigrewe\CookieConsentBundle\Controller\CookieConsentController;
 use Jostkleigrewe\CookieConsentBundle\Controller\ShowcaseController;
@@ -55,6 +59,22 @@ return static function (ContainerConfigurator $container): void {
         ->factory([IdentifierCookieConfig::class, 'fromArray'])
         ->args(['%cookie_consent.identifier_cookie%']);
 
+    $services->set(UiConfig::class)
+        ->factory([UiConfig::class, 'fromArray'])
+        ->args(['%cookie_consent.ui%']);
+
+    $services->set(EnforcementConfig::class)
+        ->factory([EnforcementConfig::class, 'fromArray'])
+        ->args(['%cookie_consent.enforcement%']);
+
+    $services->set(LoggingConfig::class)
+        ->factory([LoggingConfig::class, 'fromArray'])
+        ->args(['%cookie_consent.logging%']);
+
+    $services->set(GoogleConsentModeConfig::class)
+        ->factory([GoogleConsentModeConfig::class, 'fromArray'])
+        ->args(['%cookie_consent.google_consent_mode%']);
+
     $services->set(CookieConsentStorageAdapter::class)
         ->args([
             '$config' => new ReferenceConfigurator(CookieConfig::class),
@@ -79,7 +99,7 @@ return static function (ContainerConfigurator $container): void {
 
         $services->set(DoctrineAuditLogPersister::class)
             ->args([
-                '$anonymizeIp' => '%cookie_consent.logging.anonymize_ip%',
+                '$logging' => new ReferenceConfigurator(LoggingConfig::class),
                 '$tokenStorage' => (new ReferenceConfigurator('security.token_storage'))->nullOnInvalid(),
             ]);
 
@@ -87,7 +107,7 @@ return static function (ContainerConfigurator $container): void {
 
         $services->set(PruneConsentLogsCommand::class)
             ->args([
-                '$logging' => '%cookie_consent.logging%',
+                '$logging' => new ReferenceConfigurator(LoggingConfig::class),
             ])
             ->tag('console.command');
     }
@@ -111,7 +131,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ConsentLogger::class)
         ->args([
             '$logger' => (new ReferenceConfigurator('logger'))->nullOnInvalid(),
-            '$logging' => '%cookie_consent.logging%',
+            '$logging' => new ReferenceConfigurator(LoggingConfig::class),
             '$auditLogPersister' => new ReferenceConfigurator(AuditLogPersisterInterface::class),
         ]);
 
@@ -129,7 +149,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ConsentManager::class);
     $services->set(ConsentRequirementResolver::class)
         ->args([
-            '$enforcement' => '%cookie_consent.enforcement%',
+            '$enforcement' => new ReferenceConfigurator(EnforcementConfig::class),
             '$firewallMap' => new ReferenceConfigurator(FirewallMapInterface::class),
             '$logger' => (new ReferenceConfigurator(LoggerInterface::class))->nullOnInvalid(),
         ]);
@@ -152,7 +172,7 @@ return static function (ContainerConfigurator $container): void {
         ->set(ConsentTwigExtension::class)
         ->tag('twig.extension')
         ->args([
-            '$ui' => '%cookie_consent.ui%',
-            '$googleConsentMode' => '%cookie_consent.google_consent_mode%',
+            '$ui' => new ReferenceConfigurator(UiConfig::class),
+            '$googleConsentMode' => new ReferenceConfigurator(GoogleConsentModeConfig::class),
         ]);
 };

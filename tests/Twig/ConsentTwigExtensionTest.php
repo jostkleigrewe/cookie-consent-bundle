@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Jostkleigrewe\CookieConsentBundle\Tests\Twig;
 
-use Jostkleigrewe\CookieConsentBundle\Consent\Policy\ConsentPolicy;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentLogger;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\ConsentManager;
-use Jostkleigrewe\CookieConsentBundle\Consent\Service\NullAuditLogPersister;
+use Jostkleigrewe\CookieConsentBundle\Config\GoogleConsentModeConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\GoogleConsentModeMappingConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\LoggingConfig;
+use Jostkleigrewe\CookieConsentBundle\Config\LogLevel;
+use Jostkleigrewe\CookieConsentBundle\Config\UiConfig;
+use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentLogger;
+use Jostkleigrewe\CookieConsentBundle\Service\ConsentManager;
+use Jostkleigrewe\CookieConsentBundle\Service\NullAuditLogPersister;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Jostkleigrewe\CookieConsentBundle\Tests\Support\InMemoryConsentStorage;
 use Jostkleigrewe\CookieConsentBundle\Twig\ConsentTwigExtension;
@@ -24,21 +29,42 @@ use Twig\Environment;
  */
 final class ConsentTwigExtensionTest extends TestCase
 {
-    private const array DEFAULT_UI = [
-        'template' => '@CookieConsent/modal.html.twig',
-        'variant' => 'default',
-        'theme' => 'light',
-        'density' => 'normal',
-        'position' => 'center',
-        'privacy_url' => '/privacy',
-        'imprint_url' => null,
-        'reload_on_change' => false,
-    ];
+    private static function createDefaultUiConfig(): UiConfig
+    {
+        return new UiConfig(
+            template: '@CookieConsent/modal.html.twig',
+            variant: 'default',
+            theme: 'light',
+            density: 'normal',
+            position: 'center',
+            privacyUrl: '/privacy',
+            imprintUrl: null,
+            reloadOnChange: false,
+        );
+    }
 
-    private const array DEFAULT_GOOGLE_CONSENT_MODE = [
-        'enabled' => false,
-        'mapping' => [],
-    ];
+    private static function createDefaultGoogleConsentModeConfig(): GoogleConsentModeConfig
+    {
+        return new GoogleConsentModeConfig(
+            enabled: false,
+            mapping: new GoogleConsentModeMappingConfig(
+                analyticsStorage: 'analytics',
+                adStorage: 'marketing',
+                adUserData: 'marketing',
+                adPersonalization: 'marketing',
+            ),
+        );
+    }
+
+    private static function createDefaultLoggingConfig(): LoggingConfig
+    {
+        return new LoggingConfig(
+            enabled: false,
+            level: LogLevel::Info,
+            anonymizeIp: true,
+            retentionDays: null,
+        );
+    }
 
     public function testRenderStylesReturnsValidLinkTag(): void
     {
@@ -159,7 +185,7 @@ final class ConsentTwigExtensionTest extends TestCase
         $consentManager = new ConsentManager(
             new InMemoryConsentStorage('1'),
             $policy,
-            new ConsentLogger(null, ['enabled' => false, 'level' => 'info', 'anonymize_ip' => true], new NullAuditLogPersister())
+            new ConsentLogger(null, self::createDefaultLoggingConfig(), new NullAuditLogPersister())
         );
 
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
@@ -177,8 +203,8 @@ final class ConsentTwigExtensionTest extends TestCase
             $urlGenerator,
             $csrfTokenManager,
             $packages,
-            self::DEFAULT_UI,
-            self::DEFAULT_GOOGLE_CONSENT_MODE,
+            self::createDefaultUiConfig(),
+            self::createDefaultGoogleConsentModeConfig(),
         );
     }
 }
