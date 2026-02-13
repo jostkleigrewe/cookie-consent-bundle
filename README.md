@@ -59,10 +59,23 @@ composer require jostkleigrewe/cookie-consent-bundle
 
 ### 2. Configure assets
 
+**Option A: Twig helper (CSP-compatible, recommended)**
+
+```twig
+{# templates/base.html.twig - in <head> #}
+{{ cookie_consent_styles() }}
+```
+
+This renders a standard `<link>` tag, fully compatible with strict Content-Security-Policy headers.
+
+**Option B: JavaScript import**
+
 ```javascript
 // assets/app.js
 import '@jostkleigrewe/cookie-consent-bundle/styles/cookie_consent.css';
 ```
+
+> **Note:** With strict CSP (`style-src 'self'`), bundlers may convert CSS imports to `data:` URLs, which can be blocked. Use Option A if you encounter CSP issues.
 
 ```json
 // assets/controllers.json

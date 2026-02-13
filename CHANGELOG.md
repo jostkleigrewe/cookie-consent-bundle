@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.4.1] - 2026-02-13
+
+### Added
+- New Twig helper `cookie_consent_styles()` for CSP-compatible CSS inclusion via `<link>` tag.
+- Documentation for both CSS integration methods (Twig helper vs. JavaScript import).
+- `symfony/asset` as required dependency for asset URL generation.
+
+### Changed
+- Updated README, Getting Started, and Integration docs with CSS integration options.
+- Quick reference tables now include `cookie_consent_styles()` helper.
+
 ## [0.4.0] - 2026-02-13
 
 ### Added
@@ -97,7 +108,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings button component to re-open modal
 - Browser events: `cookie-consent:changed`, `cookie-consent:open`
 
-[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jostkleigrewe/cookie-consent-bundle/compare/v0.1.0...v0.2.0
