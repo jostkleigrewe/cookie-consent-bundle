@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 /**
  * CookieConsentBundle - DSGVO/GDPR Cookie Consent Bundle
@@ -175,16 +174,5 @@ final class CookieConsentBundle extends AbstractBundle
         }
 
         return is_file($bundlesMetadata['FrameworkBundle']['path'] . '/Resources/config/asset_mapper.php');
-    }
-
-    /**
-     * DE: Lädt Bundle-Routen automatisch (z.B. POST /_cookie-consent).
-     * EN: Automatically loads bundle routes (e.g., POST /_cookie-consent).
-     *
-     * @param RoutingConfigurator $routes Routing configurator
-     */
-    public function loadRoutes(RoutingConfigurator $routes): void
-    {
-        $routes->import($this->getPath() . '/config/routes.php', 'php');
     }
 }

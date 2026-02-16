@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
@@ -23,8 +24,6 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  * Processes consent changes from the frontend (modal).
  *     Validates CSRF token, parses payload, and saves preferences.
  *     Responds with JSON for async processing.
- *
- * Route: POST /_cookie-consent (cookie_consent_update)
  *
  * @example
  * // Frontend sends JSON payload
@@ -81,6 +80,7 @@ final readonly class CookieConsentController
      *     "code": "csrf_invalid"
      * }
      */
+    #[Route('/_cookie-consent', name: 'cookie_consent_update', methods: ['POST'])]
     public function update(Request $request): JsonResponse
     {
         // Validate and parse payload

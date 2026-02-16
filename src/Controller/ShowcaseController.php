@@ -7,6 +7,7 @@ namespace Jostkleigrewe\CookieConsentBundle\Controller;
 use Jostkleigrewe\CookieConsentBundle\Policy\ConsentPolicy;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
@@ -25,14 +26,13 @@ use Twig\Environment;
  *     - Themes: day, night
  *     - Densities: normal, compact
  *
- * Route: GET /_cookie-consent/showcase
- *
  * Displays 12 combinations (3 x 2 x 2).
  *
  * @example
  * // Open in browser
  * https://localhost/_cookie-consent/showcase
  */
+#[Route('/_cookie-consent/showcase', name: 'cookie_consent_showcase', methods: ['GET'])]
 final readonly class ShowcaseController
 {
     /**
