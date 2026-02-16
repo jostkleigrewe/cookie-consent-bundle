@@ -41,6 +41,15 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 final class CookieConsentBundle extends AbstractBundle
 {
     /**
+     * DE: Gibt den Pfad zum Bundle-Root zurück.
+     * EN: Returns the path to the bundle root.
+     */
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
+
+    /**
      * DE: Lädt das Konfigurations-Schema des Bundles.
      *     Definiert alle verfügbaren Konfigurationsoptionen.
      * EN: Loads the bundle configuration schema definition.
@@ -169,13 +178,13 @@ final class CookieConsentBundle extends AbstractBundle
     }
 
     /**
-     * DE: Registriert Bundle-Routen (z.B. POST /_cookie-consent).
-     * EN: Registers bundle routes (e.g., POST /_cookie-consent).
+     * DE: Lädt Bundle-Routen automatisch (z.B. POST /_cookie-consent).
+     * EN: Automatically loads bundle routes (e.g., POST /_cookie-consent).
      *
      * @param RoutingConfigurator $routes Routing configurator
      */
-    public function configureRoutes(RoutingConfigurator $routes): void
+    public function loadRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import($this->getPath() . '/config/routes.php');
+        $routes->import($this->getPath() . '/config/routes.php', 'php');
     }
 }
