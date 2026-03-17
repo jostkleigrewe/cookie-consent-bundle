@@ -24,12 +24,11 @@ use Jostkleigrewe\CookieConsentBundle\Storage\DoctrineOrmConsentStorageAdapter;
 use Jostkleigrewe\CookieConsentBundle\Command\PruneConsentLogsCommand;
 use Jostkleigrewe\CookieConsentBundle\Controller\CookieConsentController;
 use Jostkleigrewe\CookieConsentBundle\Controller\ShowcaseController;
-use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentSessionSubscriber;
+use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentCookieFilterListener;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ConsentRequirementResolver;
 use Jostkleigrewe\CookieConsentBundle\EventSubscriber\ControllerAttributeResolver;
 use Jostkleigrewe\CookieConsentBundle\Security\ConsentCsrfTokenManager;
 use Jostkleigrewe\CookieConsentBundle\Twig\ConsentTwigExtension;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ReferenceConfigurator;
 use Symfony\Component\Security\Http\FirewallMapInterface;
@@ -93,7 +92,7 @@ return static function (ContainerConfigurator $container): void {
 
     $hasDoctrineBundle = class_exists(\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class);
 
-    if ($hasDoctrineBundle && class_exists(EntityManagerInterface::class)) {
+    if ($hasDoctrineBundle && class_exists(\Doctrine\ORM\EntityManagerInterface::class)) {
         $services->set(DoctrineOrmConsentStorageAdapter::class);
         $doctrineStorage = new ReferenceConfigurator(DoctrineOrmConsentStorageAdapter::class);
 
@@ -112,7 +111,7 @@ return static function (ContainerConfigurator $container): void {
             ->tag('console.command');
     }
 
-    if ($hasDoctrineBundle && class_exists(Doctrine\DBAL\Connection::class)) {
+    if ($hasDoctrineBundle && class_exists(\Doctrine\DBAL\Connection::class)) {
         $services->set(DoctrineConsentStorageAdapter::class);
         if ($doctrineStorage === null) {
             $doctrineStorage = new ReferenceConfigurator(DoctrineConsentStorageAdapter::class);
@@ -157,8 +156,11 @@ return static function (ContainerConfigurator $container): void {
         ->set(ControllerAttributeResolver::class);
 
     $services
-        ->set(ConsentSessionSubscriber::class)
-        ->tag('kernel.event_subscriber');
+        ->set(ConsentCookieFilterListener::class)
+        ->tag('kernel.event_subscriber')
+        ->args([
+            '$tokenStorage' => (new ReferenceConfigurator('security.token_storage'))->nullOnInvalid(),
+        ]);
 
     $services
         ->set(CookieConsentController::class)
