@@ -63,7 +63,10 @@ Erstelle `config/routes/cookie_consent.yaml`:
 
 ```yaml
 cookie_consent:
-    resource: '@CookieConsentBundle/config/routes.php'
+    resource:
+        path: '@CookieConsentBundle/Controller/'
+        namespace: Jostkleigrewe\CookieConsentBundle\Controller
+    type: attribute
 ```
 
 Dies registriert den `/_cookie-consent` Endpunkt, der für Consent-Updates benötigt wird.
@@ -147,7 +150,9 @@ cookie_consent:
           default: false
 
   ui:
-    template: '@CookieConsent/styles/tabler/modal.html.twig'
+    variant: tabler        # plain | bootstrap | tabler
+    theme: day             # day | night | auto
+    density: normal        # normal | compact
     position: center
     privacy_url: '/datenschutz'
     reload_on_change: false

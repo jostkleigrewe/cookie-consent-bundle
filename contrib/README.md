@@ -101,7 +101,10 @@ composer require jostkleigrewe/cookie-consent-bundle
 # 2. Routen manuell erstellen
 cat > config/routes/cookie_consent.yaml << 'EOF'
 cookie_consent:
-    resource: '@CookieConsentBundle/config/routes.php'
+    resource:
+        path: '@CookieConsentBundle/Controller/'
+        namespace: Jostkleigrewe\CookieConsentBundle\Controller
+    type: attribute
 EOF
 
 # 3. Konfiguration kopieren

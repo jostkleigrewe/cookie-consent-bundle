@@ -40,11 +40,14 @@ Or create `config/packages/cookie_consent.yaml` manually. See [Configuration](co
 
 ## Routes
 
-Add to `config/routes.yaml`:
+Create `config/routes/cookie_consent.yaml`:
 
 ```yaml
 cookie_consent:
-  resource: '@CookieConsentBundle/config/routes.php'
+    resource:
+        path: '@CookieConsentBundle/Controller/'
+        namespace: Jostkleigrewe\CookieConsentBundle\Controller
+    type: attribute
 ```
 
 ## Asset Setup (AssetMapper)

@@ -280,7 +280,7 @@ Enable the controller:
     "@jostkleigrewe/cookie-consent-bundle": {
       "cookie-consent-settings-button": {
         "enabled": true,
-        "fetch": "eager"
+        "fetch": "lazy"
       }
     }
   }

@@ -1,24 +1,78 @@
 # Documentation: https://github.com/jostkleigrewe/cookie-consent-bundle
 cookie_consent:
+    # DE: Version der Consent-Policy. Bei Erhöhung werden alte Einwilligungen ungültig.
+    # EN: Consent policy version. Increase to invalidate existing consents.
     policy_version: '1'
+
+    # DE: Storage-Backend: 'cookie' (default), 'doctrine' oder 'both'.
+    # EN: Storage backend: 'cookie' (default), 'doctrine' or 'both'.
     storage: cookie
 
     categories:
         necessary:
             label: Necessary
+            description: 'Required for basic site functionality.'
             required: true
             default: true
+        functional:
+            label: Functional
+            description: 'Remember choices and enhance features.'
+            default: false
         analytics:
             label: Analytics
+            description: 'Help us improve by collecting analytics.'
             default: false
         marketing:
             label: Marketing
+            description: 'Personalized marketing and ads.'
             default: false
 
     ui:
-        template: '@CookieConsent/styles/tabler/modal.html.twig'
-        position: center
-        privacy_url: '/privacy'
+        # DE: Layout-Variante: 'plain', 'bootstrap' oder 'tabler'.
+        # EN: Layout variant: 'plain', 'bootstrap' or 'tabler'.
+        variant: tabler
 
+        # DE: Farbschema: 'day', 'night' oder 'auto'.
+        # EN: Color theme: 'day', 'night' or 'auto'.
+        theme: day
+
+        # DE: Dichte-Modus: 'normal' oder 'compact'.
+        # EN: Density mode: 'normal' or 'compact'.
+        density: normal
+
+        # DE: Position des Modals (center, top, bottom, top-left, top-right, ...).
+        # EN: Modal position (center, top, bottom, top-left, top-right, ...).
+        position: center
+
+        # DE: URLs zur Datenschutzerklärung und zum Impressum. Pfade anpassen.
+        # EN: URLs to the privacy policy and imprint. Adjust paths.
+        # privacy_url: '/privacy'
+        # imprint_url: '/imprint'
+        reload_on_change: false
+
+    # DE: Session-Schutz: verhindert Session-Cookies ohne Einwilligung.
+    # EN: Session protection: prevents session cookies without consent.
+    enforcement:
+        require_consent_for_session: true
+        # stateless_paths: ['/api']
+        # stateless_routes: []
+        # protected_paths: []
+        # protected_routes: []
+
+    # DE: Optionales Consent-Logging (Audit-Trail).
+    # EN: Optional consent logging (audit trail).
+    logging:
+        enabled: false
+        level: info
+        anonymize_ip: true
+        # retention_days: 365
+
+    # DE: Google Consent Mode v2 Integration (aktiviert gtag consent updates).
+    # EN: Google Consent Mode v2 integration (enables gtag consent updates).
     google_consent_mode:
         enabled: false
+        # mapping:
+        #     analytics_storage: analytics
+        #     ad_storage: marketing
+        #     ad_user_data: marketing
+        #     ad_personalization: marketing

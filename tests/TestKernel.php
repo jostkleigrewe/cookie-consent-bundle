@@ -80,7 +80,9 @@ final class TestKernel extends Kernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(dirname(__DIR__).'/config/routes.php');
+        // DE: Lädt #[Route]-Attribute aus den Bundle-Controllern.
+        // EN: Loads #[Route] attributes from the bundle's controllers.
+        $routes->import(dirname(__DIR__).'/src/Controller/', 'attribute');
     }
 
     public function getCacheDir(): string

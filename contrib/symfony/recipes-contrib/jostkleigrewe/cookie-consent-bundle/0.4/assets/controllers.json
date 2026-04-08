@@ -4,6 +4,10 @@
             "cookie-consent": {
                 "enabled": true,
                 "fetch": "eager"
+            },
+            "cookie-consent-settings-button": {
+                "enabled": true,
+                "fetch": "lazy"
             }
         }
     }

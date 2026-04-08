@@ -2,6 +2,16 @@
 
 [English](configuration.md) | [Zurück zur README](../README.de.md)
 
+## Minimal-Konfiguration
+
+```yaml
+cookie_consent: ~
+```
+
+Nutzt alle Defaults: Tabler-Variante, Day-Theme, Standard-Kategorien.
+
+---
+
 ## Vollständige Konfigurationsreferenz
 
 Erstelle `config/packages/cookie_consent.yaml`:
@@ -50,7 +60,10 @@ cookie_consent:
 
   # UI-Einstellungen
   ui:
-    template: '@CookieConsent/styles/tabler/modal.html.twig'
+    template: '@CookieConsent/modal.html.twig'
+    variant: tabler             # plain, bootstrap, tabler
+    theme: day                  # day, night, auto
+    density: normal             # normal, compact
     position: center            # center, bottom, top, left, right, top-left, top-right, bottom-left, bottom-right
     privacy_url: '/datenschutz'   # optional
     imprint_url: '/impressum'     # optional
@@ -90,30 +103,32 @@ bin/console doctrine:migrations:migrate
 
 ---
 
-## Templates
+## UI-Varianten
 
-### Mitgelieferte Templates
+### `variant`
 
-| Template | Pfad |
-|----------|------|
-| Tabler Day (Standard) | `@CookieConsent/styles/tabler/modal-day.html.twig` |
-| Tabler Night | `@CookieConsent/styles/tabler/modal-night.html.twig` |
-| Tabler Compact Day | `@CookieConsent/styles/tabler/modal-compact-day.html.twig` |
-| Tabler Compact Night | `@CookieConsent/styles/tabler/modal-compact-night.html.twig` |
-| Bootstrap | `@CookieConsent/styles/bootstrap/modal.html.twig` |
-| Plain/Vanilla | `@CookieConsent/styles/plain/modal.html.twig` |
+| Wert | Beschreibung |
+|------|--------------|
+| `tabler` | Tabler-UI-Framework-Stil mit Switch-Toggles und Badge |
+| `bootstrap` | Bootstrap-5-kompatibel mit nativen Button-Klassen |
+| `plain` | Framework-agnostisch, minimale Abhängigkeiten |
 
-### Eigenes Template
+### `theme`
 
-Template in die App kopieren und anpassen:
+| Wert | Beschreibung |
+|------|--------------|
+| `day` | Helles Farbschema |
+| `night` | Dunkles Farbschema |
+| `auto` | Folgt der `prefers-color-scheme`-Media-Query |
 
-```
-templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
-```
+### `density`
 
----
+| Wert | Beschreibung |
+|------|--------------|
+| `normal` | Standard-Abstände und -Typografie |
+| `compact` | Reduziertes Padding für kompaktere Darstellung |
 
-## Position
+### `position`
 
 | Wert | Beschreibung |
 |------|--------------|
@@ -126,6 +141,39 @@ templates/bundles/CookieConsentBundle/styles/plain/modal.html.twig
 | `top-right` | Oben rechts |
 | `bottom-left` | Unten links |
 | `bottom-right` | Unten rechts |
+
+---
+
+## Templates
+
+### Mitgelieferte Templates (Legacy)
+
+Aus Gründen der Rückwärtskompatibilität funktionieren die folgenden Template-Pfade weiterhin:
+
+| Template | Pfad |
+|----------|------|
+| Tabler Day (Standard) | `@CookieConsent/styles/tabler/modal-day.html.twig` |
+| Tabler Night | `@CookieConsent/styles/tabler/modal-night.html.twig` |
+| Tabler Compact Day | `@CookieConsent/styles/tabler/modal-compact-day.html.twig` |
+| Tabler Compact Night | `@CookieConsent/styles/tabler/modal-compact-night.html.twig` |
+| Bootstrap | `@CookieConsent/styles/bootstrap/modal.html.twig` |
+| Plain/Vanilla | `@CookieConsent/styles/plain/modal.html.twig` |
+
+**Empfehlung:** Nutze stattdessen die neuen Optionen `variant`, `theme` und `density` statt separater Template-Pfade.
+
+### Eigenes Template
+
+Template in die App kopieren und anpassen:
+
+```
+templates/bundles/CookieConsentBundle/modal.html.twig
+```
+
+Oder einzelne Partials überschreiben:
+
+```
+templates/bundles/CookieConsentBundle/_partials/tabler/header.html.twig
+```
 
 ---
 
@@ -228,7 +276,7 @@ Controller aktivieren:
     "@jostkleigrewe/cookie-consent-bundle": {
       "cookie-consent-settings-button": {
         "enabled": true,
-        "fetch": "eager"
+        "fetch": "lazy"
       }
     }
   }
@@ -266,6 +314,24 @@ cookie_consent:
 
 Das Bundle ruft automatisch `gtag('consent', 'update', ...)` auf, wenn sich Präferenzen ändern.
 
+### Eigenes Kategorie-Mapping
+
+```yaml
+cookie_consent:
+  categories:
+    statistics:   # eigener Name
+      label: Statistik
+    advertising:  # eigener Name
+      label: Werbung
+  google_consent_mode:
+    enabled: true
+    mapping:
+      analytics_storage: statistics
+      ad_storage: advertising
+      ad_user_data: advertising
+      ad_personalization: advertising
+```
+
 ---
 
 ## Browser-Events
@@ -286,3 +352,15 @@ document.addEventListener('cookie-consent:changed', (e) => {
 ## Übersetzungen
 
 Übersetzungsschlüssel befinden sich in `translations/messages.*.yaml`. Überschreibe sie durch eigene Übersetzungen in der Domain `messages`.
+
+---
+
+## Template-Showcase
+
+Für die visuelle Überprüfung aller Varianten-Kombinationen aufrufen:
+
+```
+/_cookie-consent/showcase
+```
+
+Zeigt alle 12 Kombinationen (3 Varianten × 2 Themes × 2 Dichten) auf einer einzigen Seite an.

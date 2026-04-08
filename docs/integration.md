@@ -72,7 +72,7 @@ Enable the Stimulus controller:
     "@jostkleigrewe/cookie-consent-bundle": {
       "cookie-consent-settings-button": {
         "enabled": true,
-        "fetch": "eager"
+        "fetch": "lazy"
       }
     }
   }
